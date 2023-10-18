@@ -1,0 +1,6 @@
+node_modules/
+dist-sdk/
+dist-demo/
+dist-docs/
+dist-coverage/
+dist-specification/

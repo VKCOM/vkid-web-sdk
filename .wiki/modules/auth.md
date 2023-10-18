@@ -1,0 +1,19 @@
+[@vkid/sdk - v0.0.1](../README.md) / [Modules](../modules.md) / auth
+
+# Module: auth
+
+## Table of contents
+
+### Enumerations
+
+- [AuthErrorCode](../enums/auth.AuthErrorCode.md)
+
+### Classes
+
+- [Auth](../classes/auth.Auth.md)
+
+### Interfaces
+
+- [AuthError](../interfaces/auth.AuthError.md)
+- [AuthParams](../interfaces/auth.AuthParams.md)
+- [AuthResponse](../interfaces/auth.AuthResponse.md)

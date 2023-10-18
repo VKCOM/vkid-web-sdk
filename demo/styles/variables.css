@@ -1,0 +1,17 @@
+:root {
+  --accent_alternate: #0077ff;
+
+  --vkui--color_background_accent: #2688EB;
+  --vkui--color_background_accent--hover: #2483E4;
+  --vkui--color_background_accent--active: #237EDD;
+  --vkui--color_background_secondary: #f5f5f5;
+  --vkui--color_background_content: #ffffff;
+  --vkui-light-text-text-contrast: #ffffff;
+
+  --vkui--size_border_radius--regular: 8px;
+  --vkui--animation_easing_platform: cubic-bezier(0.4,0,0.2,1);
+  --vkui--elevation4: 0px 0px 8px rgba(0,0,0,.12),0px 16px 16px rgba(0,0,0,.16);
+
+  --background_page: #ebedf0;
+  --light-button-primary-foreground: #FFF;
+}

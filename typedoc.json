@@ -1,0 +1,12 @@
+{
+  "entryPoints": [
+    "./src/core/config/index.ts",
+    "./src/auth/index.ts"
+  ],
+  "out": "dist-docs",
+  "exclude": ["*.tests.ts"],
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "disableSources": true,
+  "includeVersion": true
+}

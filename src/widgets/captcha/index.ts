@@ -1,0 +1,1 @@
+export { Captcha } from './captcha';

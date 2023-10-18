@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log
+.idea/
+.vscode/
+yarn-error.log
+vscode
+dist-sdk/
+dist-demo/
+dist-specification/
+dist-coverage/
+.eslintcache
+coverage
+*.DS_Store
+allure-report/
+allure-results/

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es5",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "typeRoots": ["node_modules/@types"],
+    "baseUrl": ".",
+    "paths": {
+      "#/*": ["src/*"],
+      "#demo/*": ["demo/*"],
+      "@vkid/sdk": ["src"],
+      "@vkid/sdk/*": ["src/*"]
+    },
+  },
+  "exclude": ["./node_modules", "./dist-sdk", "./dist-demo", "./dist-docs"],
+  "include": ["./src/**/*.ts", "./demo/**/*.ts"]
+}

@@ -1,0 +1,29 @@
+@import url('./styles/variables.css');
+@import url('./styles/button.css');
+@import url('./styles/snackbar.css');
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--background_page);
+}
+
+.VkIdWebSdk__container {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.VkIdWebSdk__content {
+  max-width: 650px;
+  width: 650px;
+  border-radius: 8px;
+}
+
+.VkIdWebSdk__content > *:not(:first-child) {
+  margin: 24px 0;
+}
+
+.VkIdWebSdk__content > h1 {
+  font-family: -apple-system, system-ui, "Helvetica Neue", Roboto, sans-serif;
+}
