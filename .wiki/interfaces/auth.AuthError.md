@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.0.1](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / AuthError
+[@vkid/sdk - v0.0.2](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / AuthError
 
 # Interface: AuthError
 

@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.0.1](../README.md) / [Modules](../modules.md) / [core/config](../modules/core_config.md) / ConfigData
+[@vkid/sdk - v0.0.2](../README.md) / [Modules](../modules.md) / [core/config](../modules/core_config.md) / ConfigData
 
 # Interface: ConfigData
 

@@ -1,6 +1,6 @@
-[@vkid/sdk - v0.0.1](README.md) / Modules
+[@vkid/sdk - v0.0.2](README.md) / Modules
 
-# @vkid/sdk - v0.0.1
+# @vkid/sdk - v0.0.2
 
 ## Table of contents
 
