@@ -1,3 +1,5 @@
+import { Languages } from '#/types';
+
 export type WidgetState = 'loading' | 'loaded' | 'not_loaded';
 
 export interface WidgetElements {
@@ -14,6 +16,10 @@ export interface WidgetParams {
    * Цветовая схема виджета
    */
   scheme?: 'light' | 'dark';
+  /**
+   * Локализация
+   */
+  lang?: Languages;
 }
 
 export enum WidgetErrorCode {

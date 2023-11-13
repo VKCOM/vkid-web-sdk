@@ -2,11 +2,13 @@ import { debounce } from '@vkontakte/vkjs';
 import ResizeObserver from 'resize-observer-polyfill';
 
 import { WidgetParams } from '#/core/widget';
+import { Languages } from '#/types';
 import { getButtonFontSize, getButtonLogoSize, getButtonPadding } from '#/utils/styles';
+import { longLang, providerLang, shortLang } from '#/widgets/oneTap/lang';
 
 import { OneTapParams, OneTapStyles } from './types';
 
-type OneTapTemplateParams = Required<OneTapStyles> & Pick<OneTapParams, 'skin'> & Pick<WidgetParams, 'scheme'> & {
+type OneTapTemplateParams = Required<OneTapStyles> & Pick<OneTapParams, 'skin'> & Pick<WidgetParams, 'scheme' | 'lang'> & {
   openFullAuth?: void;
   iframeHeight?: number;
 };
@@ -32,14 +34,15 @@ export const getOneTapTemplate = ({
   openFullAuth,
   skin,
   scheme,
+  lang = Languages.RUS,
 }: OneTapTemplateParams) => (id: string) => {
   let textIconLimit = 0;
   let textLongLimit = 0;
   let textShortWidth = 0;
   let textLongWidth = 0;
-  const initialText = 'Продолжить';
-  const shortText = 'VK ID';
-  const longText = 'Войти через VK ID';
+  const initialText = shortLang[lang];
+  const shortText = providerLang;
+  const longText = longLang[lang];
   const textPadding = 8;
   const padding = getButtonPadding(height);
   const fontSize = getButtonFontSize(height);
@@ -85,7 +88,7 @@ export const getOneTapTemplate = ({
     return clientWidth + 2 * textPadding + 2 * padding + 2 * logoSize;
   };
 
-  window.addEventListener('DOMContentLoaded', () => {
+  const handleLoaded = () => {
     let ANIMATION_TIMEOUT = 0;
     const observeCallback = () => {
       const hasTextContainer = contentEl.contains(textContainerEl);
@@ -153,7 +156,13 @@ export const getOneTapTemplate = ({
       observeCallback();
       ANIMATION_TIMEOUT = 250;
     }
-  });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', handleLoaded);
+  } else {
+    setTimeout(handleLoaded, 0);
+  }
 
   return `
 <div id="${id}" data-test-id="oneTap" data-scheme="${scheme}" data-skin="${skin}">

@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.0.2](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / AuthErrorCode
+[@vkid/sdk - v0.0.3](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / AuthErrorCode
 
 # Enumeration: AuthErrorCode
 

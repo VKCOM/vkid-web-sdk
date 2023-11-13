@@ -1,33 +1,38 @@
 import './styles.css';
 import * as VKID from '@vkid/sdk';
+import { WidgetEvents } from '@vkid/sdk/core/widget/events';
 import { OneTap } from '@vkid/sdk/widgets/oneTap';
 import { OneTapPublicEvents } from '@vkid/sdk/widgets/oneTap/events';
 
-import { showSuccessSnackbar, showErrorSnackbar } from '#demo/components/snackbar';
+import {
+  showAuthSuccessSnackbar,
+  showAuthErrorSnackbar,
+  showInitErrorSnackbar,
+} from '#demo/components/snackbar';
 
 const authButtonIds = ['authIconButton', 'authButton', 'authButtonWithIcon'];
 
 VKID.Config.set({ app: 7303035 });
 
-const handleSuccess = (response: any) => {
+const handleAuthSuccess = (response: any) => {
   console.info(response);
 
   if (response.token) {
-    showSuccessSnackbar();
+    showAuthSuccessSnackbar();
   } else {
-    showErrorSnackbar();
+    showAuthErrorSnackbar();
   }
 };
 
-const handleError = (error: any) => {
+const handleAuthError = (error: any) => {
   console.error(error);
-  showErrorSnackbar();
+  showAuthErrorSnackbar();
 };
 
 const handleClick = () => {
   VKID.Auth.login()
-    .then(handleSuccess)
-    .catch(handleError);
+    .then(handleAuthSuccess)
+    .catch(handleAuthError);
 };
 
 authButtonIds.forEach((item) => {
@@ -36,12 +41,30 @@ authButtonIds.forEach((item) => {
   button && (button.onclick = handleClick);
 });
 
-const oneTapEl = document.getElementById('oneTap') as HTMLElement;
-const oneTapSuccess = (response: any) => {
-  console.info(response);
-  showSuccessSnackbar();
+const createOneTap = (lang = VKID.Languages.RUS) => {
+  const oneTapEl = document.getElementById('oneTap') as HTMLElement;
+  const oneTapAuthSuccess = (response: any) => {
+    console.info(response);
+    showAuthSuccessSnackbar();
+  };
+
+  const oneTap = new OneTap();
+  oneTap.on(OneTapPublicEvents.LOGIN_SUCCESS, oneTapAuthSuccess);
+  oneTap.on(OneTapPublicEvents.LOGIN_FAILED, showAuthErrorSnackbar);
+  oneTap.on(WidgetEvents.ERROR, showInitErrorSnackbar);
+  oneTap.render({ container: oneTapEl, showAlternativeLogin: true, lang });
+
+  return oneTap;
 };
-const oneTap = new OneTap();
-oneTap.on(OneTapPublicEvents.LOGIN_SUCCESS, oneTapSuccess);
-oneTap.on(OneTapPublicEvents.LOGIN_FAILED, showErrorSnackbar);
-oneTap.render({ container: oneTapEl, showAlternativeLogin: true });
+
+let oneTap = createOneTap();
+
+function handleLangChange() {
+  oneTap.close();
+  oneTap = createOneTap(this.value);
+}
+
+const langEl = document.getElementById('lang');
+if (langEl) {
+  langEl.addEventListener('change', handleLangChange);
+}

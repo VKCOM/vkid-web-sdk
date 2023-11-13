@@ -103,6 +103,7 @@ export class Widget<P = Record<string, any>> extends Dispatcher {
    * Метод вызывается, когда во время работы/загрузки VK ID приложения произошла ошибка
    */
   protected onErrorHandler(error: WidgetError) {
+    clearTimeout(this.timeoutTimer);
     this.setState('not_loaded');
     this.events.emit(WidgetEvents.ERROR, error);
     this.elements?.iframe?.remove();

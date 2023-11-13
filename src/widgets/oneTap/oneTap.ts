@@ -2,6 +2,7 @@ import { BridgeMessage } from '#/core/bridge';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isValidHeight, validator } from '#/core/validator';
 import { Widget, WidgetEvents } from '#/core/widget';
+import { Languages } from '#/types';
 import { AgreementsDialog } from '#/widgets/agreementsDialog/agreementsDialog';
 import { AgreementsDialogInternalEvents } from '#/widgets/agreementsDialog/events';
 
@@ -34,6 +35,7 @@ export class OneTap extends Widget<OneTapParams> {
       }
       case OneTapInternalEvents.NOT_AUTHORIZED: {
         this.setState('not_loaded');
+        clearTimeout(this.timeoutTimer);
         this.elements?.iframe?.remove();
         break;
       }
@@ -81,6 +83,7 @@ export class OneTap extends Widget<OneTapParams> {
       show_alternative_login: params?.showAlternativeLogin ? 1 : 0,
       button_skin: params.skin || 'primary',
       scheme: params.scheme || 'light',
+      lang_id: params.lang || Languages.RUS,
     };
 
     this.templateRenderer = getOneTapTemplate({
@@ -91,6 +94,7 @@ export class OneTap extends Widget<OneTapParams> {
       openFullAuth: this.openFullAuth.bind(this),
       skin: oneTapParams.button_skin,
       scheme: oneTapParams.scheme,
+      lang: oneTapParams.lang_id,
     });
 
     return super.render({ container: params.container, ...oneTapParams });

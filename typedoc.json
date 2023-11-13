@@ -1,7 +1,8 @@
 {
   "entryPoints": [
     "./src/core/config/index.ts",
-    "./src/auth/index.ts"
+    "./src/auth/index.ts",
+    "./src/widgets/oneTap/index.ts"
   ],
   "out": "dist-docs",
   "exclude": ["*.tests.ts"],

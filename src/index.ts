@@ -3,7 +3,7 @@ import { Config, ConfigData } from './core/config';
 import { Widget } from './core/widget';
 import { Languages } from './types';
 
-export type { Languages };
+export { Languages };
 
 const globalConfig = new Config();
 export { globalConfig as Config };

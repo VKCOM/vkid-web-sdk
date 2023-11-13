@@ -1,7 +1,7 @@
 import { BridgeMessage } from '#/core/bridge';
 import { BRIDGE_MESSAGE_TYPE_SDK } from '#/core/bridge/bridge';
 import { WidgetEvents } from '#/core/widget';
-import { Config } from '#/index';
+import { Config, Languages } from '#/index';
 import { OneTap } from '#/widgets/oneTap';
 import { OneTapInternalEvents, OneTapPublicEvents } from '#/widgets/oneTap/events';
 
@@ -61,16 +61,28 @@ describe('OneTap', () => {
       expect(location[3]).toEqual('show_alternative_login=1'),
       expect(location[4]).toEqual('button_skin=primary'),
       expect(location[5]).toEqual('scheme=light'),
-      expect(location[6]).toEqual('code_challenge=stringified_SHA256-STRING'),
-      expect(location[7]).toEqual('code_challenge_method=s256'),
-      expect(location[8]).toEqual('origin=https%3A%2F%2Frnd-service.ru'),
+      expect(location[6]).toEqual('lang_id=0'),
+      expect(location[7]).toEqual('code_challenge=stringified_SHA256-STRING'),
+      expect(location[8]).toEqual('code_challenge_method=s256'),
+      expect(location[9]).toEqual('origin=https%3A%2F%2Frnd-service.ru'),
       expect(frameSrc).toContain('uuid'),
       expect(frameSrc).toContain('v'),
-      expect(location[11]).toEqual('app_id=100'),
-      expect(location[12]).toEqual('sdk_type=vkid'),
+      expect(location[12]).toEqual('app_id=100'),
+      expect(location[13]).toEqual('sdk_type=vkid'),
     ];
 
     expect(location.length).toEqual(expectArr.length);
+  });
+
+  test('The lang_id parameter must be set', () => {
+    oneTap.render({
+      container,
+      showAlternativeLogin: 1,
+      lang: Languages.ENG,
+    });
+    iframeElement = container.querySelector('iframe') as HTMLIFrameElement;
+    const frameSrc = iframeElement.getAttribute('src') as string;
+    expect(frameSrc).toContain('lang_id=3');
   });
 
   test('Should use the light theme and the main default skin', () => {
