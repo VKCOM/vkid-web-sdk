@@ -1,8 +1,5 @@
 import './styles.css';
 import * as VKID from '@vkid/sdk';
-import { WidgetEvents } from '@vkid/sdk/core/widget/events';
-import { OneTap } from '@vkid/sdk/widgets/oneTap';
-import { OneTapPublicEvents } from '@vkid/sdk/widgets/oneTap/events';
 
 import {
   showAuthSuccessSnackbar,
@@ -48,10 +45,10 @@ const createOneTap = (lang = VKID.Languages.RUS) => {
     showAuthSuccessSnackbar();
   };
 
-  const oneTap = new OneTap();
-  oneTap.on(OneTapPublicEvents.LOGIN_SUCCESS, oneTapAuthSuccess);
-  oneTap.on(OneTapPublicEvents.LOGIN_FAILED, showAuthErrorSnackbar);
-  oneTap.on(WidgetEvents.ERROR, showInitErrorSnackbar);
+  const oneTap = new VKID.OneTap();
+  oneTap.on(VKID.OneTapPublicEvents.LOGIN_SUCCESS, oneTapAuthSuccess);
+  oneTap.on(VKID.OneTapPublicEvents.LOGIN_FAILED, showAuthErrorSnackbar);
+  oneTap.on(VKID.WidgetEvents.ERROR, showInitErrorSnackbar);
   oneTap.render({ container: oneTapEl, showAlternativeLogin: true, lang });
 
   return oneTap;

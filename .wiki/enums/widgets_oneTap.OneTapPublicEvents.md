@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.0.3](../README.md) / [Modules](../modules.md) / [widgets/oneTap](../modules/widgets_oneTap.md) / OneTapPublicEvents
+[@vkid/sdk - v0.0.4](../README.md) / [Modules](../modules.md) / [widgets/oneTap](../modules/widgets_oneTap.md) / OneTapPublicEvents
 
 # Enumeration: OneTapPublicEvents
 

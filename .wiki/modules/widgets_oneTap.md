@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.0.3](../README.md) / [Modules](../modules.md) / widgets/oneTap
+[@vkid/sdk - v0.0.4](../README.md) / [Modules](../modules.md) / widgets/oneTap
 
 # Module: widgets/oneTap
 

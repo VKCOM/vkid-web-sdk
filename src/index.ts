@@ -1,9 +1,11 @@
 import { Auth, AuthParams, AuthError, AuthResponse, AuthErrorCode } from './auth';
 import { Config, ConfigData } from './core/config';
 import { Widget } from './core/widget';
-import { Languages } from './types';
 
-export { Languages };
+export { WidgetEvents } from './core/widget/events';
+export { Languages } from './types';
+export { OneTap, OneTapPublicEvents } from './widgets/oneTap';
+export type { OneTapParams } from './widgets/oneTap';
 
 const globalConfig = new Config();
 export { globalConfig as Config };
