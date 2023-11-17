@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.0.4](../README.md) / [Modules](../modules.md) / [core/config](../modules/core_config.md) / Config
+[@vkid/sdk - v0.1.1](../README.md) / [Modules](../modules.md) / [core/config](../modules/core_config.md) / Config
 
 # Class: Config
 
