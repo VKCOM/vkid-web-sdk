@@ -1,6 +1,6 @@
 {
   "name": "@vkid/sdk",
-  "version": "0.0.4",
+  "version": "0.1.1",
   "description": "VK ID Web SDK",
   "main": "dist-sdk/cjs/index.js",
   "module": "dist-sdk/esm/index.js",
@@ -24,7 +24,8 @@
     "prepare": "husky install",
     "release": "yarn publish --non-interactive --access public",
     "release:alpha": "yarn release --tag alpha",
-    "release:beta": "yarn release --tag beta"
+    "release:beta": "yarn release --tag beta",
+    "prepublishOnly": "yarn demo:prod && yarn sdk:prod && yarn docs:prod"
   },
   "files": [
     "dist-sdk",
