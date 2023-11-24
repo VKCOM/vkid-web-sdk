@@ -1,3 +1,3 @@
 export { OneTap } from './oneTap';
 export { OneTapPublicEvents } from './events';
-export { OneTapParams } from './types';
+export { OneTapParams, OneTapStyles } from './types';

@@ -12,11 +12,22 @@ html, body {
   display: flex;
   justify-content: center;
   padding: 30px;
+  border: 1px solid #ddd;
+  margin: 25px auto;
+  width: 350px;
+  background: #fff;
+  border-radius: 5px;
+}
+
+.VkIdWebSdk_controls {
+  padding: 15px;
+    background: #f1f1f1;
+    border-radius: 5px;
 }
 
 .VkIdWebSdk__content {
   max-width: 650px;
-  width: 650px;
+  width: 300px;
   border-radius: 8px;
 }
 

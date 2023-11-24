@@ -49,7 +49,7 @@ pnpm add @vkid/sdk
 **CDN:**
 
 ```html
-<script src="https://unpkg.com/@vkid/sdk/dist/index-umd.js"></script>
+<script src="https://unpkg.com/@vkid/sdk@latest/dist-sdk/umd/index.js"></script>
 ```
 
 ## Пример

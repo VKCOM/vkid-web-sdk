@@ -12,6 +12,11 @@ export interface AuthParams {
   lang?: Languages;
 
   /**
+   * @ignore
+   */
+  action?: AuthAction;
+
+  /**
    * Дополнительные параметры
    */
   [key: string]: any;
@@ -75,4 +80,11 @@ export interface AuthResponse {
    * Время жизни токена
    */
   ttl: number;
+}
+
+type AuthActionNames = 'sdk_oauth';
+
+interface AuthAction {
+  name: AuthActionNames;
+  params: any;
 }

@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.1.1](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / Auth
+[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / Auth
 
 # Class: Auth
 

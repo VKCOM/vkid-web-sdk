@@ -64,11 +64,12 @@ export class Auth {
 
   public readonly login = (params?: AuthParams): Promise<AuthResponse> => {
     this.dataService = new AuthDataService();
-    const queryParams: Partial<Record<string, string>> = {
+    const queryParams: Record<string, string | undefined> = {
       scheme: params?.scheme,
       lang_id: params?.lang,
       origin: location.protocol + '//' + location.hostname,
       response_type: AUTH_RESPONSE_TOKEN,
+      action: params?.action ? btoa(JSON.stringify(params.action)) : undefined,
     };
 
     const url = getVKIDUrl('auth', queryParams, this.config.get());

@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.1.1](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / AuthParams
+[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / AuthParams
 
 # Interface: AuthParams
 
@@ -19,7 +19,7 @@
 
 ### lang
 
-• `Optional` **lang**: `Languages`
+• `Optional` **lang**: [`Languages`](../enums/types.Languages.md)
 
 Локализация, в которой будет отображена страница авторизации
 

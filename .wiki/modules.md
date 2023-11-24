@@ -1,6 +1,6 @@
-[@vkid/sdk - v0.1.1](README.md) / Modules
+[@vkid/sdk - v0.1.2](README.md) / Modules
 
-# @vkid/sdk - v0.1.1
+# @vkid/sdk - v0.1.2
 
 ## Table of contents
 
@@ -8,4 +8,6 @@
 
 - [auth](modules/auth.md)
 - [core/config](modules/core_config.md)
+- [types](modules/types.md)
+- [widgets/oauthList](modules/widgets_oauthList.md)
 - [widgets/oneTap](modules/widgets_oneTap.md)
