@@ -11,18 +11,20 @@
 <body>
   <div class="VkIdWebSdk__container">
     <div id="demo" class="VkIdWebSdk__content">
-      <label for="lang">Язык:</label>
-      <select id="lang" name="lang">
-        <option value="0">RUS</option>
-        <option value="1">UKR</option>
-        <option value="3">ENG</option>
-        <option value="4">SPA</option>
-        <option value="6">GERMAN</option>
-        <option value="15">POL</option>
-        <option value="16">FRA</option>
-        <option value="82">TURKEY</option>
-      </select>
-      <h1>Auth</h1>
+      <div class="VkIdWebSdk_controls">
+        <label for="lang">Язык:</label>
+        <select id="lang" name="lang">
+          <option value="0">RUS</option>
+          <option value="1">UKR</option>
+          <option value="3">ENG</option>
+          <option value="4">SPA</option>
+          <option value="6">GERMAN</option>
+          <option value="15">POL</option>
+          <option value="16">FRA</option>
+          <option value="82">TURKEY</option>
+        </select>
+      </div>
+      <h1>Basic Auth</h1>
       <!-- AuthIconButton  -->
       <div>
         <button id="authIconButton" class="VkIdWebSdk__iconButton VkIdWebSdk__iconButton_reset">
@@ -34,9 +36,9 @@
         </button>
       </div>
 
-      <!-- AuthButton  -->
+      <!-- AuthButtonWithIcon  -->
       <div>
-        <button id="authButton" class="VkIdWebSdk__button VkIdWebSdk__button_reset">
+        <button id="authButtonWithIcon" class="VkIdWebSdk__button VkIdWebSdk__button_reset">
           <div class="VkIdWebSdk__button_container">
             <div class="VkIdWebSdk__button_icon">
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -50,20 +52,14 @@
         </button>
       </div>
 
-      <!-- AuthButtonWithIcon  -->
-      <div>
-        <button id="authButtonWithIcon" class="VkIdWebSdk__button VkIdWebSdk__button_reset">
-          <div class="VkIdWebSdk__button_container">
-            <div class="VkIdWebSdk__button_text">
-              Войти через VK ID
-            </div>
-          </div>
-        </button>
-      </div>
-
       <!-- OneTap  -->
-      <h1>OneTap Widget</h1>
+      <h1>OneTap Button</h1>
       <div id="oneTap"></div>
+
+
+      <!-- OAuthList  -->
+      <h1>OAuth List</h1>
+      <div id="oauthList"></div>
     </div>
   </div>
 </body>

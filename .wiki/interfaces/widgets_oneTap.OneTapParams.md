@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.1.1](../README.md) / [Modules](../modules.md) / [widgets/oneTap](../modules/widgets_oneTap.md) / OneTapParams
+[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / [widgets/oneTap](../modules/widgets_oneTap.md) / OneTapParams
 
 # Interface: OneTapParams
 
@@ -37,7 +37,7 @@ ___
 
 ### lang
 
-• `Optional` **lang**: `Languages`
+• `Optional` **lang**: [`Languages`](../enums/types.Languages.md)
 
 Локализация
 
@@ -77,6 +77,6 @@ ___
 
 ### styles
 
-• `Optional` **styles**: `OneTapStyles`
+• `Optional` **styles**: [`OneTapStyles`](widgets_oneTap.OneTapStyles.md)
 
 Настройки внешнего вида

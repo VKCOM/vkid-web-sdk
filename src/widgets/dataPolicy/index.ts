@@ -1,1 +1,0 @@
-export { DataPolicy } from './dataPolicy';

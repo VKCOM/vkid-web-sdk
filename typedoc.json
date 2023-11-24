@@ -2,7 +2,9 @@
   "entryPoints": [
     "./src/core/config/index.ts",
     "./src/auth/index.ts",
-    "./src/widgets/oneTap/index.ts"
+    "./src/widgets/oneTap/index.ts",
+    "./src/widgets/oauthList/index.ts",
+    "./src/types.ts"
   ],
   "out": "dist-docs",
   "exclude": ["*.tests.ts"],

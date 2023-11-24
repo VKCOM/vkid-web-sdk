@@ -39,3 +39,10 @@ export const isValidHeight: ValidatorRule = (param: any) => {
     makeError: () => 'The height should correspond to the range from 32 to 56',
   };
 };
+
+export const isNotEmptyOAuthList: ValidatorRule = (param: any) => {
+  return {
+    result: param?.length && param.length >= 1,
+    makeError: () => 'OAuth list can\'t be empty',
+  };
+};

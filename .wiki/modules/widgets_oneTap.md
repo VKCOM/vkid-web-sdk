@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.1.1](../README.md) / [Modules](../modules.md) / widgets/oneTap
+[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / widgets/oneTap
 
 # Module: widgets/oneTap
 
@@ -15,3 +15,4 @@
 ### Interfaces
 
 - [OneTapParams](../interfaces/widgets_oneTap.OneTapParams.md)
+- [OneTapStyles](../interfaces/widgets_oneTap.OneTapStyles.md)

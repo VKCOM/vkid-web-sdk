@@ -7,7 +7,7 @@ import {
   showInitErrorSnackbar,
 } from '#demo/components/snackbar';
 
-const authButtonIds = ['authIconButton', 'authButton', 'authButtonWithIcon'];
+const authButtonIds = ['authIconButton', 'authButtonWithIcon'];
 
 VKID.Config.set({ app: 7303035 });
 
@@ -56,9 +56,38 @@ const createOneTap = (lang = VKID.Languages.RUS) => {
 
 let oneTap = createOneTap();
 
+const createOAuthList = (lang = VKID.Languages.RUS) => {
+  const container = document.getElementById('oauthList') as HTMLElement;
+  const oouthListAuthSuccess = (response: any) => {
+    console.info(response);
+    showAuthSuccessSnackbar();
+  };
+
+  const oauthList = new VKID.OAuthList();
+  oauthList.on(VKID.OAuthListPublicEvents.LOGIN_SUCCESS, oouthListAuthSuccess);
+  oauthList.on(VKID.OAuthListPublicEvents.LOGIN_FAILED, showAuthErrorSnackbar);
+  oauthList.on(VKID.WidgetEvents.ERROR, showInitErrorSnackbar);
+  oauthList.render({
+    container,
+    lang,
+    oauthList: [
+      VKID.OAuthName.VK,
+      VKID.OAuthName.MAIL,
+      VKID.OAuthName.OK,
+    ],
+  });
+
+  return oauthList;
+};
+
+let oauthList = createOAuthList();
+
 function handleLangChange() {
   oneTap.close();
   oneTap = createOneTap(this.value);
+
+  oauthList.close();
+  oauthList = createOAuthList(this.value);
 }
 
 const langEl = document.getElementById('lang');
