@@ -5,9 +5,11 @@ import { ConfigData } from './types';
 export class Config {
   private store: ConfigData = {
     app: 0,
-    loginDomain: LOGIN_DOMAIN,
-    oauthDomain: OAUTH_DOMAIN,
-    vkidDomain: VKID_DOMAIN,
+    redirectUrl: '',
+
+    __loginDomain: LOGIN_DOMAIN,
+    __oauthDomain: OAUTH_DOMAIN,
+    __vkidDomain: VKID_DOMAIN,
   };
 
   public set(config: Partial<ConfigData>): this {

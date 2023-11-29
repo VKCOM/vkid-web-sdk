@@ -2,7 +2,7 @@ import { WidgetParams } from '#/core/widget';
 import { Languages } from '#/types';
 
 import { OAuthNameText } from './constants';
-import { linkLongTextLang, linkShortTextLang, singleButtonText } from './lang';
+import { linkTextLang, singleButtonText } from './lang';
 import { OAuthListStyles, OAuthName } from './types';
 
 const spinnerSvg = `
@@ -91,7 +91,7 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
   }
 
   const isSingleMode = params.oauthList.length === 1 ? 'data-single-mode' : '';
-  const linkText = isSingleMode ? linkShortTextLang[lang] : linkLongTextLang[lang];
+  const linkText = linkTextLang[lang];
 
   return `
     <div id="${id}" class="VkIdSdk_oauth_container" data-scheme="${scheme}">
@@ -133,6 +133,7 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
           line-height: 16px;
           margin-bottom: 16px;
           justify-content: center;
+          text-align: center;
         }
         #${id}[data-scheme=dark] .VkIdSdk_oauth_link_text {
          color: var(--vkui--color_text_primary--dark);

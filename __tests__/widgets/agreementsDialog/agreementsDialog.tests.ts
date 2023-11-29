@@ -3,7 +3,12 @@ import { BRIDGE_MESSAGE_TYPE_SDK } from '#/core/bridge/bridge';
 import { WidgetEvents } from '#/core/widget';
 import { Config } from '#/index';
 import { AgreementsDialog } from '#/widgets/agreementsDialog';
-import { AgreementsDialogInternalEvents } from '#/widgets/agreementsDialog/events';
+import {
+  AgreementsDialogInternalEvents,
+  AgreementsDialogPublicEvents,
+} from '#/widgets/agreementsDialog/events';
+
+import { version } from '../../../package.json';
 
 class TestAgreementsDialog extends AgreementsDialog {
   public onBridgeMessageHandler(event: BridgeMessage<AgreementsDialogInternalEvents | WidgetEvents>) {
@@ -18,18 +23,26 @@ let agreementsDialog: TestAgreementsDialog;
 
 describe('Agreements Dialog', () => {
   beforeEach(() => {
-    Config.set({ app: APP_ID });
+    Config.set({ app: APP_ID, redirectUrl: 'test' });
     agreementsDialog = new TestAgreementsDialog();
 
     agreementsDialog.render({ container: document.body });
     iframeElement = document.querySelector('iframe') as HTMLIFrameElement;
+
+    reporter
+      .addLabel('Layer', 'unit')
+      .feature('Units')
+      .addLabel('Platform', 'Web')
+      .addLabel('Product', 'VK ID SDK')
+      .addLabel('Component', 'Agreements Dialog')
+      .addLabel('Suite', 'Units');
   });
 
   afterEach(() => {
     agreementsDialog.close();
   });
 
-  test('check iframe url params', () => {
+  test('Check iframe url params', () => {
     expect(iframeElement).toBeTruthy();
 
     const frameSrc = iframeElement.getAttribute('src') as string;
@@ -41,9 +54,10 @@ describe('Agreements Dialog', () => {
       expect(location[2]).toContain('code_challenge_method=s256'),
       expect(location[3]).toContain('origin=https%3A%2F%2Frnd-service.ru'),
       expect(frameSrc).toContain('uuid'),
-      expect(frameSrc).toContain('v'),
-      expect(location[6]).toContain('app_id=100'),
-      expect(location[7]).toContain('sdk_type=vkid'),
+      expect(location[5]).toContain(`v=%22${version}%22`),
+      expect(location[6]).toContain('sdk_type=vkid'),
+      expect(location[7]).toContain('app_id=100'),
+      expect(location[8]).toContain('redirect_uri=test'),
     ];
 
     expect(location.length).toEqual(expectArr.length);
@@ -65,7 +79,7 @@ describe('Agreements Dialog', () => {
     expect(iframeElement).toBeTruthy();
 
     const handler = jest.fn();
-    agreementsDialog.on(AgreementsDialogInternalEvents.ACCEPT, handler);
+    agreementsDialog.on(AgreementsDialogPublicEvents.ACCEPT, handler);
     agreementsDialog.onBridgeMessageHandler({
       type: BRIDGE_MESSAGE_TYPE_SDK,
       handler: AgreementsDialogInternalEvents.ACCEPT,

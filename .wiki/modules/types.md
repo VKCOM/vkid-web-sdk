@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / types
+[@vkid/sdk - v1.0.0](../README.md) / [Modules](../modules.md) / types
 
 # Module: types
 
@@ -7,3 +7,4 @@
 ### Enumerations
 
 - [Languages](../enums/types.Languages.md)
+- [Scheme](../enums/types.Scheme.md)

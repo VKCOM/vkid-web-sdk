@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / [widgets/oauthList](../modules/widgets_oauthList.md) / OAuthListParams
+[@vkid/sdk - v1.0.0](../README.md) / [Modules](../modules.md) / [widgets/oauthList](../modules/widgets_oauthList.md) / OAuthListParams
 
 # Interface: OAuthListParams
 
@@ -26,7 +26,7 @@
 
 • **container**: `HTMLElement`
 
-HTML элемент, в который будет вставлено окно с кнопкой
+HTML элемент, в который будет вставлен виджет
 
 #### Inherited from
 
@@ -56,7 +56,7 @@ ___
 
 ### scheme
 
-• `Optional` **scheme**: ``"light"`` \| ``"dark"``
+• `Optional` **scheme**: [`Scheme`](../enums/types.Scheme.md)
 
 Цветовая схема виджета
 

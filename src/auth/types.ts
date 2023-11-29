@@ -1,10 +1,10 @@
-import { Languages } from '#/types';
+import { Languages, Scheme } from '#/types';
 
 export interface AuthParams {
   /**
    * Цветовая тема, в которой будет отображена страница авторизации
    */
-  scheme?: 'bright_light' | 'space_gray';
+  scheme?: Scheme;
 
   /**
    * Локализация, в которой будет отображена страница авторизации
@@ -17,9 +17,9 @@ export interface AuthParams {
   action?: AuthAction;
 
   /**
-   * Дополнительные параметры
+   * @ignore
    */
-  [key: string]: any;
+  screen?: string;
 }
 
 export enum AuthErrorCode {
@@ -87,4 +87,12 @@ type AuthActionNames = 'sdk_oauth';
 interface AuthAction {
   name: AuthActionNames;
   params: any;
+}
+
+export interface AuthQueryParams {
+  lang_id?: Languages;
+  scheme?: Scheme;
+  screen?: string;
+  response_type: string; // и под токены
+  action?: string;
 }

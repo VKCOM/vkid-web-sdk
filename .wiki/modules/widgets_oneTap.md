@@ -1,12 +1,8 @@
-[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / widgets/oneTap
+[@vkid/sdk - v1.0.0](../README.md) / [Modules](../modules.md) / widgets/oneTap
 
 # Module: widgets/oneTap
 
 ## Table of contents
-
-### Enumerations
-
-- [OneTapPublicEvents](../enums/widgets_oneTap.OneTapPublicEvents.md)
 
 ### Classes
 

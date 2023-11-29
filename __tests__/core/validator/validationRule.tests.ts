@@ -1,6 +1,15 @@
 import { isRequired, isNumber, isValidAppId, isValidHeight } from '#/core/validator';
 
 describe('isNumber rule', () => {
+  beforeEach(() => {
+    reporter
+      .addLabel('Layer', 'unit')
+      .feature('Units')
+      .addLabel('Platform', 'Web')
+      .addLabel('Product', 'VK ID SDK')
+      .addLabel('Component', 'isNumber rule')
+      .addLabel('Suite', 'Units');
+  });
   it('should return true', () => {
     expect(isNumber(1).result).toBeTruthy();
     expect(isNumber(12345).result).toBeTruthy();
@@ -20,6 +29,15 @@ describe('isNumber rule', () => {
 });
 
 describe('isRequired rule', () => {
+  beforeEach(() => {
+    reporter
+      .addLabel('Layer', 'unit')
+      .feature('Units')
+      .addLabel('Platform', 'Web')
+      .addLabel('Product', 'VK ID SDK')
+      .addLabel('Component', 'isRequired')
+      .addLabel('Suite', 'Units');
+  });
   it('should return true', () => {
     expect(isRequired(1).result).toBeTruthy();
     expect(isRequired('12345').result).toBeTruthy();
@@ -37,6 +55,15 @@ describe('isRequired rule', () => {
 });
 
 describe('isValidAppId rule', () => {
+  beforeEach(() => {
+    reporter
+      .addLabel('Layer', 'unit')
+      .feature('Units')
+      .addLabel('Platform', 'Web')
+      .addLabel('Product', 'VK ID SDK')
+      .addLabel('Component', 'isValidAppId rule')
+      .addLabel('Suite', 'Units');
+  });
   it('should return true', () => {
     expect(isValidAppId(undefined).result).toBeTruthy();
     expect(isValidAppId(1).result).toBeTruthy();
@@ -53,6 +80,15 @@ describe('isValidAppId rule', () => {
 });
 
 describe('isValidHeight rule', () => {
+  beforeEach(() => {
+    reporter
+      .addLabel('Layer', 'unit')
+      .feature('Units')
+      .addLabel('Platform', 'Web')
+      .addLabel('Product', 'VK ID SDK')
+      .addLabel('Component', 'isValidHeight rule')
+      .addLabel('Suite', 'Units');
+  });
   it('should return true', () => {
     expect(isValidHeight(undefined).result).toBeTruthy();
     expect(isValidHeight({}).result).toBeTruthy();

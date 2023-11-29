@@ -5,4 +5,5 @@ export enum WidgetEvents {
   HIDE = 'common: hide',
   CLOSE = 'common: close',
   ERROR = 'common: error',
+  RESIZE = 'common: resize',
 }

@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / [types](../modules/types.md) / Languages
+[@vkid/sdk - v1.0.0](../README.md) / [Modules](../modules.md) / [types](../modules/types.md) / Languages
 
 # Enumeration: Languages
 
@@ -21,46 +21,46 @@
 
 ### ENG
 
-• **ENG** = ``"3"``
+• **ENG** = ``3``
 
 ___
 
 ### FRA
 
-• **FRA** = ``"16"``
+• **FRA** = ``16``
 
 ___
 
 ### GERMAN
 
-• **GERMAN** = ``"6"``
+• **GERMAN** = ``6``
 
 ___
 
 ### POL
 
-• **POL** = ``"15"``
+• **POL** = ``15``
 
 ___
 
 ### RUS
 
-• **RUS** = ``"0"``
+• **RUS** = ``0``
 
 ___
 
 ### SPA
 
-• **SPA** = ``"4"``
+• **SPA** = ``4``
 
 ___
 
 ### TURKEY
 
-• **TURKEY** = ``"82"``
+• **TURKEY** = ``82``
 
 ___
 
 ### UKR
 
-• **UKR** = ``"1"``
+• **UKR** = ``1``

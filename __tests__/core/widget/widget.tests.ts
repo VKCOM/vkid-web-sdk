@@ -29,6 +29,14 @@ describe('Data Policy', () => {
 
     widget.render({ container });
     iframeElement = container.querySelector('iframe') as HTMLIFrameElement;
+
+    reporter
+      .addLabel('Layer', 'unit')
+      .feature('Units')
+      .addLabel('Platform', 'Web')
+      .addLabel('Product', 'VK ID SDK')
+      .addLabel('Component', 'Data Policy')
+      .addLabel('Suite', 'Units');
   });
 
   afterEach(() => {

@@ -5,11 +5,10 @@
     <img width="150" class="figure" src="https://unpkg.com/@vkid/sdk@0.0.1-alpha/logo.svg"/>
   </h1>
   <p align="center">
-    <!-- Заменить @vkontakte/superappkit на @vkid/sdk -->
     <a href="LICENSE">
       <img src="https://img.shields.io/npm/l/@vkid/sdk?maxAge=3600">
     </a>
-    <a href="https://npmjs.com/package/@vkontakte/superappkit">
+    <a href="https://npmjs.com/package/@vkid/sdk">
       <img src="https://img.shields.io/npm/v/@vkid/sdk/latest.svg?maxAge=3600">
     </a>
     <a href="https://npmjs.com/package/@vkid/sdk">
@@ -54,7 +53,29 @@ pnpm add @vkid/sdk
 <script src="https://unpkg.com/@vkid/sdk@latest/dist-sdk/umd/index.js"></script>
 ```
 
+> Обратите внимание: Для работы авторизации нужен APP_ID. Вы получите его, когда [создадите](https://id.vk.com/business/go/docs/vkid/latest/create-application) приложение в кабинете подключения VK ID.
+
 ## Пример
+
+<details>
+  <summary>Базовая авторизация</summary>
+
+```javascript
+import * as VKID from '@vkid/sdk';
+
+VKID.Config.set({ app: APP_ID, redirectUrl: 'https://example.com' });
+
+const authButton = document.createElement('button');
+authButton.onclick = () => {
+  VKID.Auth.login(); // После авторизации будет редирект на адрес, указанный в параметре redirect_uri
+};
+
+document.getElementById('container').appendChild(authButton);
+```
+</details>
+
+<details>
+  <summary>OneTap</summary>
 
 ```javascript
 import * as VKID from '@vkid/sdk';
@@ -63,22 +84,25 @@ VKID.Config.set({
   app: APP_ID
 });
 
-const handleSuccess = (token) => {
+const handleSuccess = ({ token }) => {
   console.log(token);
 }
 
-const authButton = document.createElement('button');
-authButton.onclick = () => {
-  VKID.Auth.login()
-    .then(handleSuccess)
-    .catch(console.error);
-};
+const handleError = (error) => {
+  console.log(error);
+}
 
-document.getElementById('container')
-  .appendChild(authButton);
+const vkIdOneTap = new VKID.OneTap();
+vkIdOneTap.on(VKID.OneTapPublicEvents.LOGIN_SUCCESS, handleSuccess);
+vkIdOneTap.on(VKID.OneTapPublicEvents.LOGIN_FAILED, handleError);
+
+const container = document.getElementById('VkIdSdkOneTap');
+
+if (container) {
+  vkIdOneTap.render({ container: container });
+}
 ```
-
-> Обратите внимание: Для работы авторизации нужен APP_ID. Вы получите его, когда [создадите](https://id.vk.com/business/go/docs/vkid/latest/create-application) приложение в кабинете подключения VK ID.
+</details>
 
 ## Документация
 

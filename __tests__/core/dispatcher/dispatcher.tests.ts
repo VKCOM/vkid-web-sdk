@@ -11,6 +11,13 @@ describe('Dispatcher', () => {
 
   beforeEach(() => {
     instance = new TestDispatcher();
+    reporter
+      .addLabel('Layer', 'unit')
+      .feature('Units')
+      .addLabel('Platform', 'Web')
+      .addLabel('Product', 'VK ID SDK')
+      .addLabel('Component', 'Dispatcher')
+      .addLabel('Suite', 'Units');
   });
 
   it('should register event handler with on() method', () => {

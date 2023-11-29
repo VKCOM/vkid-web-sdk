@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / widgets/oauthList
+[@vkid/sdk - v1.0.0](../README.md) / [Modules](../modules.md) / widgets/oauthList
 
 # Module: widgets/oauthList
 
@@ -6,7 +6,6 @@
 
 ### Enumerations
 
-- [OAuthListPublicEvents](../enums/widgets_oauthList.OAuthListPublicEvents.md)
 - [OAuthName](../enums/widgets_oauthList.OAuthName.md)
 
 ### Classes
