@@ -1,12 +1,8 @@
-[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / AuthParams
+[@vkid/sdk - v1.0.0](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / AuthParams
 
 # Interface: AuthParams
 
 [auth](../modules/auth.md).AuthParams
-
-## Indexable
-
-▪ [key: `string`]: `any`
 
 ## Table of contents
 
@@ -27,6 +23,6 @@ ___
 
 ### scheme
 
-• `Optional` **scheme**: ``"bright_light"`` \| ``"space_gray"``
+• `Optional` **scheme**: [`Scheme`](../enums/types.Scheme.md)
 
 Цветовая тема, в которой будет отображена страница авторизации

@@ -2,11 +2,12 @@ import { BridgeMessage } from '#/core/bridge';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isValidHeight, validator } from '#/core/validator';
 import { Widget, WidgetEvents } from '#/core/widget';
-import { Languages } from '#/types';
+import { WidgetState } from '#/core/widget/types';
+import { Languages, Scheme } from '#/types';
 import { AgreementsDialog } from '#/widgets/agreementsDialog/agreementsDialog';
-import { AgreementsDialogInternalEvents } from '#/widgets/agreementsDialog/events';
+import { AgreementsDialogPublicEvents } from '#/widgets/agreementsDialog/events';
 
-import { OneTapInternalEvents, OneTapPublicEvents } from './events';
+import { OneTapInternalEvents } from './events';
 import { getOneTapTemplate } from './template';
 import { OneTapParams, OneTapStyles } from './types';
 
@@ -25,16 +26,15 @@ export class OneTap extends Widget<OneTapParams> {
     switch (event.handler) {
       // TODO: hidePreloadButton на событие ошибки
       case OneTapInternalEvents.LOGIN_SUCCESS: {
-        this.events.emit(OneTapPublicEvents.LOGIN_SUCCESS, event.params);
+        this.redirectWithPayload(event.params);
         break;
       }
       case OneTapInternalEvents.SHOW_FULL_AUTH: {
-        this.events.emit(OneTapPublicEvents.SHOW_FULL_AUTH, event.params);
         this.openFullAuth();
         break;
       }
       case OneTapInternalEvents.NOT_AUTHORIZED: {
-        this.setState('not_loaded');
+        this.setState(WidgetState.NOT_LOADED);
         clearTimeout(this.timeoutTimer);
         this.elements?.iframe?.remove();
         break;
@@ -51,39 +51,46 @@ export class OneTap extends Widget<OneTapParams> {
   }
 
   private createAgreementsDialogWidget() {
+    const params = {
+      container: document.body,
+      lang: this.lang,
+      scheme: this.scheme,
+    };
     const agreementsDialog = new AgreementsDialog();
-    const acceptHandler = (event: BridgeMessage<AgreementsDialogInternalEvents & WidgetEvents>) => {
+    const acceptHandler = (event: BridgeMessage<AgreementsDialogPublicEvents & WidgetEvents>) => {
       this.bridge.sendMessage({
         handler: OneTapInternalEvents.START_AUTHORIZE,
         params: event.params,
       });
-      agreementsDialog.off(AgreementsDialogInternalEvents.ACCEPT, acceptHandler);
+      agreementsDialog.off(AgreementsDialogPublicEvents.ACCEPT, acceptHandler);
       agreementsDialog.close();
     };
 
-    agreementsDialog.on(AgreementsDialogInternalEvents.ACCEPT, acceptHandler);
-    agreementsDialog.render({ container: document.body });
+    agreementsDialog.on(AgreementsDialogPublicEvents.ACCEPT, acceptHandler);
+    agreementsDialog.render(params);
   }
 
   private openFullAuth() {
-    OneTap.__auth.login()
-      .then((data) => {
-        this.events.emit(OneTapPublicEvents.LOGIN_SUCCESS, data);
-      })
-      .catch((error) => {
-        this.events.emit(OneTapPublicEvents.LOGIN_FAILED, error);
-      });
+    const params = {
+      lang: this.lang,
+      screen: 'phone',
+      scheme: this.scheme,
+    };
+    OneTap.__auth.login(params);
   }
 
   @validator<OneTapParams>({ styles: [isValidHeight] })
   public render(params: OneTapParams) {
+    this.lang = params?.lang || Languages.RUS;
+    this.scheme = params?.scheme || Scheme.LIGHT;
+
     const oneTapParams: Record<string, any> = {
       style_height: params.styles?.height || defaultStylesParams.height,
       style_border_radius: params.styles?.borderRadius || defaultStylesParams.borderRadius,
       show_alternative_login: params?.showAlternativeLogin ? 1 : 0,
       button_skin: params.skin || 'primary',
-      scheme: params.scheme || 'light',
-      lang_id: params.lang || Languages.RUS,
+      scheme: this.scheme,
+      lang_id: this.lang,
     };
 
     this.templateRenderer = getOneTapTemplate({

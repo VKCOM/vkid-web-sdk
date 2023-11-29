@@ -6,8 +6,9 @@ import { Config, ConfigData } from '#/core/config';
 import { Dispatcher } from '#/core/dispatcher';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isRequired, validator } from '#/core/validator';
+import { Languages, Scheme } from '#/types';
 import { generateCodeChallenge } from '#/utils/oauth';
-import { getVKIDUrl } from '#/utils/url';
+import { getRedirectWithPayloadUrl, getVKIDUrl } from '#/utils/url';
 
 import { WIDGET_ERROR_TEXT } from './constants';
 import { WidgetEvents } from './events';
@@ -18,12 +19,14 @@ const MODULE_LOAD_TIMEOUT = 5000;
 const MODULE_CHANGE_STATE_TIMEOUT = 300;
 const CODE_CHALLENGE_METHOD = 's256';
 
-export class Widget<P = Record<string, any>> extends Dispatcher {
+export class Widget<P = WidgetParams> extends Dispatcher {
   public static __config: Config;
   public static __auth: Auth;
 
   protected readonly id: string = customAlphabet('qazwsxedcrfvtgbyhnujmikol', 6)();
 
+  protected lang: Languages;
+  protected scheme: Scheme;
   protected vkidAppName = '';
   protected config: Config;
   protected timeoutTimer: any;
@@ -39,11 +42,12 @@ export class Widget<P = Record<string, any>> extends Dispatcher {
   }
 
   @validator<WidgetParams>({ container: [isRequired] })
-  public render(params: WidgetParams & P): this {
-    this.container = params.container;
+  public render(params: P | WidgetParams): this {
+    const { container, ...otherParams } = params as P & Pick<WidgetParams, 'container'>;
+    this.container = container;
     this.renderTemplate();
     this.registerElements();
-    this.loadWidgetFrame(params);
+    this.loadWidgetFrame(otherParams as P);
 
     return this;
   }
@@ -77,7 +81,7 @@ export class Widget<P = Record<string, any>> extends Dispatcher {
    * Метод вызывается перед началом загрузки iframe с VK ID приложением
    */
   protected onStartLoadHandler() {
-    this.setState('loading');
+    this.setState(WidgetState.LOADING);
     this.timeoutTimer = setTimeout(() => {
       this.onErrorHandler({
         code: WidgetErrorCode.TimeoutExceeded,
@@ -94,7 +98,7 @@ export class Widget<P = Record<string, any>> extends Dispatcher {
     clearTimeout(this.timeoutTimer);
     setTimeout(() => {
       // Задержка избавляет от моргания замены шаблона на iframe
-      this.setState('loaded');
+      this.setState(WidgetState.LOADED);
     }, MODULE_CHANGE_STATE_TIMEOUT);
     this.events.emit(WidgetEvents.LOAD);
   }
@@ -104,7 +108,7 @@ export class Widget<P = Record<string, any>> extends Dispatcher {
    */
   protected onErrorHandler(error: WidgetError) {
     clearTimeout(this.timeoutTimer);
-    this.setState('not_loaded');
+    this.setState(WidgetState.NOT_LOADED);
     this.events.emit(WidgetEvents.ERROR, error);
     this.elements?.iframe?.remove();
   }
@@ -140,21 +144,20 @@ export class Widget<P = Record<string, any>> extends Dispatcher {
     this.container.insertAdjacentHTML('beforeend', this.templateRenderer(this.id));
   }
 
-  protected loadWidgetFrame(params: WidgetParams) {
+  protected loadWidgetFrame(params: P) {
     this.onStartLoadHandler();
     this.bridge = new Bridge({
       iframe: this.elements.iframe,
-      origin: `https://${this.config.get().vkidDomain}`,
+      origin: `https://${this.config.get().__vkidDomain}`,
     });
     this.bridge.on(BridgeEvents.MESSAGE, (event: BridgeMessage<any>) => this.onBridgeMessageHandler(event));
 
     this.elements.iframe.src = this.getWidgetFrameSrc(this.config.get(), params);
   }
 
-  protected getWidgetFrameSrc(config: ConfigData, params: WidgetParams): string {
-    const { container, ...otherParams } = params;
+  protected getWidgetFrameSrc(config: ConfigData, params: P): string {
     const queryParams = {
-      ...otherParams,
+      ...params,
       code_challenge: generateCodeChallenge(),
       code_challenge_method: CODE_CHALLENGE_METHOD,
       origin: location.protocol + '//' + location.host,
@@ -175,5 +178,10 @@ export class Widget<P = Record<string, any>> extends Dispatcher {
       root,
       iframe: root.querySelector('iframe') as HTMLIFrameElement,
     };
+  }
+
+  // TODO: добавить типы
+  protected redirectWithPayload(payload: any) {
+    location.assign(getRedirectWithPayloadUrl(payload, Widget.__config));
   }
 }

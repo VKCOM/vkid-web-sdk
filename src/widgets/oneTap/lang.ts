@@ -5,14 +5,14 @@ type Text = Record<Languages, string>;
 export const providerLang = 'VK ID';
 
 export const longLang: Text = {
-  [Languages.RUS]: `Войти c ${providerLang}`,
-  [Languages.UKR]: `Увійти з ${providerLang}`,
-  [Languages.ENG]: `Sign in with ${providerLang}`,
-  [Languages.SPA]: `Iniciar sesión con ${providerLang}`,
-  [Languages.GERMAN]: `Sign in with ${providerLang}`,
-  [Languages.POL]: `Wejdź poprzez ${providerLang}`,
-  [Languages.FRA]: `Sign in with ${providerLang}`,
-  [Languages.TURKEY]: `${providerLang} den gir`,
+  [Languages.RUS]: 'Войти c VK ID',
+  [Languages.UKR]: 'Увійти з VK ID',
+  [Languages.ENG]: 'Sign in with VK ID',
+  [Languages.SPA]: 'Iniciar sesión con VK ID',
+  [Languages.GERMAN]: 'Mit VK-ID anmelden',
+  [Languages.POL]: 'Wejdź z VK ID',
+  [Languages.FRA]: 'Se connecter avec VK ID',
+  [Languages.TURKEY]: 'VK ID aracılığıyla gir',
 };
 
 export const shortLang: Text = {
@@ -22,6 +22,6 @@ export const shortLang: Text = {
   [Languages.SPA]: 'Continuar',
   [Languages.GERMAN]: 'Fortfahren',
   [Languages.POL]: 'Kontynuuj',
-  [Languages.FRA]: 'Continue',
+  [Languages.FRA]: 'Continuer',
   [Languages.TURKEY]: 'Devam',
 };

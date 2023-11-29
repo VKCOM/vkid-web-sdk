@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / [core/config](../modules/core_config.md) / ConfigData
+[@vkid/sdk - v1.0.0](../README.md) / [Modules](../modules.md) / [core/config](../modules/core_config.md) / ConfigData
 
 # Interface: ConfigData
 
@@ -8,26 +8,11 @@
 
 ### Properties
 
-- [\_\_debug](core_config.ConfigData.md#__debug)
-- [\_\_localhost](core_config.ConfigData.md#__localhost)
 - [app](core_config.ConfigData.md#app)
-- [loginDomain](core_config.ConfigData.md#logindomain)
-- [oauthDomain](core_config.ConfigData.md#oauthdomain)
-- [vkidDomain](core_config.ConfigData.md#vkiddomain)
+- [redirectUrl](core_config.ConfigData.md#redirecturl)
+- [state](core_config.ConfigData.md#state)
 
 ## Properties
-
-### \_\_debug
-
-• `Optional` **\_\_debug**: `boolean`
-
-___
-
-### \_\_localhost
-
-• `Optional` **\_\_localhost**: `boolean`
-
-___
 
 ### app
 
@@ -35,18 +20,12 @@ ___
 
 ___
 
-### loginDomain
+### redirectUrl
 
-• **loginDomain**: `string`
-
-___
-
-### oauthDomain
-
-• **oauthDomain**: `string`
+• **redirectUrl**: `string`
 
 ___
 
-### vkidDomain
+### state
 
-• **vkidDomain**: `string`
+• `Optional` **state**: `string`

@@ -3,6 +3,15 @@
 import { isRequired, isNumber, isValidAppId, validator } from '#/core/validator';
 
 describe('Validator', () => {
+  beforeEach(() => {
+    reporter
+      .addLabel('Layer', 'unit')
+      .feature('Units')
+      .addLabel('Platform', 'Web')
+      .addLabel('Product', 'VK ID SDK')
+      .addLabel('Component', 'Validator')
+      .addLabel('Suite', 'Units');
+  });
   it('one parameter, one rule', () => {
     const correctParams = { value1: 'Langley' };
     const incorrectParams = { value1: null };
@@ -21,6 +30,7 @@ describe('Validator', () => {
   });
 
   it('one parameter, two rules', () => {
+    reporter.addLabel('id', '2248070');
     const correctParams = { value1: 2 };
     const incorrectParams = { value1: 'Ayanami' };
 
@@ -38,6 +48,7 @@ describe('Validator', () => {
   });
 
   it('two parameters, one rule', () => {
+    reporter.addLabel('id', '2248071');
     const correctParams = { value1: 'Ikari', value2: 2 };
     const incorrectParams = { value1: 'Katsuragi', value2: {} };
 

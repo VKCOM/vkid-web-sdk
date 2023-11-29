@@ -1,9 +1,8 @@
-import { AuthError } from '#/auth';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isNotEmptyOAuthList, validator } from '#/core/validator';
 import { Widget } from '#/core/widget';
+import { WidgetState } from '#/core/widget/types';
 
-import { OAuthListPublicEvents } from './events';
 import { getOAuthListTemplate } from './template';
 import { OAuthListParams } from './types';
 
@@ -20,7 +19,7 @@ export class OAuthList extends Widget<OAuthListParams> {
     this.container = params.container;
     this.renderTemplate();
     this.registerElements();
-    this.setState('loaded');
+    this.setState(WidgetState.LOADED);
 
     this.elements.root.addEventListener('click', this.handleClick.bind(this));
 
@@ -35,12 +34,6 @@ export class OAuthList extends Widget<OAuthListParams> {
 
     const oauth = target.getAttribute('data-oauth');
 
-    OAuthList.__auth.login({ action: { name: 'sdk_oauth', params: { oauth } } })
-      .then((data) => {
-        this.events.emit(OAuthListPublicEvents.LOGIN_SUCCESS, data);
-      })
-      .catch((error: AuthError) => {
-        this.events.emit(OAuthListPublicEvents.LOGIN_FAILED, error);
-      });
+    OAuthList.__auth.login({ action: { name: 'sdk_oauth', params: { oauth } } });
   }
 }

@@ -3,3 +3,6 @@ export enum AgreementsDialogInternalEvents {
   DECLINE = 'agreements dialog: decline',
 }
 
+export enum AgreementsDialogPublicEvents {
+  ACCEPT = 'agreements dialog: accept',
+}

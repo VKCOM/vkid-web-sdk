@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / Auth
+[@vkid/sdk - v1.0.0](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / Auth
 
 # Class: Auth
 
@@ -34,7 +34,7 @@
 
 ### login
 
-▸ `Readonly` **login**(`params?`): `Promise`<[`AuthResponse`](../interfaces/auth.AuthResponse.md)\>
+▸ `Readonly` **login**(`params?`): `void`
 
 #### Parameters
 
@@ -44,4 +44,4 @@
 
 #### Returns
 
-`Promise`<[`AuthResponse`](../interfaces/auth.AuthResponse.md)\>
+`void`

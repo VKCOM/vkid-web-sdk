@@ -1,6 +1,10 @@
-import { Languages } from '#/types';
+import { Languages, Scheme } from '#/types';
 
-export type WidgetState = 'loading' | 'loaded' | 'not_loaded';
+export enum WidgetState {
+  LOADING = 'loading',
+  LOADED = 'loaded',
+  NOT_LOADED = 'not_loaded',
+}
 
 export interface WidgetElements {
   root: HTMLElement;
@@ -9,13 +13,13 @@ export interface WidgetElements {
 
 export interface WidgetParams {
   /**
-   * HTML элемент, в который будет вставлено окно с кнопкой
+   * HTML элемент, в который будет вставлен виджет
    */
   container: HTMLElement;
   /**
    * Цветовая схема виджета
    */
-  scheme?: 'light' | 'dark';
+  scheme?: Scheme;
   /**
    * Локализация
    */

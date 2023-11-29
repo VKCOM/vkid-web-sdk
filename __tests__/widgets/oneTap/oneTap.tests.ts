@@ -2,8 +2,9 @@ import { BridgeMessage } from '#/core/bridge';
 import { BRIDGE_MESSAGE_TYPE_SDK } from '#/core/bridge/bridge';
 import { WidgetEvents } from '#/core/widget';
 import { Config, Languages } from '#/index';
+import { Scheme } from '#/types';
 import { OneTap } from '#/widgets/oneTap';
-import { OneTapInternalEvents, OneTapPublicEvents } from '#/widgets/oneTap/events';
+import { OneTapInternalEvents } from '#/widgets/oneTap/events';
 
 const APP_ID = 100;
 
@@ -11,7 +12,6 @@ let container: HTMLElement;
 let iframeElement: HTMLIFrameElement;
 let oneTap: TestOneTap;
 
-const onHandlerFn = jest.fn();
 const openFn = jest.fn();
 const removeEventListenerFn = jest.fn();
 
@@ -33,11 +33,19 @@ describe('OneTap', () => {
   });
 
   beforeEach(() => {
-    Config.set({ app: APP_ID });
+    Config.set({ app: APP_ID, redirectUrl: 'test', state: 'test' });
     oneTap = new TestOneTap();
 
     container = document.createElement('div', {});
     document.body.append(container);
+
+    reporter
+      .addLabel('Layer', 'unit')
+      .feature('Units')
+      .addLabel('Platform', 'Web')
+      .addLabel('Product', 'VK ID SDK')
+      .addLabel('Component', 'OneTap')
+      .addLabel('Suite', 'Units');
   });
 
   afterEach(() => {
@@ -67,8 +75,10 @@ describe('OneTap', () => {
       expect(location[9]).toEqual('origin=https%3A%2F%2Frnd-service.ru'),
       expect(frameSrc).toContain('uuid'),
       expect(frameSrc).toContain('v'),
-      expect(location[12]).toEqual('app_id=100'),
-      expect(location[13]).toEqual('sdk_type=vkid'),
+      expect(location[12]).toEqual('sdk_type=vkid'),
+      expect(location[13]).toEqual('app_id=100'),
+      expect(location[14]).toEqual('redirect_uri=test'),
+      expect(location[15]).toEqual('redirect_state=test'),
     ];
 
     expect(location.length).toEqual(expectArr.length);
@@ -110,7 +120,7 @@ describe('OneTap', () => {
     oneTap.render({
       container,
       showAlternativeLogin: 1,
-      scheme: 'dark',
+      scheme: Scheme.DARK,
     });
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
     expect(oneTapEl?.getAttribute('data-scheme')).toEqual('dark');
@@ -121,7 +131,7 @@ describe('OneTap', () => {
     oneTap.render({
       container,
       showAlternativeLogin: 1,
-      scheme: 'dark',
+      scheme: Scheme.DARK,
       skin: 'secondary',
     });
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
@@ -173,30 +183,5 @@ describe('OneTap', () => {
       }, 400);
     });
     expect(oneTapEl?.getAttribute('data-state')).toEqual('loaded');
-  });
-
-  test('Should emit public LOGIN_SUCCESS after internal', () => {
-    oneTap.on(OneTapPublicEvents.LOGIN_SUCCESS, onHandlerFn);
-
-    oneTap.onBridgeMessageHandler({
-      type: BRIDGE_MESSAGE_TYPE_SDK,
-      handler: OneTapInternalEvents.LOGIN_SUCCESS,
-      params: { someData: 'token' },
-    });
-
-    expect(onHandlerFn).toBeCalled();
-  });
-
-  test('Should emit public SHOW_FULL_AUTH after internal', () => {
-    oneTap.on(OneTapPublicEvents.SHOW_FULL_AUTH, onHandlerFn);
-
-    oneTap.onBridgeMessageHandler({
-      type: BRIDGE_MESSAGE_TYPE_SDK,
-      handler: OneTapInternalEvents.SHOW_FULL_AUTH,
-      params: {},
-    });
-
-    expect(onHandlerFn).toBeCalled();
-    expect(openFn).toHaveBeenCalled();
   });
 });

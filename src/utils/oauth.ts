@@ -3,7 +3,7 @@ import sha256 from 'crypto-js/sha256';
 import { nanoid } from 'nanoid/non-secure';
 
 /**
- Генерация code challenge для нового oauth
+ * Генерация code challenge для нового oauth
  */
 export const generateCodeChallenge = (): string => {
   const codeVerifier = nanoid();

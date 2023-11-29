@@ -1,144 +1,87 @@
-import { AUTH_ERROR_TEXT, AUTH_RESPONSE_TOKEN, AUTH_VK_CONNECT_RESPONSE } from '#/auth/constants';
-import { AuthErrorCode, AuthResponse } from '#/auth/types';
+import { AUTH_RESPONSE_TOKEN } from '#/auth/constants';
 import { Auth, AuthParams, Config, Languages } from '#/index';
 
 import { version } from '../../package.json';
-import { WINDOW_LOCATION_HOST } from '../constants';
 
 const APP_ID = 100;
 
 const openFn = jest.fn();
-const closeFn = jest.fn();
+const assignFn = jest.fn();
 const eventListenerFn = jest.fn();
 
 describe('Auth', () => {
   beforeAll(() => {
     window.open = openFn;
+    Object.defineProperty(window, 'location', {
+      value: {
+        hash: {
+          endsWith: jest.fn(),
+          includes: jest.fn(),
+        },
+        assign: assignFn,
+      },
+      writable: true,
+    });
     window.addEventListener = eventListenerFn;
   });
 
   beforeEach(() => {
-    Config.set({ app: APP_ID });
+    Config.set({ app: APP_ID, redirectUrl: 'test', state: 'test' });
+    reporter
+      .addLabel('Layer', 'unit')
+      .feature('Units')
+      .addLabel('Platform', 'Web')
+      .addLabel('Product', 'VK ID SDK')
+      .addLabel('Component', 'Auth')
+      .addLabel('Suite', 'Units');
   });
 
-  test('Opens a window with default fields', async () => {
-    try {
-      await Auth.login();
-    } catch (e) {
-      expect(openFn).toHaveBeenCalled();
+  test('Should redirect to url with default fields', async () => {
+    Auth.login();
+    expect(assignFn).toHaveBeenCalled();
 
-      const callArgs: string[] = openFn.mock.calls[0];
-      const location = new URL(callArgs[0]);
+    const callArgs: string[] = assignFn.mock.calls[0];
+    const location = new URL(callArgs[0]).search.split(/[?&]/);
 
-      expect(location.search).toEqual(`?origin=https%3A%2F%2F${WINDOW_LOCATION_HOST}&response_type=${AUTH_RESPONSE_TOKEN}&v=%22${version}%22&app_id=${APP_ID}&sdk_type=vkid`);
-    }
+    const expectArr = [
+      expect(location[0]).toEqual(''),
+      expect(location[1]).toEqual(`response_type=${AUTH_RESPONSE_TOKEN}`),
+      expect(location[2]).toEqual(`v=%22${version}%22`),
+      expect(location[3]).toEqual('sdk_type=vkid'),
+      expect(location[4]).toEqual(`app_id=${APP_ID}`),
+      expect(location[5]).toEqual('redirect_uri=test'),
+      expect(location[6]).toEqual('redirect_state=test'),
+    ];
+
+    expect(location.length).toEqual(expectArr.length);
   });
 
-  test('Opens a window with additional fields', async () => {
+  test('Should redirect to url with additional fields', async () => {
     const params: AuthParams = {
       scheme: 'bright_light',
       lang: '0' as Languages,
+      screen: 'phone',
     };
 
-    try {
-      await Auth.login(params);
-    } catch (e) {
-      expect(openFn).toHaveBeenCalled();
+    Auth.login(params);
+    expect(assignFn).toHaveBeenCalled();
 
-      const callArgs: string[] = openFn.mock.calls[0];
-      const location = new URL(callArgs[0]);
+    const callArgs: string[] = assignFn.mock.calls[0];
+    const location = new URL(callArgs[0]).search.split(/[?&]/);
 
-      expect(location.search).toEqual(`?scheme=${params.scheme}&lang_id=${params.lang}&origin=https%3A%2F%2F${WINDOW_LOCATION_HOST}&response_type=${AUTH_RESPONSE_TOKEN}&v=%22${version}%22&app_id=${APP_ID}&sdk_type=vkid`);
-    }
-  });
+    const expectArr = [
+      expect(location[0]).toEqual(''),
+      expect(location[1]).toEqual(`lang_id=${params.lang}`),
+      expect(location[2]).toEqual(`scheme=${params.scheme}`),
+      expect(location[3]).toEqual('screen=phone'),
+      expect(location[4]).toEqual(`response_type=${AUTH_RESPONSE_TOKEN}`),
+      expect(location[5]).toEqual(`v=%22${version}%22`),
+      expect(location[6]).toEqual('sdk_type=vkid'),
+      expect(location[7]).toEqual(`app_id=${APP_ID}`),
+      expect(location[8]).toEqual('redirect_uri=test'),
+      expect(location[9]).toEqual('redirect_state=test'),
+    ];
 
-  test('Must return error: cannot create new tab', async () => {
-    const error = {
-      code: AuthErrorCode.CannotCreateNewTab,
-      text: AUTH_ERROR_TEXT[AuthErrorCode.CannotCreateNewTab],
-    };
-
-    try {
-      await Auth.login();
-    } catch (e) {
-      expect(e).toEqual(error);
-    }
-  });
-
-  test('Must return error: new tab has been closed', async () => {
-    openFn.mockReturnValue({
-      closed: true,
-      close: closeFn,
-    });
-    const error = {
-      code: AuthErrorCode.NewTabHasBeenClosed,
-      text: AUTH_ERROR_TEXT[AuthErrorCode.NewTabHasBeenClosed],
-    };
-
-    try {
-      await Auth.login();
-    } catch (e) {
-      expect(e).toEqual(error);
-      expect(closeFn).toHaveBeenCalled();
-    }
-  });
-
-  test('Must return error: event not supported', async () => {
-    const opener = {
-      closed: false,
-      close: closeFn,
-    };
-    openFn.mockReturnValue(opener);
-    eventListenerFn.mockImplementation((event, callback) => {
-      callback({
-        origin: 'vk.com',
-        source: opener,
-        data: {
-          payload: {},
-        },
-      });
-    });
-
-    const error = {
-      code: AuthErrorCode.EventNotSupported,
-      text: AUTH_ERROR_TEXT[AuthErrorCode.EventNotSupported],
-    };
-
-    try {
-      await Auth.login();
-    } catch (e) {
-      expect(closeFn).toHaveBeenCalled();
-      expect(e).toEqual(error);
-    }
-  });
-
-  test('Must return data', async () => {
-    const response: AuthResponse = {
-      token: 'token',
-      type: 'silent_token',
-      ttl: 500,
-    };
-    const opener = {
-      closed: false,
-      close: closeFn,
-    };
-    openFn.mockReturnValue(opener);
-    eventListenerFn.mockImplementation((event, callback) => {
-      callback({
-        origin: 'vk.com',
-        source: opener,
-        data: {
-          action: AUTH_VK_CONNECT_RESPONSE,
-          payload: response,
-        },
-      });
-    });
-
-    try {
-      const res = await Auth.login();
-      expect(closeFn).toHaveBeenCalled();
-      expect(res).toEqual(response);
-    } catch (e) {
-    }
+    expect(location.length).toEqual(expectArr.length);
   });
 });

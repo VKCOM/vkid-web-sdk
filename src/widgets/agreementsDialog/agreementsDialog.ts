@@ -1,7 +1,7 @@
 import { BridgeMessage } from '#/core/bridge';
 import { Widget, WidgetEvents } from '#/core/widget';
 
-import { AgreementsDialogInternalEvents } from './events';
+import { AgreementsDialogInternalEvents, AgreementsDialogPublicEvents } from './events';
 import { getAgreementsDialogTemplate } from './template';
 
 export class AgreementsDialog extends Widget {
@@ -15,7 +15,7 @@ export class AgreementsDialog extends Widget {
         break;
       }
       case AgreementsDialogInternalEvents.ACCEPT: {
-        this.events.emit(AgreementsDialogInternalEvents.ACCEPT, event);
+        this.events.emit(AgreementsDialogPublicEvents.ACCEPT, event);
         break;
       }
       default:

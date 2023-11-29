@@ -1,4 +1,4 @@
-[@vkid/sdk - v0.1.2](../README.md) / [Modules](../modules.md) / [widgets/oneTap](../modules/widgets_oneTap.md) / OneTapParams
+[@vkid/sdk - v1.0.0](../README.md) / [Modules](../modules.md) / [widgets/oneTap](../modules/widgets_oneTap.md) / OneTapParams
 
 # Interface: OneTapParams
 
@@ -27,7 +27,7 @@
 
 • **container**: `HTMLElement`
 
-HTML элемент, в который будет вставлено окно с кнопкой
+HTML элемент, в который будет вставлен виджет
 
 #### Inherited from
 
@@ -49,7 +49,7 @@ ___
 
 ### scheme
 
-• `Optional` **scheme**: ``"light"`` \| ``"dark"``
+• `Optional` **scheme**: [`Scheme`](../enums/types.Scheme.md)
 
 Цветовая схема виджета
 

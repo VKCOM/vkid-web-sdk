@@ -1,8 +1,7 @@
 import { Auth, AuthParams, AuthError, AuthResponse, AuthErrorCode } from './auth';
 import { Config, ConfigData } from './core/config';
 import { Widget } from './core/widget';
-
-export { Languages } from './types';
+export { Languages, Scheme } from './types';
 
 const globalConfig = new Config();
 export { globalConfig as Config };
@@ -20,9 +19,13 @@ Widget.__auth = globalAuth;
 export { WidgetEvents } from './core/widget';
 
 /** Export OneTap */
-export { OneTap, OneTapPublicEvents } from './widgets/oneTap';
+export { OneTap } from './widgets/oneTap';
 export type { OneTapParams, OneTapStyles } from './widgets/oneTap';
 
+/** Export FloatingOneTap */
+export { FloatingOneTap, FloatingOneTapContentId } from './widgets/floatingOneTap';
+export type { FloatingOneTapParams } from './widgets/floatingOneTap';
+
 /** Export OAuthList */
-export { OAuthList, OAuthListPublicEvents, OAuthName } from './widgets/oauthList';
+export { OAuthList, OAuthName } from './widgets/oauthList';
 export type { OAuthListParams, OAuthListStyles } from './widgets/oauthList';

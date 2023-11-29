@@ -3,26 +3,15 @@ import { OAuthName } from '#/widgets/oauthList/types';
 
 type Text = Record<Languages, string>;
 
-export const linkLongTextLang: Text = {
-  [Languages.RUS]: 'или c помощью',
-  [Languages.UKR]: 'або за допомогою',
-  [Languages.ENG]: 'or sign in with',
-  [Languages.SPA]: 'o inicia sesión con',
-  [Languages.GERMAN]: 'oder mit Hilfe',
-  [Languages.POL]: 'lub z pomocą',
-  [Languages.FRA]: 'ou via',
-  [Languages.TURKEY]: 'veya işbu yöntemle',
-};
-
-export const linkShortTextLang: Text = {
-  [Languages.RUS]: 'или',
-  [Languages.UKR]: 'або',
-  [Languages.ENG]: 'or',
-  [Languages.SPA]: 'o',
-  [Languages.GERMAN]: 'oder',
-  [Languages.POL]: 'lub',
-  [Languages.FRA]: 'ou',
-  [Languages.TURKEY]: 'ya da',
+export const linkTextLang: Text = {
+  [Languages.RUS]: 'или войти через VK ID с использованием данных из сервиса',
+  [Languages.UKR]: 'orsign in withVKID using information fromaservice',
+  [Languages.ENG]: 'orsign in withVKID using information fromaservice',
+  [Languages.SPA]: 'orsign in withVKID using information fromaservice',
+  [Languages.GERMAN]: 'orsign in withVKID using information fromaservice',
+  [Languages.POL]: 'orsign in withVKID using information fromaservice',
+  [Languages.FRA]: 'orsign in withVKID using information fromaservice',
+  [Languages.TURKEY]: 'orsign in withVKID using information fromaservice',
 };
 
 export const singleButtonText = {
@@ -36,6 +25,6 @@ export const singleButtonText = {
   [Languages.SPA]: 'Iniciar sesión con {provider}',
   [Languages.GERMAN]: 'Über {provider} anmelden',
   [Languages.POL]: 'Wejdź poprzez {provider}',
-  [Languages.FRA]: 'Connexion via {provider}',
+  [Languages.FRA]: 'Connexion avec {provider}',
   [Languages.TURKEY]: '{provider}\'den gir',
 };
