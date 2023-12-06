@@ -1,5 +1,3 @@
-import { customAlphabet } from 'nanoid/non-secure';
-
 import { Auth } from '#/auth';
 import { Bridge, BridgeEvents, BridgeMessage } from '#/core/bridge';
 import { Config, ConfigData } from '#/core/config';
@@ -9,6 +7,7 @@ import { isRequired, validator } from '#/core/validator';
 import { Languages, Scheme } from '#/types';
 import { generateCodeChallenge } from '#/utils/oauth';
 import { getRedirectWithPayloadUrl, getVKIDUrl } from '#/utils/url';
+import { uuid } from '#/utils/uuid';
 
 import { WIDGET_ERROR_TEXT } from './constants';
 import { WidgetEvents } from './events';
@@ -23,7 +22,7 @@ export class Widget<P = WidgetParams> extends Dispatcher {
   public static __config: Config;
   public static __auth: Auth;
 
-  protected readonly id: string = customAlphabet('qazwsxedcrfvtgbyhnujmikol', 6)();
+  protected readonly id: string = uuid();
 
   protected lang: Languages;
   protected scheme: Scheme;
@@ -161,7 +160,6 @@ export class Widget<P = WidgetParams> extends Dispatcher {
       code_challenge: generateCodeChallenge(),
       code_challenge_method: CODE_CHALLENGE_METHOD,
       origin: location.protocol + '//' + location.host,
-      uuid: this.id,
     };
 
     return getVKIDUrl(this.vkidAppName, queryParams, config);

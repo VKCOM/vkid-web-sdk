@@ -1,4 +1,4 @@
-[@vkid/sdk - v1.0.0](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / AuthParams
+[@vkid/sdk - v1.0.1](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / AuthParams
 
 # Interface: AuthParams
 

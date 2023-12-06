@@ -1,6 +1,6 @@
 {
   "name": "@vkid/sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "VK ID Web SDK",
   "main": "dist-sdk/cjs/index.js",
   "module": "dist-sdk/esm/index.js",
@@ -30,6 +30,7 @@
   "files": [
     "dist-sdk",
     ".wiki",
+    "CHANGELOG.md",
     "CONTRIBUTING.md",
     "CODE_OF_CONDUCT.md",
     "CODE_STYLE.md",

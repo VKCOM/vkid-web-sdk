@@ -1,3 +1,4 @@
+import { AuthParams } from '#/auth/types';
 import { BridgeMessage } from '#/core/bridge';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isRequired, validator } from '#/core/validator';
@@ -31,7 +32,11 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
         break;
       }
       case FloatingOneTapInternalEvents.SHOW_FULL_AUTH: {
-        this.openFullAuth();
+        const params: Partial<AuthParams> = {};
+        if (event.params.screen) {
+          params.screen = event.params.screen;
+        }
+        this.openFullAuth(params);
         break;
       }
       case FloatingOneTapInternalEvents.NOT_AUTHORIZED: {
@@ -74,10 +79,10 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
     agreementsDialog.render(params);
   }
 
-  private openFullAuth() {
+  private openFullAuth(value?: AuthParams) {
     const params = {
+      ...value,
       lang: this.lang,
-      screen: 'phone',
       scheme: this.scheme,
     };
     FloatingOneTap.__auth.login(params);
