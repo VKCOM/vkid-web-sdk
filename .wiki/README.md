@@ -5,6 +5,9 @@
     <img width="150" class="figure" src="https://unpkg.com/@vkid/sdk@0.0.1-alpha/logo.svg"/>
   </h1>
   <p align="center">
+    <a href="https://npmjs.com/package/@vkid/sdk">
+      <img src="https://img.shields.io/badge/stability-beta-red">
+    </a>
     <a href="LICENSE">
       <img src="https://img.shields.io/npm/l/@vkid/sdk?maxAge=3600">
     </a>
@@ -15,7 +18,7 @@
       <img alt="npm" src="https://img.shields.io/npm/dw/%40vkid%2Fsdk">
     </a>
     <a href="https://npmjs.com/package/@vkid/sdk">
-      <img alt="npm bundle size" src="https://img.shields.io/bundlephobia/minzip/%40vkid%2Fsdk">
+      <img alt="npm bundle size" src="https://img.shields.io/bundlephobia/minzip/%40vkid%2Fsdk@latest">
     </a>
   </p>
   <p align="center">
@@ -23,9 +26,11 @@
   </p>
 </div>
 
-## Демонстрация
+---
 
-Чтобы изучить возможности VK ID SDK, перейдите на [демо-стенд](https://id.vk.com/about/business/demo)
+:information_source: VK ID SDK сейчас находится в бета-тестировании. О проблемах вы можете сообщить с помощью <a href="https://github.com/VKCOM/vkid-web-sdk/issues">issues репозитория</a>.
+
+---
 
 ## Установка
 
@@ -53,7 +58,7 @@ pnpm add @vkid/sdk
 <script src="https://unpkg.com/@vkid/sdk@latest/dist-sdk/umd/index.js"></script>
 ```
 
-> Обратите внимание: Для работы авторизации нужен APP_ID. Вы получите его, когда [создадите](https://id.vk.com/business/go/docs/vkid/latest/create-application) приложение в кабинете подключения VK ID.
+> Обратите внимание: Для работы авторизации нужен APP_ID. Вы получите его, когда [создадите](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/create-application) приложение в кабинете подключения VK ID.
 
 ## Пример
 
@@ -63,7 +68,10 @@ pnpm add @vkid/sdk
 ```javascript
 import * as VKID from '@vkid/sdk';
 
-VKID.Config.set({ app: APP_ID, redirectUrl: 'https://example.com' });
+VKID.Config.set({
+  app: APP_ID,
+  redirectUrl: 'https://example.com'
+});
 
 const authButton = document.createElement('button');
 authButton.onclick = () => {
@@ -81,34 +89,25 @@ document.getElementById('container').appendChild(authButton);
 import * as VKID from '@vkid/sdk';
 
 VKID.Config.set({
-  app: APP_ID
+  app: APP_ID,
+  redirectUrl: 'https://example.com'
 });
 
-const handleSuccess = ({ token }) => {
-  console.log(token);
-}
-
-const handleError = (error) => {
-  console.log(error);
-}
-
-const vkIdOneTap = new VKID.OneTap();
-vkIdOneTap.on(VKID.OneTapPublicEvents.LOGIN_SUCCESS, handleSuccess);
-vkIdOneTap.on(VKID.OneTapPublicEvents.LOGIN_FAILED, handleError);
+const oneTap = new VKID.OneTap();
 
 const container = document.getElementById('VkIdSdkOneTap');
 
 if (container) {
-  vkIdOneTap.render({ container: container });
+  oneTap.render({ container });
 }
 ```
 </details>
 
 ## Документация
 
-- [Что такое VK ID](https://id.vk.com/business/go/docs/vkid/latest/start-page)
-- [Создание приложения](https://id.vk.com/business/go/docs/vkid/latest/create-application)
-- [Требования к дизайну](https://id.vk.com/business/go/docs/vkid/latest/guidelines/design-rules)
+- [Что такое VK ID](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/intro/start-page)
+- [Создание приложения](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/create-application)
+- [Требования к дизайну](https://id.vk.com/business/go/docs/ru/vkid/archive/1.60/vk-id/guidelines/design-rules)
 - [Спецификация](.wiki/README.md)
 
 ## Contributing

@@ -46,11 +46,12 @@ describe('Auth', () => {
     const expectArr = [
       expect(location[0]).toEqual(''),
       expect(location[1]).toEqual(`response_type=${AUTH_RESPONSE_TOKEN}`),
-      expect(location[2]).toEqual(`v=%22${version}%22`),
-      expect(location[3]).toEqual('sdk_type=vkid'),
-      expect(location[4]).toEqual(`app_id=${APP_ID}`),
-      expect(location[5]).toEqual('redirect_uri=test'),
-      expect(location[6]).toEqual('redirect_state=test'),
+      expect(location[2]).toContain('uuid'),
+      expect(location[3]).toEqual(`v=%22${version}%22`),
+      expect(location[4]).toEqual('sdk_type=vkid'),
+      expect(location[5]).toEqual(`app_id=${APP_ID}`),
+      expect(location[6]).toEqual('redirect_uri=test'),
+      expect(location[7]).toEqual('redirect_state=test'),
     ];
 
     expect(location.length).toEqual(expectArr.length);
@@ -75,11 +76,12 @@ describe('Auth', () => {
       expect(location[2]).toEqual(`scheme=${params.scheme}`),
       expect(location[3]).toEqual('screen=phone'),
       expect(location[4]).toEqual(`response_type=${AUTH_RESPONSE_TOKEN}`),
-      expect(location[5]).toEqual(`v=%22${version}%22`),
-      expect(location[6]).toEqual('sdk_type=vkid'),
-      expect(location[7]).toEqual(`app_id=${APP_ID}`),
-      expect(location[8]).toEqual('redirect_uri=test'),
-      expect(location[9]).toEqual('redirect_state=test'),
+      expect(location[5]).toContain('uuid'),
+      expect(location[6]).toEqual(`v=%22${version}%22`),
+      expect(location[7]).toEqual('sdk_type=vkid'),
+      expect(location[8]).toEqual(`app_id=${APP_ID}`),
+      expect(location[9]).toEqual('redirect_uri=test'),
+      expect(location[10]).toEqual('redirect_state=test'),
     ];
 
     expect(location.length).toEqual(expectArr.length);

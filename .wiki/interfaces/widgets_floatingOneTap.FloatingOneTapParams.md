@@ -1,4 +1,4 @@
-[@vkid/sdk - v1.0.0](../README.md) / [Modules](../modules.md) / [widgets/floatingOneTap](../modules/widgets_floatingOneTap.md) / FloatingOneTapParams
+[@vkid/sdk - v1.0.1](../README.md) / [Modules](../modules.md) / [widgets/floatingOneTap](../modules/widgets_floatingOneTap.md) / FloatingOneTapParams
 
 # Interface: FloatingOneTapParams
 
