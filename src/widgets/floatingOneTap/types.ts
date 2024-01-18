@@ -1,4 +1,5 @@
 import { WidgetParams } from '#/core/widget';
+import { OAuthName } from '#/widgets/oauthList';
 
 export interface FloatingOneTapIndent {
   /**
@@ -59,4 +60,8 @@ export interface FloatingOneTapParams extends Omit<WidgetParams, 'container'> {
    * Имя приложения из конфигурации приложения VK ID
    */
   appName: string;
+  /**
+   * Список внешних сервисов авторизации
+   */
+  oauthList?: OAuthName[];
 }

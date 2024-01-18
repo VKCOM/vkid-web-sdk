@@ -1,4 +1,4 @@
-[@vkid/sdk - v1.0.1](../README.md) / [Modules](../modules.md) / [widgets/oneTap](../modules/widgets_oneTap.md) / OneTapParams
+[@vkid/sdk - v1.0.2](../README.md) / [Modules](../modules.md) / [widgets/oneTap](../modules/widgets_oneTap.md) / OneTapParams
 
 # Interface: OneTapParams
 
@@ -16,6 +16,7 @@
 
 - [container](widgets_oneTap.OneTapParams.md#container)
 - [lang](widgets_oneTap.OneTapParams.md#lang)
+- [oauthList](widgets_oneTap.OneTapParams.md#oauthlist)
 - [scheme](widgets_oneTap.OneTapParams.md#scheme)
 - [showAlternativeLogin](widgets_oneTap.OneTapParams.md#showalternativelogin)
 - [skin](widgets_oneTap.OneTapParams.md#skin)
@@ -44,6 +45,14 @@ ___
 #### Inherited from
 
 WidgetParams.lang
+
+___
+
+### oauthList
+
+• `Optional` **oauthList**: [`OAuthName`](../enums/widgets_oauthList.OAuthName.md)[]
+
+Список внешних сервисов авторизации
 
 ___
 

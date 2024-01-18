@@ -1,4 +1,4 @@
-[@vkid/sdk - v1.0.1](../README.md) / [Modules](../modules.md) / [widgets/oauthList](../modules/widgets_oauthList.md) / OAuthListParams
+[@vkid/sdk - v1.0.2](../README.md) / [Modules](../modules.md) / [widgets/oauthList](../modules/widgets_oauthList.md) / OAuthListParams
 
 # Interface: OAuthListParams
 

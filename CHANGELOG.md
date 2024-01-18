@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.0.2
+
+### Исправления
+- Исправлено изменение высоты в [шторке авторизации](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/web/auth)
+
 ## 1.0.1
 
 ### Исправления 

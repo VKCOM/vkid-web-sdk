@@ -71,8 +71,8 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
   }).join('');
 
   const handleLoaded = () => {
-    const textDiv = document.querySelector('.VkIdSdk_oauth_button_text');
-    const oauthItemDiv = document.querySelector('.VkIdSdk_oauth_item');
+    const textDiv = document.querySelector(`#${id} .VkIdSdk_oauth_button_text`);
+    const oauthItemDiv = document.querySelector(`#${id} .VkIdSdk_oauth_item`);
 
     if (!textDiv || !oauthItemDiv) {
       return;
@@ -80,7 +80,7 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
 
     const shouldHideText = textDiv.clientWidth >= oauthItemDiv.clientWidth - isonSize * 2 - 32 - paddingSize * 2;
     if (shouldHideText) {
-      document.querySelector('.VkIdSdk_oauth_list')?.removeAttribute('data-single-mode');
+      document.querySelector(`#${id} .VkIdSdk_oauth_list`)?.removeAttribute('data-single-mode');
     }
   };
 
@@ -94,7 +94,7 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
   const linkText = linkTextLang[lang];
 
   return `
-    <div id="${id}" class="VkIdSdk_oauth_container" data-scheme="${scheme}">
+    <div id="${id}" class="VkIdSdk_oauth_container" data-test-id="oauthList" data-scheme="${scheme}">
       <style>
         #${id}.VkIdSdk_oauth_container {
           position: relative;
@@ -136,7 +136,7 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
           text-align: center;
         }
         #${id}[data-scheme=dark] .VkIdSdk_oauth_link_text {
-         color: var(--vkui--color_text_primary--dark);
+         color: var(--vkui--color_text_secondary--dark);
         }
 
         #${id} .VkIdSdk_spinner {
