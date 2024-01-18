@@ -1,4 +1,5 @@
 import { WidgetParams } from '#/core/widget';
+import { OAuthName } from '#/widgets/oauthList';
 
 export interface OneTapStyles {
   /**
@@ -28,4 +29,8 @@ export interface OneTapParams extends WidgetParams {
    * Стиль отображения кнопки
    */
   skin?: 'primary' | 'secondary';
+  /**
+   * Список внешних сервисов авторизации
+   */
+  oauthList?: OAuthName[];
 }

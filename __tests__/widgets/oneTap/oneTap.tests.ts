@@ -1,7 +1,7 @@
 import { BridgeMessage } from '#/core/bridge';
 import { BRIDGE_MESSAGE_TYPE_SDK } from '#/core/bridge/bridge';
 import { WidgetEvents } from '#/core/widget';
-import { Config, Languages } from '#/index';
+import { Config, Languages, OAuthName } from '#/index';
 import { Scheme } from '#/types';
 import { OneTap } from '#/widgets/oneTap';
 import { OneTapInternalEvents } from '#/widgets/oneTap/events';
@@ -40,7 +40,7 @@ describe('OneTap', () => {
     document.body.append(container);
 
     reporter
-      .addLabel('Layer', 'unit')
+      .addLabel('layer', 'unit')
       .feature('Units')
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
@@ -70,15 +70,16 @@ describe('OneTap', () => {
       expect(location[4]).toEqual('button_skin=primary'),
       expect(location[5]).toEqual('scheme=light'),
       expect(location[6]).toEqual('lang_id=0'),
-      expect(location[7]).toEqual('code_challenge=stringified_SHA256-STRING'),
-      expect(location[8]).toEqual('code_challenge_method=s256'),
-      expect(location[9]).toEqual('origin=https%3A%2F%2Frnd-service.ru'),
+      expect(location[7]).toEqual('providers='),
+      expect(location[8]).toEqual('code_challenge=stringified_SHA256-STRING'),
+      expect(location[9]).toEqual('code_challenge_method=s256'),
+      expect(location[10]).toEqual('origin=https%3A%2F%2Frnd-service.ru'),
       expect(frameSrc).toContain('uuid'),
       expect(frameSrc).toContain('v'),
-      expect(location[12]).toEqual('sdk_type=vkid'),
-      expect(location[13]).toEqual('app_id=100'),
-      expect(location[14]).toEqual('redirect_uri=test'),
-      expect(location[15]).toEqual('redirect_state=test'),
+      expect(location[13]).toEqual('sdk_type=vkid'),
+      expect(location[14]).toEqual('app_id=100'),
+      expect(location[15]).toEqual('redirect_uri=test'),
+      expect(location[16]).toEqual('redirect_state=test'),
     ];
 
     expect(location.length).toEqual(expectArr.length);
@@ -183,5 +184,49 @@ describe('OneTap', () => {
       }, 400);
     });
     expect(oneTapEl?.getAttribute('data-state')).toEqual('loaded');
+  });
+
+  test('Must render oauthlist if oauthList param exists', async () => {
+    oneTap.render({
+      container,
+      oauthList: [OAuthName.MAIL, OAuthName.OK],
+    });
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve('');
+      }, 0);
+    });
+    const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
+    const oauthListEl = oneTapEl.querySelector('[data-test-id="oauthList"]');
+    expect(oauthListEl).toBeTruthy();
+  });
+
+  test('Must not render oauthlist if only OAuthName.VK', async () => {
+    oneTap.render({
+      container,
+      oauthList: [OAuthName.VK],
+    });
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve('');
+      }, 0);
+    });
+    const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
+    const oauthListEl = oneTapEl.querySelector('[data-test-id="oauthList"]');
+    expect(oauthListEl).toBeFalsy();
+  });
+
+  test('Must not render oauthlist if oauthList param not exists', async () => {
+    oneTap.render({
+      container,
+    });
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve('');
+      }, 0);
+    });
+    const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
+    const oauthListEl = oneTapEl.querySelector('[data-test-id="oauthList"]');
+    expect(oauthListEl).toBeFalsy();
   });
 });

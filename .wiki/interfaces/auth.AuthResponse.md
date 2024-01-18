@@ -1,4 +1,4 @@
-[@vkid/sdk - v1.0.1](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / AuthResponse
+[@vkid/sdk - v1.0.3](../README.md) / [Modules](../modules.md) / [auth](../modules/auth.md) / AuthResponse
 
 # Interface: AuthResponse
 

@@ -37,7 +37,7 @@ describe('OAuthList', () => {
     document.body.append(container);
 
     reporter
-      .addLabel('Layer', 'unit')
+      .addLabel('layer', 'unit')
       .feature('Units')
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')

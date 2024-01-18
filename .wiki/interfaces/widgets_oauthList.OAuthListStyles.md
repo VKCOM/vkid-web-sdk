@@ -1,4 +1,4 @@
-[@vkid/sdk - v1.0.1](../README.md) / [Modules](../modules.md) / [widgets/oauthList](../modules/widgets_oauthList.md) / OAuthListStyles
+[@vkid/sdk - v1.0.3](../README.md) / [Modules](../modules.md) / [widgets/oauthList](../modules/widgets_oauthList.md) / OAuthListStyles
 
 # Interface: OAuthListStyles
 
@@ -23,6 +23,6 @@ ___
 
 ### height
 
-• `Optional` **height**: ``32`` \| ``40`` \| ``34`` \| ``36`` \| ``38`` \| ``42`` \| ``44`` \| ``46`` \| ``48`` \| ``50`` \| ``52`` \| ``54`` \| ``56``
+• `Optional` **height**: ``32`` \| ``34`` \| ``36`` \| ``38`` \| ``40`` \| ``42`` \| ``44`` \| ``46`` \| ``48`` \| ``50`` \| ``52`` \| ``54`` \| ``56``
 
 Высота кнопки

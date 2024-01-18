@@ -3,7 +3,7 @@ import { isRequired, isNumber, isValidAppId, isValidHeight } from '#/core/valida
 describe('isNumber rule', () => {
   beforeEach(() => {
     reporter
-      .addLabel('Layer', 'unit')
+      .addLabel('layer', 'unit')
       .feature('Units')
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
@@ -31,7 +31,7 @@ describe('isNumber rule', () => {
 describe('isRequired rule', () => {
   beforeEach(() => {
     reporter
-      .addLabel('Layer', 'unit')
+      .addLabel('layer', 'unit')
       .feature('Units')
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
@@ -57,7 +57,7 @@ describe('isRequired rule', () => {
 describe('isValidAppId rule', () => {
   beforeEach(() => {
     reporter
-      .addLabel('Layer', 'unit')
+      .addLabel('layer', 'unit')
       .feature('Units')
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
@@ -82,7 +82,7 @@ describe('isValidAppId rule', () => {
 describe('isValidHeight rule', () => {
   beforeEach(() => {
     reporter
-      .addLabel('Layer', 'unit')
+      .addLabel('layer', 'unit')
       .feature('Units')
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')

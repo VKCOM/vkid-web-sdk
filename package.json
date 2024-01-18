@@ -1,6 +1,6 @@
 {
   "name": "@vkid/sdk",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "VK ID Web SDK",
   "main": "dist-sdk/cjs/index.js",
   "module": "dist-sdk/esm/index.js",
@@ -54,6 +54,7 @@
     "@typescript-eslint/eslint-plugin": "5.0.0",
     "@typescript-eslint/parser": "5.0.0",
     "@vkontakte/eslint-config": "3.0.0",
+    "@vkontakte/vkjs": "0.20.0",
     "concurrently": "^8.0.1",
     "cross-env": "^7.0.2",
     "css-loader": "^6.8.1",
@@ -90,7 +91,6 @@
     "typescript-transform-paths": "^3.4.6"
   },
   "dependencies": {
-    "@vkontakte/vkjs": "^0.20.0",
     "crypto-js": "^4.1.1"
   },
   "directories": {
