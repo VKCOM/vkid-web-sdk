@@ -1,4 +1,4 @@
-[@vkid/sdk - v1.0.1](../README.md) / [Modules](../modules.md) / [types](../modules/types.md) / Scheme
+[@vkid/sdk - v1.0.3](../README.md) / [Modules](../modules.md) / [types](../modules/types.md) / Scheme
 
 # Enumeration: Scheme
 

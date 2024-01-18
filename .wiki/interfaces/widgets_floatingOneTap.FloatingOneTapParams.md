@@ -1,4 +1,4 @@
-[@vkid/sdk - v1.0.1](../README.md) / [Modules](../modules.md) / [widgets/floatingOneTap](../modules/widgets_floatingOneTap.md) / FloatingOneTapParams
+[@vkid/sdk - v1.0.3](../README.md) / [Modules](../modules.md) / [widgets/floatingOneTap](../modules/widgets_floatingOneTap.md) / FloatingOneTapParams
 
 # Interface: FloatingOneTapParams
 
@@ -18,6 +18,7 @@
 - [contentId](widgets_floatingOneTap.FloatingOneTapParams.md#contentid)
 - [indent](widgets_floatingOneTap.FloatingOneTapParams.md#indent)
 - [lang](widgets_floatingOneTap.FloatingOneTapParams.md#lang)
+- [oauthList](widgets_floatingOneTap.FloatingOneTapParams.md#oauthlist)
 - [scheme](widgets_floatingOneTap.FloatingOneTapParams.md#scheme)
 - [showAlternativeLogin](widgets_floatingOneTap.FloatingOneTapParams.md#showalternativelogin)
 
@@ -56,6 +57,14 @@ ___
 #### Inherited from
 
 Omit.lang
+
+___
+
+### oauthList
+
+• `Optional` **oauthList**: [`OAuthName`](../enums/widgets_oauthList.OAuthName.md)[]
+
+Список внешних сервисов авторизации
 
 ___
 

@@ -3,7 +3,7 @@ import { Config } from '#/core/config';
 describe('Config', () => {
   beforeEach(() => {
     reporter
-      .addLabel('Layer', 'unit')
+      .addLabel('layer', 'unit')
       .feature('Units')
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')

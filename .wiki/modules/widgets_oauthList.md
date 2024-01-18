@@ -1,4 +1,4 @@
-[@vkid/sdk - v1.0.1](../README.md) / [Modules](../modules.md) / widgets/oauthList
+[@vkid/sdk - v1.0.3](../README.md) / [Modules](../modules.md) / widgets/oauthList
 
 # Module: widgets/oauthList
 

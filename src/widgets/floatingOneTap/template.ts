@@ -1,6 +1,7 @@
 import { WidgetParams } from '#/core/widget';
 import { getTitleLang, getButtonLang, getDescriptionLang } from '#/widgets/floatingOneTap/langs';
 import { FloatingOneTapParams } from '#/widgets/floatingOneTap/types';
+import { OAuthListParams, OAuthName } from '#/widgets/oauthList';
 
 type FloatingOneTapTemplateParams = Required<
 Pick<FloatingOneTapParams, 'indent' | 'contentId' | 'appName'> &
@@ -8,6 +9,8 @@ Pick<WidgetParams, 'scheme' | 'lang'>
 > & {
   openFullAuth?: VoidFunction;
   close?: VoidFunction;
+  renderOAuthList: (params: OAuthListParams) => void;
+  providers?: OAuthName[];
 };
 
 const logoVkIdSvg = `
@@ -47,7 +50,17 @@ const getIndent = (value?: number) => {
   return value - INTERNAL_INDENT;
 };
 
-export const getFloatingOneTapTemplate = ({ scheme, indent, openFullAuth, close, lang, contentId, appName }: FloatingOneTapTemplateParams) => (id: string) => {
+export const getFloatingOneTapTemplate = ({
+  scheme,
+  indent,
+  openFullAuth,
+  close,
+  lang,
+  contentId,
+  appName,
+  providers,
+  renderOAuthList,
+}: FloatingOneTapTemplateParams) => (id: string) => {
   const titleText = getTitleLang(contentId, lang, appName);
   const descriptionText = getDescriptionLang(lang);
   const buttonText = getButtonLang(contentId, lang);
@@ -108,6 +121,9 @@ export const getFloatingOneTapTemplate = ({ scheme, indent, openFullAuth, close,
   buttonSpinnerEl.classList.add(`VkIdWebSdk__floating_button_spinner_${id}`);
   buttonSpinnerEl.innerHTML = spinnerSvg;
 
+  const oauthListEl = document.createElement('div');
+  oauthListEl.classList.add(`VkIdWebSdk__oauthList_container_${id}`);
+
   const handleLoaded = () => {
     const floatingOneTap = document.getElementById(id);
 
@@ -131,6 +147,20 @@ export const getFloatingOneTapTemplate = ({ scheme, indent, openFullAuth, close,
       buttonContentEl.appendChild(buttonLogoEl);
       buttonContentEl.appendChild(buttonTextEl);
       buttonContentEl.appendChild(buttonSpinnerEl);
+      if (providers?.length) {
+        containerEl.appendChild(oauthListEl);
+
+        renderOAuthList({
+          lang,
+          scheme,
+          container: oauthListEl,
+          oauthList: providers,
+          styles: {
+            borderRadius: 8,
+            height: 36,
+          },
+        });
+      }
     }
   };
 
@@ -181,7 +211,7 @@ export const getFloatingOneTapTemplate = ({ scheme, indent, openFullAuth, close,
     }
 
     #${id} iframe {
-      position: fixed;
+      position: absolute;
       opacity: 0;
       pointer-events: none;
       border: none;
@@ -208,7 +238,6 @@ export const getFloatingOneTapTemplate = ({ scheme, indent, openFullAuth, close,
     }
 
     #${id} .VkIdWebSdk__floating_container_${id} {
-      min-width: 360px;
       background: var(--vkui--color_background_modal);
       border-radius: 12px;
       padding: var(--vkui--size_base_padding_horizontal--regular);
@@ -329,6 +358,10 @@ export const getFloatingOneTapTemplate = ({ scheme, indent, openFullAuth, close,
       transition: .5s;
       min-width: max-content;
       margin-left: 6px;
+    }
+
+    #${id} .VkIdWebSdk__oauthList_container_${id} {
+      margin-top: 16px;
     }
 
     #${id}[data-state=loaded] iframe {

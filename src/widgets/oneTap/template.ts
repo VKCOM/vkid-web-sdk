@@ -4,6 +4,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 import { WidgetParams } from '#/core/widget';
 import { Languages } from '#/types';
 import { getButtonFontSize, getButtonLogoSize, getButtonPadding } from '#/utils/styles';
+import { OAuthListParams, OAuthName } from '#/widgets/oauthList';
 import { longLang, providerLang, shortLang } from '#/widgets/oneTap/lang';
 
 import { OneTapParams, OneTapStyles } from './types';
@@ -11,6 +12,8 @@ import { OneTapParams, OneTapStyles } from './types';
 type OneTapTemplateParams = Required<OneTapStyles> & Pick<OneTapParams, 'skin'> & Pick<WidgetParams, 'scheme' | 'lang'> & {
   openFullAuth?: void;
   iframeHeight?: number;
+  renderOAuthList: (params: OAuthListParams) => void;
+  providers?: OAuthName[];
 };
 
 const logoSvg = `
@@ -35,6 +38,8 @@ export const getOneTapTemplate = ({
   skin,
   scheme,
   lang = Languages.RUS,
+  renderOAuthList,
+  providers,
 }: OneTapTemplateParams) => (id: string) => {
   let textIconLimit = 0;
   let textLongLimit = 0;
@@ -83,6 +88,9 @@ export const getOneTapTemplate = ({
   const spinnerEl = document.createElement('span');
   spinnerEl.classList.add(`VkIdWebSdk__button_spinner_${id}`);
   spinnerEl.innerHTML = spinnerSvg;
+
+  const oauthListEl = document.createElement('div');
+  oauthListEl.classList.add(`VkIdWebSdk__oauthList_container_${id}`);
 
   const getTextWidth = (clientWidth: number) => {
     return clientWidth + 2 * textPadding + 2 * padding + 2 * logoSize;
@@ -137,6 +145,20 @@ export const getOneTapTemplate = ({
     if (oneTap) {
       oneTap.appendChild(containerEl);
       containerEl.appendChild(buttonEl);
+
+      if (providers?.length) {
+        containerEl.appendChild(oauthListEl);
+        renderOAuthList({
+          lang,
+          scheme,
+          container: oauthListEl,
+          oauthList: providers,
+          styles: {
+            borderRadius,
+            height,
+          },
+        });
+      }
       buttonEl.appendChild(btnInEl);
       btnInEl.appendChild(contentEl);
       contentEl.appendChild(logoEl);
@@ -169,9 +191,12 @@ export const getOneTapTemplate = ({
   <style>
     #${id} {
       position: relative;
-      height: ${iframeHeight}px;
       width: ${width ? `${width}px` : '100%'};
       min-width: ${height}px;
+    }
+
+    #${id}[data-state=loaded] {
+      height: ${iframeHeight}px;
     }
 
     #${id} iframe {
@@ -322,6 +347,10 @@ export const getOneTapTemplate = ({
       color: #ffffff;
     }
 
+    .VkIdWebSdk__oauthList_container_${id} {
+      margin-top: 16px;
+    }
+
     #${id}[data-scheme=light][data-skin=secondary] .VkIdWebSdk__button_text_${id},
     #${id}[data-scheme=light][data-skin=secondary] .VkIdWebSdk__button_spinner_${id} {
       color: #000000;
@@ -344,6 +373,10 @@ export const getOneTapTemplate = ({
       opacity: 0;
       pointer-events: none;
       width: 0;
+    }
+
+    #${id}[data-state=loaded] .VkIdWebSdk__oauthList_container_${id} {
+      display: none;
     }
 
     #${id}[data-state=loaded] iframe {

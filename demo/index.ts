@@ -1,5 +1,6 @@
 import './styles.css';
 import * as VKID from '@vkid/sdk';
+import { OAuthName } from '@vkid/sdk';
 
 import {
   showAuthSuccessSnackbar,
@@ -45,6 +46,7 @@ let demoStore = {
   contentId: VKID.FloatingOneTapContentId.SIGN_IN_TO_SERVICE,
   lang: VKID.Languages.RUS,
   scheme: VKID.Scheme.LIGHT,
+  oauthes: '',
 };
 
 /**
@@ -59,6 +61,7 @@ const createOneTap = () => {
     contentId: Number(demoStore.contentId),
     lang: Number(demoStore.lang),
     scheme: demoStore.scheme,
+    oauthList: demoStore.oauthes ? demoStore.oauthes.split(',') as OAuthName[] : undefined,
   };
 
   const oneTap = new VKID.OneTap();
@@ -75,6 +78,7 @@ const createFloatingOneTap = () => {
     contentId: Number(demoStore.contentId),
     lang: Number(demoStore.lang),
     scheme: demoStore.scheme,
+    oauthList: demoStore.oauthes ? demoStore.oauthes.split(',') as OAuthName[] : undefined,
   };
 
   const floatingOneTap = new VKID.FloatingOneTap();
@@ -107,7 +111,7 @@ let oneTap = createOneTap();
 let floatingOneTap = createFloatingOneTap();
 let oauthList = createOAuthList();
 
-function handleParamsChange() {
+function handleSelectParamsChange() {
   demoStore = Object.assign(demoStore, { [this.name]: this.value });
   oneTap.close();
   oneTap = createOneTap();
@@ -117,13 +121,16 @@ function handleParamsChange() {
 
   floatingOneTap.close();
   floatingOneTap = createFloatingOneTap();
+
+  document.querySelector('html')?.setAttribute('data-scheme', demoStore.scheme);
 }
 
 const langEl = document.getElementById('lang');
 const schemeEl = document.getElementById('scheme');
 const contentIdEl = document.getElementById('contentId');
-[langEl, schemeEl, contentIdEl].forEach((item) => {
+const oauthesEl = document.getElementById('oauthes');
+[langEl, schemeEl, contentIdEl, oauthesEl].forEach((item) => {
   if (item) {
-    item.addEventListener('change', handleParamsChange);
+    item.addEventListener('change', handleSelectParamsChange);
   }
 });

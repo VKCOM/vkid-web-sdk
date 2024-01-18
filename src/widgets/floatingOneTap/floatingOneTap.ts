@@ -7,6 +7,7 @@ import { WidgetState } from '#/core/widget/types';
 import { Languages, Scheme } from '#/types';
 import { AgreementsDialog } from '#/widgets/agreementsDialog/agreementsDialog';
 import { AgreementsDialogInternalEvents } from '#/widgets/agreementsDialog/events';
+import { OAuthList, OAuthListParams, OAuthName } from '#/widgets/oauthList';
 
 import { FloatingOneTapInternalEvents } from './events';
 import { getFloatingOneTapTemplate } from './template';
@@ -23,10 +24,6 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
 
   protected onBridgeMessageHandler(event: BridgeMessage<FloatingOneTapInternalEvents | WidgetEvents>) {
     switch (event.handler) {
-      case WidgetEvents.RESIZE: {
-        this.elements.root.style.height = `${event.params.height}px`;
-        break;
-      }
       case FloatingOneTapInternalEvents.LOGIN_SUCCESS: {
         this.redirectWithPayload(event.params);
         break;
@@ -35,6 +32,9 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
         const params: Partial<AuthParams> = {};
         if (event.params.screen) {
           params.screen = event.params.screen;
+        }
+        if (event.params.sdk_oauth) {
+          params.action = { name: 'sdk_oauth', params: { oauth: event.params.sdk_oauth } };
         }
         this.openFullAuth(params);
         break;
@@ -88,16 +88,26 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
     FloatingOneTap.__auth.login(params);
   }
 
+  private renderOAuthList(params: OAuthListParams) {
+    if (!params.oauthList.length) {
+      return;
+    }
+    const oauthList = new OAuthList();
+    oauthList.render(params);
+  }
+
   @validator<FloatingOneTapParams>({ appName: [isRequired] })
   public render(params: FloatingOneTapParams) {
     this.lang = params?.lang || Languages.RUS;
     this.scheme = params?.scheme || Scheme.LIGHT;
+    const providers = (params.oauthList || []).filter((provider) => provider !== OAuthName.VK);
 
     const queryParams: Record<string, any> = {
       scheme: this.scheme,
       lang_id: this.lang,
       show_alternative_login: params?.showAlternativeLogin ? 1 : 0,
       content_id: params?.contentId || FloatingOneTapContentId.SIGN_IN_TO_SERVICE,
+      providers: providers.join(','),
     };
 
     this.templateRenderer = getFloatingOneTapTemplate({
@@ -108,6 +118,8 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
       indent: Object.assign(defaultIndent, params.indent || {}),
       contentId: queryParams.content_id,
       appName: params.appName,
+      renderOAuthList: this.renderOAuthList.bind(this),
+      providers,
     });
 
     return super.render({ container: document.body, ...queryParams });

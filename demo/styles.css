@@ -8,6 +8,10 @@ html, body {
   background: var(--background_page);
 }
 
+html[data-scheme="dark"], html[data-scheme="dark"] body {
+  background: black;
+}
+
 .VkIdWebSdk__container {
   display: flex;
   justify-content: center;
@@ -20,10 +24,21 @@ html, body {
   border-radius: 12px;
 }
 
+html[data-scheme="dark"] .VkIdWebSdk__container {
+  background: #1e1e1e;
+  color: white;
+  border: 1px solid #323232;
+}
+
 .VkIdWebSdk_controls {
   padding: 15px;
-    background: #f1f1f1;
-    border-radius: 5px;
+  background: #f1f1f1;
+  border-radius: 5px;
+}
+
+html[data-scheme="dark"]  .VkIdWebSdk_controls {
+  background: #777777;
+  color: white;
 }
 
 .VkIdWebSdk__content {

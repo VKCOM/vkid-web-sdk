@@ -5,7 +5,7 @@ import { isRequired, isNumber, isValidAppId, validator } from '#/core/validator'
 describe('Validator', () => {
   beforeEach(() => {
     reporter
-      .addLabel('Layer', 'unit')
+      .addLabel('layer', 'unit')
       .feature('Units')
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')

@@ -8,7 +8,8 @@
   --vkui--color_background_content: #ffffff;
   --vkui--color_field_border_alpha: rgba(0, 0, 0, .12);
   --vkui--color_field_border_alpha--dark: rgba(255, 255, 255, 0.12);
-  --vkui--color_text_primary--dark: rgba(225, 227, 230, 1);
+  --vkui--color_text_secondary--dark: #76787a;
+  --vkui--color_text_primary--dark: #e1e3e6;
 
   --vkui-light-text-secondary: #818C99;
   --vkui-light-text-text-contrast: #ffffff;

@@ -71,8 +71,8 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
   }).join('');
 
   const handleLoaded = () => {
-    const textDiv = document.querySelector('.VkIdSdk_oauth_button_text');
-    const oauthItemDiv = document.querySelector('.VkIdSdk_oauth_item');
+    const textDiv = document.querySelector(`#${id} .VkIdSdk_oauth_button_text`);
+    const oauthItemDiv = document.querySelector(`#${id} .VkIdSdk_oauth_item`);
 
     if (!textDiv || !oauthItemDiv) {
       return;
@@ -80,7 +80,7 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
 
     const shouldHideText = textDiv.clientWidth >= oauthItemDiv.clientWidth - isonSize * 2 - 32 - paddingSize * 2;
     if (shouldHideText) {
-      document.querySelector('.VkIdSdk_oauth_list')?.removeAttribute('data-single-mode');
+      document.querySelector(`#${id} .VkIdSdk_oauth_list`)?.removeAttribute('data-single-mode');
     }
   };
 
@@ -94,8 +94,20 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
   const linkText = linkTextLang[lang];
 
   return `
-    <div id="${id}" class="VkIdSdk_oauth_container" data-scheme="${scheme}">
+    <div id="${id}" class="VkIdSdk_oauth_container" data-test-id="oauthList" data-scheme="${scheme}">
       <style>
+        :root #${id}[data-scheme=light] {
+          --vkui--color_field_border_alpha: rgba(0, 0, 0, .12);
+          --vkui--color_text_secondary: #818c99;
+          --vkui--color_text_primary: #000;
+        }
+
+        :root #${id}[data-scheme=dark] {
+          --vkui--color_field_border_alpha: rgba(255, 255, 255, 0.12);
+          --vkui--color_text_secondary: #76787a;
+          --vkui--color_text_primary: #e1e3e6;
+        }
+
         #${id}.VkIdSdk_oauth_container {
           position: relative;
         }
@@ -117,9 +129,6 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
           border-radius: ${borderRadius}px;
           cursor: pointer;
         }
-        #${id}[data-scheme=dark] .VkIdSdk_oauth_item {
-         border: 1px solid var(--vkui--color_field_border_alpha--dark);
-        }
 
         #${id} .VkIdSdk_oauth_item:last-child {
           margin-right: 0;
@@ -134,9 +143,6 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
           margin-bottom: 16px;
           justify-content: center;
           text-align: center;
-        }
-        #${id}[data-scheme=dark] .VkIdSdk_oauth_link_text {
-         color: var(--vkui--color_text_primary--dark);
         }
 
         #${id} .VkIdSdk_spinner {
@@ -162,9 +168,7 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
         #${id} .VkIdSdk_oauth_button_text {
           display: none;
           font-family: -apple-system, system-ui, "Helvetica Neue", Roboto, sans-serif;
-        }
-        #${id}[data-scheme=dark] .VkIdSdk_oauth_button_text {
-         color: var(--vkui--color_text_primary--dark);
+          color: var(--vkui--color_text_primary);
         }
 
         #${id} .VkIdSdk_oauth_list[data-single-mode] .VkIdSdk_oauth_item svg {

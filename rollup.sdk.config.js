@@ -11,7 +11,6 @@ const entry = 'src/index.ts';
 const external = [
   'crypto-js/enc-base64',
   'crypto-js/sha256',
-  '@vkontakte/vkjs'
 ]
 
 const plugins = [

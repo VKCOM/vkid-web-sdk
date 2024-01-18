@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.0.3
+- Исправлены текста в [шторке авторизации](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/web/auth)
+- Исправлено падение сборки в проектах не использующих babel
+
+## 1.0.2
+
+### Исправления
+- Исправлено изменение высоты в [шторке авторизации](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/web/auth)
+
 ## 1.0.1
 
 ### Исправления 

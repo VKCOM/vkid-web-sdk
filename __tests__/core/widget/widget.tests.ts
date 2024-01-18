@@ -31,7 +31,7 @@ describe('Data Policy', () => {
     iframeElement = container.querySelector('iframe') as HTMLIFrameElement;
 
     reporter
-      .addLabel('Layer', 'unit')
+      .addLabel('layer', 'unit')
       .feature('Units')
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')

@@ -7,6 +7,7 @@ import { WidgetState } from '#/core/widget/types';
 import { Languages, Scheme } from '#/types';
 import { AgreementsDialog } from '#/widgets/agreementsDialog/agreementsDialog';
 import { AgreementsDialogPublicEvents } from '#/widgets/agreementsDialog/events';
+import { OAuthList, OAuthListParams, OAuthName } from '#/widgets/oauthList';
 
 import { OneTapInternalEvents } from './events';
 import { getOneTapTemplate } from './template';
@@ -34,6 +35,9 @@ export class OneTap extends Widget<OneTapParams> {
         const params: Partial<AuthParams> = {};
         if (event.params.screen) {
           params.screen = event.params.screen;
+        }
+        if (event.params.sdk_oauth) {
+          params.action = { name: 'sdk_oauth', params: { oauth: event.params.sdk_oauth } };
         }
         this.openFullAuth(params);
         break;
@@ -84,10 +88,19 @@ export class OneTap extends Widget<OneTapParams> {
     OneTap.__auth.login(params);
   }
 
+  private renderOAuthList(params: OAuthListParams) {
+    if (!params.oauthList.length) {
+      return;
+    }
+    const oauthList = new OAuthList();
+    oauthList.render(params);
+  }
+
   @validator<OneTapParams>({ styles: [isValidHeight] })
   public render(params: OneTapParams) {
     this.lang = params?.lang || Languages.RUS;
     this.scheme = params?.scheme || Scheme.LIGHT;
+    const providers = (params.oauthList || []).filter((provider) => provider !== OAuthName.VK);
 
     const oneTapParams: Record<string, any> = {
       style_height: params.styles?.height || defaultStylesParams.height,
@@ -96,6 +109,7 @@ export class OneTap extends Widget<OneTapParams> {
       button_skin: params.skin || 'primary',
       scheme: this.scheme,
       lang_id: this.lang,
+      providers: providers.join(','),
     };
 
     this.templateRenderer = getOneTapTemplate({
@@ -107,6 +121,8 @@ export class OneTap extends Widget<OneTapParams> {
       skin: oneTapParams.button_skin,
       scheme: oneTapParams.scheme,
       lang: oneTapParams.lang_id,
+      renderOAuthList: this.renderOAuthList.bind(this),
+      providers,
     });
 
     return super.render({ container: params.container, ...oneTapParams });

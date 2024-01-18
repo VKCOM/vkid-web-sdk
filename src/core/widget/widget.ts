@@ -133,6 +133,10 @@ export class Widget<P = WidgetParams> extends Dispatcher {
         });
         break;
       }
+      case WidgetEvents.RESIZE: {
+        this.elements.root.style.height = `${event.params.height}px`;
+        break;
+      }
       default:
         break;
     }
