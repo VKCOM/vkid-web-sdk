@@ -197,7 +197,7 @@ describe('OneTap', () => {
       }, 0);
     });
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
-    const oauthListEl = oneTapEl.querySelector('[data-test-id="oauthList"]');
+    const oauthListEl = oneTapEl?.querySelector('[data-test-id="oauthList"]');
     expect(oauthListEl).toBeTruthy();
   });
 
@@ -212,7 +212,7 @@ describe('OneTap', () => {
       }, 0);
     });
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
-    const oauthListEl = oneTapEl.querySelector('[data-test-id="oauthList"]');
+    const oauthListEl = oneTapEl?.querySelector('[data-test-id="oauthList"]');
     expect(oauthListEl).toBeFalsy();
   });
 
@@ -226,7 +226,7 @@ describe('OneTap', () => {
       }, 0);
     });
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
-    const oauthListEl = oneTapEl.querySelector('[data-test-id="oauthList"]');
+    const oauthListEl = oneTapEl?.querySelector('[data-test-id="oauthList"]');
     expect(oauthListEl).toBeFalsy();
   });
 });

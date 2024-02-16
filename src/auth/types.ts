@@ -90,9 +90,11 @@ interface AuthAction {
 }
 
 export interface AuthQueryParams {
+  uuid?: string;
   lang_id?: Languages;
   scheme?: Scheme;
   screen?: string;
   response_type: string; // и под токены
   action?: string;
+  origin?: string;
 }

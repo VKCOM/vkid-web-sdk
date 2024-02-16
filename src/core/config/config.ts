@@ -1,11 +1,12 @@
 import { LOGIN_DOMAIN, OAUTH_DOMAIN, VKID_DOMAIN } from '#/constants';
 
-import { ConfigData } from './types';
+import { ConfigAuthMode, ConfigData } from './types';
 
 export class Config {
   private store: ConfigData = {
     app: 0,
     redirectUrl: '',
+    mode: ConfigAuthMode.Redirect,
 
     __loginDomain: LOGIN_DOMAIN,
     __oauthDomain: OAUTH_DOMAIN,

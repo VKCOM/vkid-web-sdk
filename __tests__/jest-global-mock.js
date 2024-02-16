@@ -14,11 +14,17 @@ jest.mock('crypto-js/enc-base64', () => ({
   default: { stringify: (str) => `stringified_${str}` },
 }));
 
+jest.mock('nanoid/non-secure', () => ({
+  nanoid: () => 'verifier',
+  customAlphabet: (data, length) => () => `abc`
+}));
+
 /**
  * mock ENV
  */
 const isProduction = process.env.NODE_ENV === 'production';
 const { version } = require('../package.json');
+const { nanoid } = require('nanoid/non-secure');
 window.env = {
   PRODUCTION: isProduction,
   VERSION: JSON.stringify(version),

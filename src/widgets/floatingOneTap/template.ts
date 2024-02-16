@@ -15,8 +15,8 @@ Pick<WidgetParams, 'scheme' | 'lang'>
 
 const logoVkIdSvg = `
   <svg width="33" height="16" viewBox="0 0 33 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20 13H21.6479V3.5H20V13Z" fill="var(--vkui--color_text_primary)"/>
-    <path d="M23.7801 13H27.474C30.4127 13 32.5 11.0326 32.5 8.24326C32.5 5.46738 30.4127 3.5 27.474 3.5H23.7801V13ZM25.4279 11.5177V4.98227H27.474C29.4377 4.98227 30.7835 6.31631 30.7835 8.24326C30.7835 10.1837 29.4377 11.5177 27.474 11.5177H25.4279Z" fill="var(--vkui--color_text_primary)"/>
+    <path d="M20 13H21.6479V3.5H20V13Z" fill="var(--floating--color_text_primary)"/>
+    <path d="M23.7801 13H27.474C30.4127 13 32.5 11.0326 32.5 8.24326C32.5 5.46738 30.4127 3.5 27.474 3.5H23.7801V13ZM25.4279 11.5177V4.98227H27.474C29.4377 4.98227 30.7835 6.31631 30.7835 8.24326C30.7835 10.1837 29.4377 11.5177 27.474 11.5177H25.4279Z" fill="var(--floating--color_text_primary)"/>
     <path d="M0 7.68C0 4.05961 0 2.24942 1.12471 1.12471C2.24942 0 4.05961 0 7.68 0H8.32C11.9404 0 13.7506 0 14.8753 1.12471C16 2.24942 16 4.05961 16 7.68V8.32C16 11.9404 16 13.7506 14.8753 14.8753C13.7506 16 11.9404 16 8.32 16H7.68C4.05961 16 2.24942 16 1.12471 14.8753C0 13.7506 0 11.9404 0 8.32V7.68Z" fill="#0077FF"/>
     <path d="M8.56331 11.66C4.91665 11.66 2.83667 9.16 2.75 5H4.57666C4.63666 8.05333 5.9833 9.34333 7.04997 9.61V5H8.77002V7.63C9.82335 7.51667 10.9299 6.32 11.3032 5H13.0233C12.7366 6.62667 11.5366 7.82667 10.6833 8.32C11.5366 8.72 12.9033 9.76667 13.4233 11.66H11.5299C11.1233 10.3933 10.11 9.41333 8.77002 9.28V11.66H8.56331Z" fill="white"/>
   </svg>
@@ -174,35 +174,35 @@ export const getFloatingOneTapTemplate = ({
 <div id="${id}" data-test-id="floatingOneTap" data-scheme="${scheme}">
   <style>
     :root #${id} {
-      --vkui--size_base_padding_horizontal--regular: 16px;
-      --vkui--elevation3: 0px 0px 2px rgba(0,0,0,.08),0px 4px 16px rgba(0,0,0,.08);
-      --vkui--font_title2--font_family--regular: -apple-system,system-ui,"Helvetica Neue",Roboto,sans-serif;
-      --vkui--color_transparent--hover: rgba(0,16,61,.04);
-      --vkui--color_transparent--active: rgba(0,16,61,.08);
-      --vkui--color_text_contrast_themed: #FFFFFF;
-      --vkui--color_background_accent_themed: #0077ff;
+      --floating--contaner_padding: 16px;
+      --floating--container_box_shadow: 0px 0px 2px rgba(0,0,0,.08),0px 4px 16px rgba(0,0,0,.08);
+      --floating--font_family: -apple-system,system-ui,"Helvetica Neue",Roboto,sans-serif;
+      --floating--close_button_color_transparent--hover: rgba(0,16,61,.04);
+      --floating--close_button_color_transparent--active: rgba(0,16,61,.08);
+      --floating--button_text_color: #FFFFFF;
+      --floating--button_background_color: #0077ff;
     }
 
     :root #${id}[data-scheme=light] {
-      --vkui--color_background_modal: #ffffff;
-      --vkui--color_icon_medium: #818c99;
-      --vkui--color_text_primary: #000000;
-      --vkui--color_text_secondary: #818c99;
-      --vkui--color_background_accent_themed--hover: #0071F2;
-      --vkui--color_background_accent_themed--focus: #0071F2;
-      --vkui--color_background_accent_themed--active: #0069E1;
+      --floating--color_background_modal: #ffffff;
+      --floating--color_icon_medium: #818c99;
+      --floating--color_text_primary: #000000;
+      --floating--color_text_secondary: #818c99;
+      --floating--button_background_color--hover: #0071F2;
+      --floating--button_background_color--focus: #0071F2;
+      --floating--button_background_color--active: #0069E1;
     }
 
     :root #${id}[data-scheme=dark] {
-      --vkui--color_background_modal: #2c2d2e;
-      --vkui--color_icon_medium: #b0b1b6;
-      --vkui--color_text_primary: #e1e3e6;
-      --vkui--color_text_secondary: #76787a;
-      --vkui--color_background_accent_themed--hover: #097EFF;
-      --vkui--color_background_accent_themed--focus: #097EFF;
-      --vkui--color_background_accent_themed--active: #1385FF;
-      --vkui--color_transparent--hover: hsla(0,0%,100%,.04);
-      --vkui--color_transparent--active: hsla(0,0%,100%,.08);
+      --floating--color_background_modal: #2c2d2e;
+      --floating--color_icon_medium: #b0b1b6;
+      --floating--color_text_primary: #e1e3e6;
+      --floating--color_text_secondary: #76787a;
+      --floating--button_background_color--hover: #097EFF;
+      --floating--button_background_color--focus: #097EFF;
+      --floating--button_background_color--active: #1385FF;
+      --floating--close_button_color_transparent--hover: hsla(0,0%,100%,.04);
+      --floating--close_button_color_transparent--active: hsla(0,0%,100%,.08);
     }
 
     #${id} {
@@ -238,10 +238,10 @@ export const getFloatingOneTapTemplate = ({
     }
 
     #${id} .VkIdWebSdk__floating_container_${id} {
-      background: var(--vkui--color_background_modal);
+      background: var(--floating--color_background_modal);
       border-radius: 12px;
-      padding: var(--vkui--size_base_padding_horizontal--regular);
-      box-shadow: var(--vkui--elevation3);
+      padding: var(--floating--contaner_padding);
+      box-shadow: var(--floating--container_box_shadow);
       box-sizing: border-box;
     }
 
@@ -253,10 +253,11 @@ export const getFloatingOneTapTemplate = ({
     }
 
     #${id} .VkIdWebSdk__floating_appName_${id} {
-      font-family: var(--vkui--font_title2--font_family--regular);
+      font-family: var(--floating--font_family);
       font-weight: 400;
       font-size: 13px;
-      color: var(--vkui--color_text_secondary);
+      line-height: 16px;
+      color: var(--floating--color_text_secondary);
     }
 
     #${id} .VkIdWebSdk__floating_close_${id} {
@@ -268,7 +269,7 @@ export const getFloatingOneTapTemplate = ({
       right: -4px;
       height: 28px;
       width: 28px;
-      color: var(--vkui--color_icon_medium);
+      color: var(--floating--color_icon_medium);
     }
 
     #${id} .VkIdWebSdk__floating_close_btn_${id} {
@@ -283,28 +284,28 @@ export const getFloatingOneTapTemplate = ({
 
     #${id} .VkIdWebSdk__floating_close_btn_${id}:hover {
       cursor: pointer;
-      background: var(--vkui--color_transparent--hover);
+      background: var(--floating--close_button_color_transparent--hover);
     }
 
     #${id} .VkIdWebSdk__floating_close_btn_${id}:active {
-      background: var(--vkui--color_transparent--active);
+      background: var(--floating--close_button_color_transparent--active);
     }
 
     #${id} .VkIdWebSdk__floating_content_${id} {
       padding: 36px 32px;
       text-align: center;
-      font-family: var(--vkui--font_title2--font_family--regular);
+      font-family: var(--floating--font_family);
     }
 
     #${id} .VkIdWebSdk__floating_title_${id} {
-      color: var(--vkui--color_text_primary);
+      color: var(--floating--color_text_primary);
       font-weight: 500;
       font-size: 20px;
       line-height: 24px;
     }
 
     #${id} .VkIdWebSdk__floating_description_${id} {
-      color: var(--vkui--color_text_secondary);
+      color: var(--floating--color_text_secondary);
       font-weight: 400;
       font-size: 15px;
       line-height: 20px;
@@ -315,22 +316,22 @@ export const getFloatingOneTapTemplate = ({
       height: 36px;
       width: 100%;
       border-radius: 8px;
-      color: var(--vkui--color_text_contrast_themed);
+      color: var(--floating--button_text_color);
       transition: .15s;
       cursor: pointer;
-      background: var(--vkui--color_background_accent_themed);
+      background: var(--floating--button_background_color);
     }
 
     #${id} .VkIdWebSdk__floating_button_${id}:hover {
-      background: var(--vkui--color_background_accent_themed--hover);
+      background: var(--floating--button_background_color--hover);
     }
 
     #${id} .VkIdWebSdk__floating_button_${id}:focus {
-      background: var(--vkui--color_background_accent_themed--focus);
+      background: var(--floating--button_background_color--focus);
     }
 
     #${id} .VkIdWebSdk__floating_button_${id}:active {
-      background: var(--vkui--color_background_accent_themed--active);
+      background: var(--floating--button_background_color--active);
     }
 
     #${id} .VkIdWebSdk__floating_button_content_${id} {
@@ -353,11 +354,12 @@ export const getFloatingOneTapTemplate = ({
     #${id} .VkIdWebSdk__floating_button_text_${id} {
       font-weight: 500;
       line-height: 20px;
-      font-family: var(--vkui--font_title2--font_family--regular);
+      font-family: var(--floating--font_family);
       font-size: 15px;
       transition: .5s;
       min-width: max-content;
       margin-left: 6px;
+      text-align: center;
     }
 
     #${id} .VkIdWebSdk__oauthList_container_${id} {

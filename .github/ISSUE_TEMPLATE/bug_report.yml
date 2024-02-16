@@ -1,0 +1,55 @@
+name: Bug Report
+description: Сообщите о проблеме, если что-то работает не так, как ожидалось.
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Описание
+      description: Подробное описание проблемы.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Шаги воспроизведения
+      description: Последовательность, при которой ошибка стабильно воспроизводится.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Версия vkid/sdk
+      description: Поможет локализовать проблему.
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: В каких браузерах воспроизводится проблема?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+        - Yandex Browser
+        - Другое (укажите в описании)
+    validations:
+      required: true
+  - type: textarea
+    id: expectations
+    attributes:
+      label: Ожидаемое поведение
+      description: Если считаете, что из описания ожидаемое поведение непонятно.
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Скриншоты
+      description: Прикрепите скриншоты, если есть такая возможность.
+  - type: textarea
+    id: example
+    attributes:
+      label: Пример с воспроизведением
+      description: Приложите ссылку (например из https://codesandbox.io). Сильно ускоряет поиск причин проблемы.

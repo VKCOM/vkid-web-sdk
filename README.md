@@ -26,7 +26,7 @@
 
 ---
 
-:information_source: VK ID SDK сейчас находится в бета-тестировании. О проблемах вы можете сообщить с помощью <a href="https://github.com/VKCOM/vkid-web-sdk/issues">issues репозитория</a>.
+VK ID SDK сейчас находится в бета-тестировании. О проблемах вы можете сообщить с помощью <a href="https://github.com/VKCOM/vkid-web-sdk/issues">issues репозитория</a>.
 
 ---
 
@@ -107,7 +107,7 @@ if (container) {
 - [Что такое VK ID](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/intro/start-page)
 - [Создание приложения](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/create-application)
 - [Требования к дизайну](https://id.vk.com/business/go/docs/ru/vkid/archive/1.60/vk-id/guidelines/design-rules)
-- [Спецификация](.wiki/README.md)
+- [Спецификация](https://vkcom.github.io/vkid-web-sdk/)
 
 ## Contributing
 

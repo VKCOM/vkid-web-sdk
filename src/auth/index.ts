@@ -1,2 +1,3 @@
 export { Auth } from './auth';
-export type { AuthParams, AuthError, AuthResponse, AuthErrorCode } from './types';
+export { AuthErrorCode } from './types';
+export type { AuthParams, AuthError, AuthResponse } from './types';
