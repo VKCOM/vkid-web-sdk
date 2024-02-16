@@ -1,0 +1,12 @@
+name: Documentation
+description: Сообщите об ошибке в документации или идею по ее улучшению, нам очень важна обратная связь
+title: '[Doc]: '
+labels: ['doc']
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Описание
+      description: Подробное описание ошибки/желаемого поведения.
+    validations:
+      required: true

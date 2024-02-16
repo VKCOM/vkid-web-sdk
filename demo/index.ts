@@ -1,12 +1,16 @@
 import './styles.css';
 import * as VKID from '@vkid/sdk';
-import { OAuthName } from '@vkid/sdk';
 
-import {
-  showAuthSuccessSnackbar,
-  showAuthErrorSnackbar,
-  showInitErrorSnackbar,
-} from '#demo/components/snackbar';
+import { initHandleAuth } from './utils/handleAuth';
+import { initAuthButtons } from './utils/initAuthButtons';
+import { initFloatingOneTap } from './utils/initFloatingOneTap';
+import { initModuleEnabledList } from './utils/initModuleEnabledList';
+import { initModuleParamsList } from './utils/initModuleParamsList';
+import { initOauthList } from './utils/initOauthList';
+import { initOneTap } from './utils/initOneTap';
+import { getDemoStoreFromLS, saveDemoStoreInLS } from './utils/localstorage';
+
+let demoStore = getDemoStoreFromLS();
 
 /**
  * General settings
@@ -15,122 +19,77 @@ VKID.Config.set({
   app: 7303035,
   state: 'test',
   redirectUrl: `${window.location.protocol}//${window.location.hostname}${window.location.pathname}`,
+  mode: demoStore.mode,
 });
 
-const urlParams = new URLSearchParams(window.location.search);
-try {
-  const payloadStr = urlParams.get('payload');
-  if (payloadStr) {
-    const payload = JSON.parse(payloadStr);
-    if (payload && payload.token) {
-      showAuthSuccessSnackbar();
-      window.history.pushState({}, document.title, window.location.pathname);
-    } else {
-      showAuthErrorSnackbar();
-    }
-  }
-} catch {}
+initHandleAuth();
+initModuleParamsList(demoStore);
+initModuleEnabledList(demoStore);
+document.querySelector('html')?.setAttribute('data-scheme', demoStore.scheme);
 
 /**
  * Custom auth
  */
-const authButtonIds = ['authIconButton', 'authButtonWithIcon'];
-
-authButtonIds.forEach((item) => {
-  const button = document.getElementById(item) as HTMLElement;
-
-  button.onclick = () => VKID.Auth.login();
-});
-
-let demoStore = {
-  contentId: VKID.FloatingOneTapContentId.SIGN_IN_TO_SERVICE,
-  lang: VKID.Languages.RUS,
-  scheme: VKID.Scheme.LIGHT,
-  oauthes: '',
-};
+initAuthButtons(demoStore);
 
 /**
  * Widgets integration
  */
-const createOneTap = () => {
-  const container = document.getElementById('oneTap') as HTMLElement;
-
-  const params = {
-    container: container,
-    showAlternativeLogin: true,
-    contentId: Number(demoStore.contentId),
-    lang: Number(demoStore.lang),
-    scheme: demoStore.scheme,
-    oauthList: demoStore.oauthes ? demoStore.oauthes.split(',') as OAuthName[] : undefined,
-  };
-
-  const oneTap = new VKID.OneTap();
-  oneTap.on(VKID.WidgetEvents.ERROR, showInitErrorSnackbar)
-    .render(params);
-
-  return oneTap;
+const createOneTap = initOneTap(demoStore);
+let oneTap = demoStore.enable_oneTap && createOneTap();
+const resetOneTap = () => {
+  if (oneTap) {
+    oneTap.close();
+    oneTap = createOneTap();
+  }
 };
 
-const createFloatingOneTap = () => {
-  const params = {
-    appName: 'VK ID Demo',
-    showAlternativeLogin: true,
-    contentId: Number(demoStore.contentId),
-    lang: Number(demoStore.lang),
-    scheme: demoStore.scheme,
-    oauthList: demoStore.oauthes ? demoStore.oauthes.split(',') as OAuthName[] : undefined,
-  };
-
-  const floatingOneTap = new VKID.FloatingOneTap();
-  floatingOneTap.on(VKID.WidgetEvents.ERROR, showInitErrorSnackbar)
-    .render(params);
-
-  return floatingOneTap;
+const createFloatingOneTap = initFloatingOneTap(demoStore);
+let floatingOneTap = demoStore.enable_floatingOneTap && createFloatingOneTap();
+const resetFloatingOneTap = () => {
+  if (floatingOneTap) {
+    floatingOneTap.close();
+    floatingOneTap = createFloatingOneTap();
+  }
 };
 
-const createOAuthList = () => {
-  const container = document.getElementById('oauthList') as HTMLElement;
-
-  const oauthList = new VKID.OAuthList();
-  oauthList.on(VKID.WidgetEvents.ERROR, showInitErrorSnackbar)
-    .render({
-      container,
-      scheme: demoStore.scheme,
-      lang: Number(demoStore.lang),
-      oauthList: [
-        VKID.OAuthName.VK,
-        VKID.OAuthName.MAIL,
-        VKID.OAuthName.OK,
-      ],
-    });
-
-  return oauthList;
+const createOauthList = initOauthList(demoStore);
+let oauthList = demoStore.enable_oauthList && createOauthList();
+const resetOauthList = () => {
+  if (oauthList) {
+    oauthList.close();
+    oauthList = createOauthList();
+  }
 };
-
-let oneTap = createOneTap();
-let floatingOneTap = createFloatingOneTap();
-let oauthList = createOAuthList();
 
 function handleSelectParamsChange() {
   demoStore = Object.assign(demoStore, { [this.name]: this.value });
-  oneTap.close();
-  oneTap = createOneTap();
+  saveDemoStoreInLS(demoStore);
 
-  oauthList.close();
-  oauthList = createOAuthList();
-
-  floatingOneTap.close();
-  floatingOneTap = createFloatingOneTap();
+  resetOneTap();
+  resetOauthList();
+  resetFloatingOneTap();
 
   document.querySelector('html')?.setAttribute('data-scheme', demoStore.scheme);
 }
+['lang', 'scheme', 'contentId', 'oauthes', 'onetapSkin'].forEach((item) => {
+  document.getElementById(item)?.addEventListener('change', handleSelectParamsChange);
+});
 
-const langEl = document.getElementById('lang');
-const schemeEl = document.getElementById('scheme');
-const contentIdEl = document.getElementById('contentId');
-const oauthesEl = document.getElementById('oauthes');
-[langEl, schemeEl, contentIdEl, oauthesEl].forEach((item) => {
-  if (item) {
-    item.addEventListener('change', handleSelectParamsChange);
-  }
+function handleConfigParamsChange() {
+  VKID.Config.set({
+    [this.name]: this.value,
+  });
+  demoStore = Object.assign(demoStore, { [this.name]: this.value });
+  saveDemoStoreInLS(demoStore);
+}
+const modeEl = document.getElementById('mode');
+modeEl && modeEl.addEventListener('change', handleConfigParamsChange);
+
+function handleModuleEnabledCheckboxChange() {
+  demoStore = Object.assign(demoStore, { [this.name]: this.checked });
+  saveDemoStoreInLS(demoStore);
+}
+['enable_oauthList', 'enable_basicAuth', 'enable_oneTap', 'enable_floatingOneTap'].forEach((name) => {
+  document.getElementById(name)?.addEventListener('change', handleModuleEnabledCheckboxChange);
 });

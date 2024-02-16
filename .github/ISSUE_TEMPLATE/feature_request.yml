@@ -1,0 +1,17 @@
+name: Feature request
+description: Отправьте свое предложение по новой функциональности.
+title: '[Feature]: '
+labels: ['feature']
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Описание
+      description: Описание новой или улучшения текущей функциональности.
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Скриншоты
+      description: Примеры того, как это будет выглядеть.

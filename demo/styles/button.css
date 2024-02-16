@@ -16,7 +16,7 @@
 
 .VkIdWebSdk__button,
 .VkIdWebSdk__iconButton {
-  background: var(--accent_alternate);
+  background: var(--demo_accent_alternate);
   cursor: pointer;
   transition: all .1s ease-out;
 }
@@ -69,5 +69,5 @@
   font-family: -apple-system, system-ui, "Helvetica Neue", Roboto, sans-serif;
   flex: 1;
   justify-content: center;
-  color: var(--vkui-light-text-text-contrast);
+  color: var(--demo_vkui-light-text-text-contrast);
 }

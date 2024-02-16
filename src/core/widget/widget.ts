@@ -19,7 +19,13 @@ const MODULE_CHANGE_STATE_TIMEOUT = 300;
 const CODE_CHALLENGE_METHOD = 's256';
 
 export class Widget<P = WidgetParams> extends Dispatcher {
+  /**
+   * @ignore
+   */
   public static __config: Config;
+  /**
+   * @ignore
+   */
   public static __auth: Auth;
 
   protected readonly id: string = uuid();

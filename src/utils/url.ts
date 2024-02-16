@@ -7,7 +7,7 @@ import { uuid } from '#/utils/uuid';
 export const getVKIDUrl = (module: string, params: Record<string, any>, config: ConfigData): string => {
   const queryParams: Record<string, any> = {
     ...params,
-    uuid: uuid(),
+    uuid: params.uuid || uuid(),
     v: VERSION,
     sdk_type: 'vkid',
     app_id: config.app,

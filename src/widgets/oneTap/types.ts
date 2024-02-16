@@ -16,6 +16,11 @@ export interface OneTapStyles {
   borderRadius?: number;
 }
 
+export enum OneTapSkin {
+  Primary = 'primary',
+  Secondary = 'secondary',
+}
+
 export interface OneTapParams extends WidgetParams {
   /**
    * Отображение кнопки входа другим способом
@@ -28,7 +33,7 @@ export interface OneTapParams extends WidgetParams {
   /**
    * Стиль отображения кнопки
    */
-  skin?: 'primary' | 'secondary';
+  skin?: OneTapSkin;
   /**
    * Список внешних сервисов авторизации
    */

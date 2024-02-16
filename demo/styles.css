@@ -5,11 +5,19 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: var(--background_page);
+  background: var(--demo_background_page);
+  font-family: -apple-system, system-ui, "Helvetica Neue", Roboto, sans-serif;
 }
 
 html[data-scheme="dark"], html[data-scheme="dark"] body {
   background: black;
+}
+
+select {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 4px;
 }
 
 .VkIdWebSdk__container {
@@ -19,7 +27,8 @@ html[data-scheme="dark"], html[data-scheme="dark"] body {
   border: 1px solid #ddd;
   box-sizing: border-box;
   margin: 25px auto;
-  max-width: 380px;
+  width: 90%;
+  max-width: 1080px;
   background: #fff;
   border-radius: 12px;
 }
@@ -34,6 +43,7 @@ html[data-scheme="dark"] .VkIdWebSdk__container {
   padding: 15px;
   background: #f1f1f1;
   border-radius: 5px;
+  min-width: 180px;
 }
 
 html[data-scheme="dark"]  .VkIdWebSdk_controls {
@@ -42,15 +52,57 @@ html[data-scheme="dark"]  .VkIdWebSdk_controls {
 }
 
 .VkIdWebSdk__content {
-  max-width: 650px;
-  width: 300px;
+  width: 100%;
+  padding: 0 24px;
   border-radius: 12px;
 }
 
-.VkIdWebSdk__content > *:not(:first-child) {
+.VkIdWebSdk__content > section > *:not(:first-child) {
   margin: 24px 0;
 }
 
-.VkIdWebSdk__content > h1 {
-  font-family: -apple-system, system-ui, "Helvetica Neue", Roboto, sans-serif;
+.enableModule {
+  padding: 12px 0 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.VkIdWebSdk_controls > *:not(:first-child) {
+  margin-top: 12px;
+}
+
+.VkIdWebSdk__floating_separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--demo_accent_alternate);
+  border-radius: 8px;
+}
+
+.VkIdWebSdk__floating_separator.top {
+  height: 260px;
+  display: flex;
+}
+.VkIdWebSdk__floating_separator.bottom {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .VkIdWebSdk__container {
+    flex-direction: column-reverse;
+  }
+  .VkIdWebSdk__content {
+    padding: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .VkIdWebSdk__floating_separator.top {
+    display: none;
+  }
+  .VkIdWebSdk__floating_separator.bottom {
+    height: 380px;
+    display: flex;
+    margin-top: 12px;
+  }
 }

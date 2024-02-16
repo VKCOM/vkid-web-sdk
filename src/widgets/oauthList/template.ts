@@ -97,15 +97,15 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
     <div id="${id}" class="VkIdSdk_oauth_container" data-test-id="oauthList" data-scheme="${scheme}">
       <style>
         :root #${id}[data-scheme=light] {
-          --vkui--color_field_border_alpha: rgba(0, 0, 0, .12);
-          --vkui--color_text_secondary: #818c99;
-          --vkui--color_text_primary: #000;
+          --oauthlist--item_border_color: rgba(0, 0, 0, .12);
+          --oauthlist--color_text_secondary: #818c99;
+          --oauthlist--color_text_primary: #000;
         }
 
         :root #${id}[data-scheme=dark] {
-          --vkui--color_field_border_alpha: rgba(255, 255, 255, 0.12);
-          --vkui--color_text_secondary: #76787a;
-          --vkui--color_text_primary: #e1e3e6;
+          --oauthlist--item_border_color: rgba(255, 255, 255, 0.12);
+          --oauthlist--color_text_secondary: #76787a;
+          --oauthlist--color_text_primary: #e1e3e6;
         }
 
         #${id}.VkIdSdk_oauth_container {
@@ -125,7 +125,7 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
           padding: ${paddingSize}px;
           margin-right: 12px;
           width: 100%;
-          border: 1px solid var(--vkui--color_field_border_alpha);
+          border: 1px solid var(--oauthlist--item_border_color);
           border-radius: ${borderRadius}px;
           cursor: pointer;
         }
@@ -137,7 +137,7 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
         #${id} .VkIdSdk_oauth_link_text {
           display: flex;
           font-family: -apple-system, system-ui, "Helvetica Neue", Roboto, sans-serif;
-          color: var(--vkui-light-text-secondary);
+          color: var(--oauthlist--color_text_secondary);
           font-size: 13px;
           line-height: 16px;
           margin-bottom: 16px;
@@ -168,7 +168,7 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
         #${id} .VkIdSdk_oauth_button_text {
           display: none;
           font-family: -apple-system, system-ui, "Helvetica Neue", Roboto, sans-serif;
-          color: var(--vkui--color_text_primary);
+          color: var(--oauthlist--color_text_primary);
         }
 
         #${id} .VkIdSdk_oauth_list[data-single-mode] .VkIdSdk_oauth_item svg {

@@ -23,6 +23,8 @@ module.exports = {
       },
     ],
 
+    '@typescript-eslint/await-thenable': 'off',
+
     // Disabled because: no configurable options for .length > 0, arr[0] and similar constructions.
     'no-magic-numbers': 'off',
     '@typescript-eslint/no-magic-numbers': 'off',

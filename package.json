@@ -1,22 +1,23 @@
 {
   "name": "@vkid/sdk",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "VK ID Web SDK",
   "main": "dist-sdk/cjs/index.js",
   "module": "dist-sdk/esm/index.js",
   "types": "dist-sdk/types/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "sdk:types": "tspc --emitDeclarationOnly -p tsconfig.sdk.json",
     "sdk:base": "rollup -c rollup.sdk.config.js --bundleConfigAsCjs",
     "sdk:dev": "yarn sdk:base -w",
     "sdk:prod": "yarn clear:sdk && cross-env NODE_ENV=production yarn sdk:base && yarn sdk:types",
-    "docs:dev": "typedoc --plugin typedoc-plugin-markdown --watch --out ./.wiki",
-    "docs:prod": "yarn clear:docs && typedoc --plugin typedoc-plugin-markdown --out ./.wiki",
+    "docs:dev": "typedoc --watch --out ./docs",
+    "docs:prod": "yarn clear:docs && typedoc --out ./docs",
     "lint:check:ts": "eslint --cache \"./**/*.{ts,tsx}\"",
     "tests": "jest --coverage=true",
     "clear:sdk": "rimraf dist-sdk",
     "clear:demo": "rimraf dist-demo",
-    "clear:docs": "rimraf ./.wiki",
+    "clear:docs": "rimraf ./docs",
     "demo:base": "rollup -c rollup.demo.config.js --bundleConfigAsCjs",
     "demo:dev": "yarn demo:base -w",
     "demo:prod": "yarn clear:demo && cross-env NODE_ENV=production yarn demo:base",
@@ -29,7 +30,7 @@
   },
   "files": [
     "dist-sdk",
-    ".wiki",
+    "docs",
     "CHANGELOG.md",
     "CONTRIBUTING.md",
     "CODE_OF_CONDUCT.md",
@@ -42,6 +43,12 @@
   },
   "author": "VK ID <devsupport@corp.vk.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VKCOM/vkid-web-sdk.git"
+  },
+  "bugs": "https://github.com/VKCOM/vkid-web-sdk/issues",
+  "homepage": "https://id.vk.com/about/business/demo/",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-node-resolve": "^15.2.1",
@@ -86,7 +93,6 @@
     "ts-node": "^10.9.1",
     "ts-patch": "^3.0.2",
     "typedoc": "^0.24.7",
-    "typedoc-plugin-markdown": "^3.15.3",
     "typescript": "5.0.4",
     "typescript-transform-paths": "^3.4.6"
   },

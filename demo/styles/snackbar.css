@@ -4,15 +4,15 @@
   min-width: 351px;
   padding: 16px 16px 16px 56px;
   box-sizing: border-box;
-  background: var(--vkui--color_background_content);
-  border-radius: var(--vkui--size_border_radius--regular);
-  box-shadow: var(--vkui--elevation4);
+  background: var(--demo_vkui--color_background_content);
+  border-radius: var(--demo_vkui--size_border_radius--regular);
+  box-shadow: var(--demo_vkui--elevation4);
   font-family: -apple-system, system-ui, "Helvetica Neue", Roboto, sans-serif;
   position: fixed;
   bottom: 24px;
   left: 0;
   transform: translate(-100%, 0);
-  transition: transform 320ms var(--vkui--animation_easing_platform);
+  transition: transform 320ms var(--demo_vkui--animation_easing_platform);
 }
 
 .VkIdWebSdk__snackbar_active {

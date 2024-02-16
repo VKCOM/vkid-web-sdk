@@ -18,8 +18,8 @@ type OneTapTemplateParams = Required<OneTapStyles> & Pick<OneTapParams, 'skin'> 
 
 const logoSvg = `
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path id="logoName" fill-rule="evenodd" clip-rule="evenodd" d="M4.2653 4.2653C3 5.5306 3 7.56707 3 11.64V12.36C3 16.4329 3 18.4694 4.2653 19.7347C5.5306 21 7.56706 21 11.64 21H12.36C16.4329 21 18.4694 21 19.7347 19.7347C21 18.4694 21 16.4329 21 12.36V11.64C21 7.56707 21 5.5306 19.7347 4.2653C18.4694 3 16.4329 3 12.36 3H11.64C7.56706 3 5.5306 3 4.2653 4.2653Z" fill="white"/>
-    <path id="logoBg" d="M12.6095 16C8.55576 16 6.09636 13.1823 6 8.5H8.05309C8.1171 11.9395 9.67903 13.397 10.8764 13.6967V8.5H12.8439V11.4683C13.9988 11.3401 15.2076 9.98991 15.614 8.5H17.5505C17.2406 10.3321 15.9246 11.6823 14.9948 12.2392C15.9253 12.6895 17.4225 13.8682 18 16H15.8714C15.4219 14.5749 14.321 13.4712 12.8446 13.3213V16H12.6095Z" fill="#0077FF"/>
+    <path id="logoBg" fill-rule="evenodd" clip-rule="evenodd" d="M4.2653 4.2653C3 5.5306 3 7.56707 3 11.64V12.36C3 16.4329 3 18.4694 4.2653 19.7347C5.5306 21 7.56706 21 11.64 21H12.36C16.4329 21 18.4694 21 19.7347 19.7347C21 18.4694 21 16.4329 21 12.36V11.64C21 7.56707 21 5.5306 19.7347 4.2653C18.4694 3 16.4329 3 12.36 3H11.64C7.56706 3 5.5306 3 4.2653 4.2653Z" fill="white"/>
+    <path id="logoIcon" d="M12.6095 16C8.55576 16 6.09636 13.1823 6 8.5H8.05309C8.1171 11.9395 9.67903 13.397 10.8764 13.6967V8.5H12.8439V11.4683C13.9988 11.3401 15.2076 9.98991 15.614 8.5H17.5505C17.2406 10.3321 15.9246 11.6823 14.9948 12.2392C15.9253 12.6895 17.4225 13.8682 18 16H15.8714C15.4219 14.5749 14.321 13.4712 12.8446 13.3213V16H12.6095Z" fill="#0077FF"/>
   </svg>
 `;
 
@@ -189,6 +189,44 @@ export const getOneTapTemplate = ({
   return `
 <div id="${id}" data-test-id="oneTap" data-scheme="${scheme}" data-skin="${skin}">
   <style>
+    :root #${id} {
+      --onetap--button_background: #0077FF;
+      --onetap--button_border: none;
+      --onetap--background_hover: #0071F2;
+      --onetap--text_and_spinner: #FFF;
+      --onetap--logo_icon: #0077FF;
+      --onetap--logo_background: #FFF;
+    }
+
+    :root #${id}[data-scheme=light][data-skin=primary] {
+      --onetap--background_hover: #0071F2;
+      --onetap--background_active: #0069E1;
+    }
+
+    :root #${id}[data-scheme=dark][data-skin=primary] {
+      --onetap--background_hover: #097EFF;
+      --onetap--background_active: #1385FF;
+    }
+
+    :root #${id}[data-scheme=light][data-skin=secondary] {
+      --onetap--button_background: rgba(255, 255, 255, 0.12);
+      --onetap--button_border: 1px solid rgba(0, 0, 0, 0.12);
+      --onetap--background_hover: #F5F5F7;
+      --onetap--background_active: #EBECEF;
+      --onetap--text_and_spinner: #000;
+      --onetap--logo_icon: #FFF;
+      --onetap--logo_background: #0077FF;
+    }
+
+    :root #${id}[data-scheme=dark][data-skin=secondary] {
+      --onetap--button_background: transparent;
+      --onetap--button_border: 1px solid rgba(255, 255, 255, 0.12);
+      --onetap--background_hover: rgba(255, 255, 255, 0.06);
+      --onetap--background_active: rgba(255, 255, 255, 0.1);
+      --onetap--logo_icon: #FFF;
+      --onetap--logo_background: #0077FF;
+    }
+
     #${id} {
       position: relative;
       width: ${width ? `${width}px` : '100%'};
@@ -241,55 +279,18 @@ export const getOneTapTemplate = ({
       cursor: pointer;
     }
 
-    #${id}[data-scheme=light][data-skin=primary] .VkIdWebSdk__button_${id},
-    #${id}[data-scheme=dark][data-skin=primary] .VkIdWebSdk__button_${id} {
-      background: #0077FF;
+    #${id} .VkIdWebSdk__button_${id} {
+      background: var(--onetap--button_background);
+      border: var(--onetap--button_border);
     }
 
-    #${id}[data-scheme=light][data-skin=secondary] .VkIdWebSdk__button_${id} {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(0, 0, 0, 0.12);
+    #${id} .VkIdWebSdk__button_${id}:focus,
+    #${id} .VkIdWebSdk__button_${id}:hover {
+      background: var(--onetap--background_hover);
     }
 
-    #${id}[data-scheme=dark][data-skin=secondary] .VkIdWebSdk__button_${id} {
-      background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    #${id}[data-scheme=light][data-skin=primary] .VkIdWebSdk__button_${id}:focus,
-    #${id}[data-scheme=light][data-skin=primary] .VkIdWebSdk__button_${id}:hover {
-      background: #0071F2;
-    }
-
-    #${id}[data-scheme=dark][data-skin=primary] .VkIdWebSdk__button_${id}:focus,
-    #${id}[data-scheme=dark][data-skin=primary] .VkIdWebSdk__button_${id}:hover {
-      background: #097EFF;
-    }
-
-    #${id}[data-scheme=light][data-skin=secondary] .VkIdWebSdk__button_${id}:focus,
-    #${id}[data-scheme=light][data-skin=secondary] .VkIdWebSdk__button_${id}:hover {
-      background: #F5F5F7;
-    }
-
-    #${id}[data-scheme=dark][data-skin=secondary] .VkIdWebSdk__button_${id}:focus,
-    #${id}[data-scheme=dark][data-skin=secondary] .VkIdWebSdk__button_${id}:hover {
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    #${id}[data-scheme=light][data-skin=primary] .VkIdWebSdk__button_${id}:active {
-      background: #0069E1;
-    }
-
-    #${id}[data-scheme=dark][data-skin=primary] .VkIdWebSdk__button_${id}:active {
-      background: #1385FF;
-    }
-
-    #${id}[data-scheme=light][data-skin=secondary] .VkIdWebSdk__button_${id}:active {
-      background: #EBECEF;
-    }
-
-    #${id}[data-scheme=dark][data-skin=secondary] .VkIdWebSdk__button_${id}:active {
-      background: rgba(255, 255, 255, 0.1);
+    #${id} .VkIdWebSdk__button_${id}:active {
+      background: var(--onetap--background_active);
     }
 
     #${id} .VkIdWebSdk__button_in_${id} {
@@ -344,24 +345,19 @@ export const getOneTapTemplate = ({
 
     #${id} .VkIdWebSdk__button_text_${id},
     #${id} .VkIdWebSdk__button_spinner_${id} {
-      color: #ffffff;
+      color: var(--onetap--text_and_spinner);
     }
 
     .VkIdWebSdk__oauthList_container_${id} {
       margin-top: 16px;
     }
 
-    #${id}[data-scheme=light][data-skin=secondary] .VkIdWebSdk__button_text_${id},
-    #${id}[data-scheme=light][data-skin=secondary] .VkIdWebSdk__button_spinner_${id} {
-      color: #000000;
+    #${id} #logoBg {
+      fill: var(--onetap--logo_background);
     }
 
-    #${id}[data-skin=secondary] #logoName {
-      fill: #0077FF;
-    }
-
-    #${id}[data-skin=secondary] #logoBg {
-      fill: #FFFFFF;
+    #${id} #logoIcon {
+      fill: var(--onetap--logo_icon);
     }
 
     #${id}[data-state=not_loaded] .VkIdWebSdk__button_in_${id} {
