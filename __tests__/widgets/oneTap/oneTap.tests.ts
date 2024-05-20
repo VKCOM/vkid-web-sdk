@@ -1,10 +1,12 @@
-import { BridgeMessage } from '#/core/bridge';
 import { BRIDGE_MESSAGE_TYPE_SDK } from '#/core/bridge/bridge';
 import { WidgetEvents } from '#/core/widget';
-import { Config, Languages, OAuthName } from '#/index';
+import { Config, Languages, OAuthName, OneTapSkin } from '#/index';
 import { Scheme } from '#/types';
 import { OneTap } from '#/widgets/oneTap';
-import { OneTapInternalEvents } from '#/widgets/oneTap/events';
+import { OneTapBridgeMessage } from '#/widgets/oneTap/types';
+
+import { WINDOW_LOCATION_URL } from '../../constants';
+import { wait } from '../../utils';
 
 const APP_ID = 100;
 
@@ -16,7 +18,7 @@ const openFn = jest.fn();
 const removeEventListenerFn = jest.fn();
 
 class TestOneTap extends OneTap {
-  public onBridgeMessageHandler(event: BridgeMessage<OneTapInternalEvents | WidgetEvents>) {
+  public onBridgeMessageHandler(event: OneTapBridgeMessage) {
     super.onBridgeMessageHandler(event);
   }
 }
@@ -33,7 +35,7 @@ describe('OneTap', () => {
   });
 
   beforeEach(() => {
-    Config.set({ app: APP_ID, redirectUrl: 'test', state: 'test' });
+    Config.init({ app: APP_ID, redirectUrl: 'test', state: 'test', codeVerifier: 'codeVerifier' });
     oneTap = new TestOneTap();
 
     container = document.createElement('div', {});
@@ -45,7 +47,8 @@ describe('OneTap', () => {
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
       .addLabel('Component', 'OneTap')
-      .addLabel('Suite', 'Units');
+      .addLabel('Suite', 'Units')
+      .addLabel('Project', 'VKIDSDK');
   });
 
   afterEach(() => {
@@ -60,29 +63,31 @@ describe('OneTap', () => {
     expect(iframeElement).toBeTruthy();
 
     const frameSrc = iframeElement.getAttribute('src') as string;
-    const location = frameSrc.split(/[?&]/);
+    const location = new URL(frameSrc);
+    const searchParams = new URLSearchParams(location.search);
+
+    expect(location.href.split('?')[0]).toEqual('https://id.vk.com/button_one_tap_auth');
 
     const expectArr = [
-      expect(location[0]).toEqual('https://id.vk.com/button_one_tap_auth'),
-      expect(location[1]).toEqual('style_height=44'),
-      expect(location[2]).toEqual('style_border_radius=8'),
-      expect(location[3]).toEqual('show_alternative_login=1'),
-      expect(location[4]).toEqual('button_skin=primary'),
-      expect(location[5]).toEqual('scheme=light'),
-      expect(location[6]).toEqual('lang_id=0'),
-      expect(location[7]).toEqual('providers='),
-      expect(location[8]).toEqual('code_challenge=stringified_SHA256-STRING'),
-      expect(location[9]).toEqual('code_challenge_method=s256'),
-      expect(location[10]).toEqual('origin=https%3A%2F%2Frnd-service.ru'),
-      expect(frameSrc).toContain('uuid'),
-      expect(frameSrc).toContain('v'),
-      expect(location[13]).toEqual('sdk_type=vkid'),
-      expect(location[14]).toEqual('app_id=100'),
-      expect(location[15]).toEqual('redirect_uri=test'),
-      expect(location[16]).toEqual('redirect_state=test'),
+      expect(searchParams.get('style_height')).toEqual('44'),
+      expect(searchParams.get('style_border_radius')).toEqual('8'),
+      expect(searchParams.get('show_alternative_login')).toEqual('1'),
+      expect(searchParams.get('button_skin')).toEqual('primary'),
+      expect(searchParams.get('scheme')).toEqual('light'),
+      expect(searchParams.get('lang_id')).toEqual('0'),
+      expect(searchParams.get('providers')).toEqual(''),
+      expect(searchParams.get('origin')).toEqual(WINDOW_LOCATION_URL),
+      expect(searchParams.get('code_challenge')).toEqual('stringified_SHA256-STRING'),
+      expect(searchParams.get('code_challenge_method')).toEqual('s256'),
+      expect(searchParams.get('v')).toBeTruthy(),
+      expect(searchParams.get('sdk_type')).toEqual('vkid'),
+      expect(searchParams.get('app_id')).toEqual('100'),
+      expect(searchParams.get('redirect_uri')).toEqual('test'),
+      expect(searchParams.get('oauth_version')).toEqual('2'),
+      expect(searchParams.get('state')).toEqual(Config.get().state),
     ];
 
-    expect(location.length).toEqual(expectArr.length);
+    expect([...new Set(searchParams.keys())].length).toEqual(expectArr.length);
   });
 
   test('The lang_id parameter must be set', () => {
@@ -110,7 +115,7 @@ describe('OneTap', () => {
     oneTap.render({
       container,
       showAlternativeLogin: 1,
-      skin: 'secondary',
+      skin: OneTapSkin.Secondary,
     });
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
     expect(oneTapEl?.getAttribute('data-scheme')).toEqual('light');
@@ -133,7 +138,7 @@ describe('OneTap', () => {
       container,
       showAlternativeLogin: 1,
       scheme: Scheme.DARK,
-      skin: 'secondary',
+      skin: OneTapSkin.Secondary,
     });
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
     expect(oneTapEl?.getAttribute('data-scheme')).toEqual('dark');
@@ -158,7 +163,7 @@ describe('OneTap', () => {
     oneTap.onBridgeMessageHandler({
       type: BRIDGE_MESSAGE_TYPE_SDK,
       handler: WidgetEvents.ERROR,
-      params: { someData: 'token' },
+      params: { uuid: 'token' },
     });
 
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
@@ -174,15 +179,11 @@ describe('OneTap', () => {
     oneTap.onBridgeMessageHandler({
       type: BRIDGE_MESSAGE_TYPE_SDK,
       handler: WidgetEvents.LOAD,
-      params: { someData: 'token' },
+      params: { uuid: 'token' },
     });
 
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve('');
-      }, 400);
-    });
+    await wait(400);
     expect(oneTapEl?.getAttribute('data-state')).toEqual('loaded');
   });
 
@@ -191,11 +192,7 @@ describe('OneTap', () => {
       container,
       oauthList: [OAuthName.MAIL, OAuthName.OK],
     });
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve('');
-      }, 0);
-    });
+    await wait(0);
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
     const oauthListEl = oneTapEl?.querySelector('[data-test-id="oauthList"]');
     expect(oauthListEl).toBeTruthy();
@@ -206,11 +203,7 @@ describe('OneTap', () => {
       container,
       oauthList: [OAuthName.VK],
     });
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve('');
-      }, 0);
-    });
+    await wait(0);
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
     const oauthListEl = oneTapEl?.querySelector('[data-test-id="oauthList"]');
     expect(oauthListEl).toBeFalsy();
@@ -220,11 +213,7 @@ describe('OneTap', () => {
     oneTap.render({
       container,
     });
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve('');
-      }, 0);
-    });
+    await wait(0);
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
     const oauthListEl = oneTapEl?.querySelector('[data-test-id="oauthList"]');
     expect(oauthListEl).toBeFalsy();

@@ -6,7 +6,10 @@ export enum Languages {
   GERMAN = 6,
   POL = 15,
   FRA = 16,
+  UZB = 65,
   TURKEY = 82,
+  KAZ = 97,
+  BEL = 114,
 }
 
 export enum Scheme {

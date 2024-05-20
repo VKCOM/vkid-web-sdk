@@ -7,7 +7,7 @@ type FloatingOneTapTemplateParams = Required<
 Pick<FloatingOneTapParams, 'indent' | 'contentId' | 'appName'> &
 Pick<WidgetParams, 'scheme' | 'lang'>
 > & {
-  openFullAuth?: VoidFunction;
+  login?: VoidFunction;
   close?: VoidFunction;
   renderOAuthList: (params: OAuthListParams) => void;
   providers?: OAuthName[];
@@ -53,7 +53,7 @@ const getIndent = (value?: number) => {
 export const getFloatingOneTapTemplate = ({
   scheme,
   indent,
-  openFullAuth,
+  login,
   close,
   lang,
   contentId,
@@ -104,7 +104,7 @@ export const getFloatingOneTapTemplate = ({
   const buttonEl = document.createElement('button');
   buttonEl.classList.add(`VkIdWebSdk__floating_button_reset_${id}`);
   buttonEl.classList.add(`VkIdWebSdk__floating_button_${id}`);
-  openFullAuth && (buttonEl.onclick = openFullAuth);
+  login && (buttonEl.onclick = login);
 
   const buttonContentEl = document.createElement('div');
   buttonContentEl.classList.add(`VkIdWebSdk__floating_button_content_${id}`);

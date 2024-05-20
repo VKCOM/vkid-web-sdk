@@ -1,5 +1,9 @@
-import { WidgetParams } from '#/core/widget';
+import { BridgeMessage } from '#/core/bridge';
+import { WidgetEvents, WidgetParams } from '#/core/widget';
+import { RedirectPayload } from '#/utils/url';
 import { OAuthName } from '#/widgets/oauthList';
+
+import { FloatingOneTapInternalEvents } from './events';
 
 export interface FloatingOneTapIndent {
   /**
@@ -65,3 +69,14 @@ export interface FloatingOneTapParams extends Omit<WidgetParams, 'container'> {
    */
   oauthList?: OAuthName[];
 }
+
+export interface FloatingOneTapBridgeFullAuthParams {
+  uuid: string;
+  screen?: string;
+  sdk_oauth?: OAuthName;
+}
+
+type FloatingOneTapBridgeParams = FloatingOneTapBridgeFullAuthParams | RedirectPayload;
+type FloatingOneTapEvents = FloatingOneTapInternalEvents | WidgetEvents;
+
+export type FloatingOneTapBridgeMessage = BridgeMessage<FloatingOneTapEvents, FloatingOneTapBridgeParams>;

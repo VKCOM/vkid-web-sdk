@@ -1,22 +1,26 @@
 import { DataService } from '#/core/dataService';
+import { state } from '#/utils/cookie';
 
 import { AUTH_ERROR_TEXT } from './constants';
 import { AuthError, AuthErrorCode, AuthResponse } from './types';
 
 export class AuthDataService extends DataService<AuthResponse, AuthError> {
-  // TODO: Типизировать payload
-  public readonly sendSuccessData = (payload: any) => {
+  private readonly state = state();
+
+  public readonly sendSuccessData = (payload: AuthResponse) => {
     this.sendSuccess({
       type: payload.type,
-      token: payload.token,
-      ttl: payload.ttl,
+      code: payload.code,
+      state: payload.state,
+      device_id: payload.device_id,
     });
   }
 
   public readonly sendNewTabHasBeenClosed = () => {
     this.sendError({
       code: AuthErrorCode.NewTabHasBeenClosed,
-      text: AUTH_ERROR_TEXT[AuthErrorCode.NewTabHasBeenClosed],
+      error: AUTH_ERROR_TEXT[AuthErrorCode.NewTabHasBeenClosed],
+      state: this.state,
     });
   }
 
@@ -24,22 +28,33 @@ export class AuthDataService extends DataService<AuthResponse, AuthError> {
   public readonly sendAuthorizationFailed = (details: any) => {
     this.sendError({
       code: AuthErrorCode.AuthorizationFailed,
-      text: AUTH_ERROR_TEXT[AuthErrorCode.AuthorizationFailed],
-      details,
+      error: AUTH_ERROR_TEXT[AuthErrorCode.AuthorizationFailed],
+      error_description: JSON.stringify(details),
+      state: this.state,
     });
   }
 
   public readonly sendEventNotSupported = () => {
     this.sendError({
       code: AuthErrorCode.EventNotSupported,
-      text: AUTH_ERROR_TEXT[AuthErrorCode.EventNotSupported],
+      error: AUTH_ERROR_TEXT[AuthErrorCode.EventNotSupported],
+      state: this.state,
     });
   }
 
   public readonly sendCannotCreateNewTab = () => {
     this.sendError({
       code: AuthErrorCode.CannotCreateNewTab,
-      text: AUTH_ERROR_TEXT[AuthErrorCode.CannotCreateNewTab],
+      error: AUTH_ERROR_TEXT[AuthErrorCode.CannotCreateNewTab],
+      state: this.state,
+    });
+  }
+
+  public readonly sendStateMismatchError = () => {
+    this.sendError({
+      code: AuthErrorCode.StateMismatch,
+      error: AUTH_ERROR_TEXT[AuthErrorCode.StateMismatch],
+      state: this.state,
     });
   }
 }

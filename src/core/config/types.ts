@@ -3,26 +3,47 @@ export enum ConfigAuthMode {
   InNewTab = 'new_tab'
 }
 
+/**
+ * Если передан codeVerifier, то нельзя передать codeChallenge и наоборот
+ * При этом оба параметра необязательные
+ */
+export type PKSE = (
+  | { codeVerifier?: string; codeChallenge?: never }
+  | { codeVerifier?: never; codeChallenge: string }
+  );
+
 export interface ConfigData {
   app: number;
   redirectUrl: string;
   state?: string;
+  codeVerifier?: string;
+  codeChallenge?: string;
+  scope?: string;
+
+  /**
+   * @ignore
+   */
+  prompt?: Prompt[];
+
+  /**
+   * @ignore
+   */
   mode?: ConfigAuthMode;
 
   /**
    * @ignore
    */
-  __loginDomain: string;
+  __loginDomain?: string;
 
   /**
    * @ignore
    */
-  __oauthDomain: string;
+  __oauthDomain?: string;
 
   /**
    * @ignore
    */
-  __vkidDomain: string;
+  __vkidDomain?: string;
 
   /**
    * @ignore
@@ -33,4 +54,12 @@ export interface ConfigData {
    * @ignore
    */
   __debug?: boolean;
+}
+
+export enum Prompt {
+  Default = '',
+  None = 'none',
+  Login = 'login',
+  Consent = 'consent',
+  SelectAccount = 'select_account',
 }

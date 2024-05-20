@@ -5,8 +5,9 @@ import { Dispatcher } from '#/core/dispatcher';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isRequired, validator } from '#/core/validator';
 import { Languages, Scheme } from '#/types';
+import { codeVerifier, state } from '#/utils/cookie';
 import { generateCodeChallenge } from '#/utils/oauth';
-import { getRedirectWithPayloadUrl, getVKIDUrl } from '#/utils/url';
+import { getRedirectWithPayloadUrl, getVKIDUrl, RedirectPayload } from '#/utils/url';
 import { uuid } from '#/utils/uuid';
 
 import { WIDGET_ERROR_TEXT } from './constants';
@@ -22,11 +23,11 @@ export class Widget<P = WidgetParams> extends Dispatcher {
   /**
    * @ignore
    */
-  public static __config: Config;
+  public static config: Config;
   /**
    * @ignore
    */
-  public static __auth: Auth;
+  public static auth: Auth;
 
   protected readonly id: string = uuid();
 
@@ -43,7 +44,7 @@ export class Widget<P = WidgetParams> extends Dispatcher {
 
   public constructor() {
     super();
-    this.config = Widget.__config;
+    this.config = Widget.config;
   }
 
   @validator<WidgetParams>({ container: [isRequired] })
@@ -165,11 +166,16 @@ export class Widget<P = WidgetParams> extends Dispatcher {
   }
 
   protected getWidgetFrameSrc(config: ConfigData, params: P): string {
+    codeVerifier(config.codeVerifier);
+    state(config.state);
+
     const queryParams = {
       ...params,
-      code_challenge: generateCodeChallenge(),
-      code_challenge_method: CODE_CHALLENGE_METHOD,
       origin: location.protocol + '//' + location.host,
+      oauth_version: 2,
+      code_challenge: config.codeChallenge ?? generateCodeChallenge(codeVerifier()),
+      code_challenge_method: CODE_CHALLENGE_METHOD,
+      state: state(),
     };
 
     return getVKIDUrl(this.vkidAppName, queryParams, config);
@@ -188,8 +194,7 @@ export class Widget<P = WidgetParams> extends Dispatcher {
     };
   }
 
-  // TODO: добавить типы
-  protected redirectWithPayload(payload: any) {
-    location.assign(getRedirectWithPayloadUrl(payload, Widget.__config));
+  protected redirectWithPayload(payload: RedirectPayload) {
+    location.assign(getRedirectWithPayloadUrl(payload, Widget.config));
   }
 }

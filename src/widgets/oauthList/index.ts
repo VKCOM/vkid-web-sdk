@@ -1,2 +1,2 @@
 export { OAuthList } from './oauthList';
-export { OAuthListParams, OAuthName, OAuthListStyles } from './types';
+export { OAuthListParams, OAuthName, ExternalOAuthName, OAuthListStyles } from './types';

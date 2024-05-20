@@ -1,21 +1,39 @@
-import { Auth, AuthParams, AuthError, AuthResponse, AuthErrorCode } from './auth';
-import { Config, ConfigData, ConfigAuthMode } from './core/config';
+import {
+  Auth,
+  AuthParams,
+  AuthError,
+  AuthResponse,
+  AuthErrorCode,
+  LogoutResult,
+  PublicInfoResult,
+  TokenResult,
+  UserInfoResult,
+} from './auth';
+import { Config, ConfigData, ConfigAuthMode, Prompt } from './core/config';
 import { Widget } from './core/widget';
 export { Languages, Scheme } from './types';
 
 const globalConfig = new Config();
-export { globalConfig as Config, ConfigAuthMode };
+export { globalConfig as Config, ConfigAuthMode, Prompt };
 export type { ConfigData };
 
 /** Export Auth */
-Auth.__config = globalConfig;
+Auth.config = globalConfig;
 const globalAuth = new Auth();
 export { globalAuth as Auth, AuthErrorCode };
-export type { AuthParams, AuthError, AuthResponse };
+export type {
+  AuthParams,
+  AuthError,
+  AuthResponse,
+  LogoutResult,
+  PublicInfoResult,
+  TokenResult,
+  UserInfoResult,
+};
 
 /** Export Core Widget */
-Widget.__config = globalConfig;
-Widget.__auth = globalAuth;
+Widget.config = globalConfig;
+Widget.auth = globalAuth;
 export { WidgetEvents } from './core/widget';
 
 /** Export OneTap */
@@ -29,4 +47,3 @@ export type { FloatingOneTapParams } from './widgets/floatingOneTap';
 /** Export OAuthList */
 export { OAuthList, OAuthName } from './widgets/oauthList';
 export type { OAuthListParams, OAuthListStyles } from './widgets/oauthList';
-

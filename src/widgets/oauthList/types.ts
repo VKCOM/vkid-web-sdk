@@ -1,9 +1,15 @@
+import { ProductionStatsEventScreen } from '#/core/analytics';
 import { WidgetParams } from '#/core/widget';
 
 export enum OAuthName {
   OK = 'ok_ru',
   MAIL = 'mail_ru',
   VK = 'vkid',
+}
+
+export enum ExternalOAuthName {
+  OK = OAuthName.OK,
+  MAIL = OAuthName.MAIL,
 }
 
 export interface OAuthListStyles {
@@ -26,4 +32,8 @@ export interface OAuthListParams extends WidgetParams {
    * Список внешних сервисов авторизации
    */
   oauthList: OAuthName[];
+  /**
+   * @ignore
+   */
+  flowSource?: ProductionStatsEventScreen.MULTIBRANDING | ProductionStatsEventScreen.NOWHERE | ProductionStatsEventScreen.FLOATING_ONE_TAP;
 }

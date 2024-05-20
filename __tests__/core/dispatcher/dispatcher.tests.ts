@@ -17,7 +17,8 @@ describe('Dispatcher', () => {
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
       .addLabel('Component', 'Dispatcher')
-      .addLabel('Suite', 'Units');
+      .addLabel('Suite', 'Units')
+      .addLabel('Project', 'VKIDSDK');
   });
 
   it('should register event handler with on() method', () => {

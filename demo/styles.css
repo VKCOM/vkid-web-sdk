@@ -106,3 +106,25 @@ html[data-scheme="dark"]  .VkIdWebSdk_controls {
     margin-top: 12px;
   }
 }
+
+.tokenManager_list {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.tokenManager_user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.tokenManager_user > img {
+  margin-right: 12px;
+}
+
+details > input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}

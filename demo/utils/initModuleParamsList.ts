@@ -1,8 +1,13 @@
-import { Languages, Scheme, ConfigAuthMode, FloatingOneTapContentId, OneTapSkin, OAuthName } from '@vkid/sdk';
+import { Languages, Scheme, ConfigAuthMode, FloatingOneTapContentId, OneTapSkin, OAuthName, Prompt } from '@vkid/sdk';
+
+import { DemoStore } from '#demo/types';
 
 const langOptions = [
   { value: Languages.RUS, text: 'RUS' },
   { value: Languages.UKR, text: 'UKR' },
+  { value: Languages.BEL, text: 'BEL' },
+  { value: Languages.KAZ, text: 'KAZ' },
+  { value: Languages.UZB, text: 'UZB' },
   { value: Languages.ENG, text: 'ENG' },
   { value: Languages.SPA, text: 'SPA' },
   { value: Languages.GERMAN, text: 'GERMAN' },
@@ -42,7 +47,14 @@ const oauthesOptions = [
   { value: OAuthName.MAIL + ',' + OAuthName.OK, text: 'Mail.ru + OK.ru' },
 ];
 
-export const initModuleParamsList = (store: Record<string, any>) => {
+const promptOptions = [
+  { value: Prompt.Login, text: 'Login' },
+  { value: Prompt.Consent, text: 'Consent' },
+  { value: Prompt.None, text: 'None' },
+  { value: Prompt.SelectAccount, text: 'Select account' },
+];
+
+export const initModuleParamsList = (store: DemoStore) => {
   const html = `<details open>
   <summary>Параметры модулей</summary>
   <label for="lang">Язык:</label>
@@ -74,6 +86,14 @@ export const initModuleParamsList = (store: Record<string, any>) => {
   <select id="oauthes" name="oauthes">
     ${oauthesOptions.map(({ text, value }) => `<option ${store.oauthes === value ? 'selected' : ''} value="${value}">${text}</option>`).join('')}
   </select>
+  <br />
+  <div class="prompt">
+    <details>
+      <summary>Prompt</summary>
+        ${promptOptions.map(({ text, value }) => `<label for="${value}">
+            <input ${store.prompt?.includes(value) ? 'checked' : ''} type="checkbox" name="${value}" id="${value}">${text}</label><br />`).join('')}
+      </div>
+    </details>
   <br />
   <button onclick="localStorage.removeItem('vkid_demo:store'); location.reload()">Сбросить</button>
 </details>

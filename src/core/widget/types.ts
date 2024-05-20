@@ -34,7 +34,11 @@ export enum WidgetErrorCode {
   /**
    * Внутренняя ошибка
    */
-  InternalError = 1
+  InternalError = 1,
+  /**
+   * Ошибка авторизации
+   */
+  AuthError = 2
 }
 
 export type WidgetErrorText = Record<WidgetErrorCode, string>;

@@ -1,8 +1,9 @@
 import { swc } from 'rollup-plugin-swc3';
-import resolve from '@rollup/plugin-node-resolve';
+import analyze from 'rollup-plugin-analyzer';
+import renameNodeModules from 'rollup-plugin-rename-node-modules';
 import commonjs from '@rollup/plugin-commonjs';
 import replace from '@rollup/plugin-replace';
-import renameNodeModules from 'rollup-plugin-rename-node-modules';
+import resolve from '@rollup/plugin-node-resolve';
 import { version } from './package.json';
 
 const extensions = ['.js', '.ts'];
@@ -13,6 +14,8 @@ const external = [
   'crypto-js/sha256',
 ]
 
+// Для отслеживания времени сборки
+console.log('time:', new Date().getTime())
 const plugins = [
   resolve({
     extensions,
@@ -28,6 +31,14 @@ const plugins = [
     },
     preventAssignment: true,
   }),
+  analyze( {
+    skipFormatted: true,
+    summaryOnly: true,
+    onAnalysis: (bundle) => {
+      // Для отслеживания времени и размеров сборки
+      console.log('size:', bundle.bundleSize);
+      console.log('time:', new Date().getTime());
+    } }),
 ];
 
 const esm = {
@@ -70,7 +81,7 @@ const umd = {
   },
   plugins: [
     ...plugins,
-    swc({ minify: false })
+    swc({ minify: true })
   ],
   output: {
     dir: 'dist-sdk/umd',

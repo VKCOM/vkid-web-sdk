@@ -3,12 +3,12 @@ export enum BridgeEvents {
   UNSUPPORTED_MESSAGE = 'unsupported_message',
 }
 
-export interface BridgeMessageData<H> {
+export interface BridgeMessageData<H, P = Record<string, any>> {
   handler: H;
-  params: Record<string, any>;
+  params: P;
 }
 
-export interface BridgeMessage<H> extends BridgeMessageData<H> {
+export interface BridgeMessage<H, P = Record<string, any>> extends BridgeMessageData<H, P> {
   type: string;
 }
 
