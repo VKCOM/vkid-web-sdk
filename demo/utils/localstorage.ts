@@ -9,8 +9,22 @@ export const saveDemoStoreInLS = (store: DemoStore) => {
   } catch (e) {}
 };
 
+export const vkidDomainLS = (domain?: string) => {
+  try {
+    if (domain) {
+      localStorage.setItem('vkid_demo:vkidDomain', domain);
+      return;
+    }
+    return localStorage.getItem('vkid_demo:vkidDomain');
+  } catch (e) {}
+};
+
 export const getDemoStoreFromLS = (): DemoStore => {
   const defaultDemoStore: DemoStore = {
+    app: 7303035,
+    state: '',
+    codeVerifier: '',
+    codeChallenge: '',
     contentId: VKID.FloatingOneTapContentId.SIGN_IN_TO_SERVICE,
     lang: VKID.Languages.RUS,
     scheme: VKID.Scheme.LIGHT,
@@ -22,12 +36,17 @@ export const getDemoStoreFromLS = (): DemoStore => {
     enable_basicAuth: true,
     enable_oneTap: true,
     enable_floatingOneTap: true,
+    prompt: [],
+    deviceId: '',
+    vkidDomain: '',
+    scope: '',
   };
 
   try {
     const stringStore = localStorage.getItem('vkid_demo:store');
     if (stringStore) {
-      return JSON.parse(stringStore);
+      const lsStore = JSON.parse(stringStore);
+      return { ...defaultDemoStore, ...lsStore };
     }
     saveDemoStoreInLS(defaultDemoStore);
   } catch (e) {}

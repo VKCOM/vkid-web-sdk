@@ -11,3 +11,5 @@ export const VKID_DOMAIN = `id.${DOMAIN}`;
 export const ALLOWED_DOMAINS = ['vk.com', 'vk.ru'];
 export const DEFAULT_DOMAIN = 'vk.com';
 export const DOMAIN_FILE_URL = 'https://vk.ru/domain.txt';
+
+export const COOKIE_EXPIRES_TIME_15_MIN = 900_000;

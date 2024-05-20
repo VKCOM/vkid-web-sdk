@@ -38,5 +38,7 @@ module.exports = {
     '@typescript-eslint/prefer-string-starts-ends-with': 'off',
 
     'no-shadow': 'off',
+
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
   },
 };

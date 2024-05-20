@@ -1,5 +1,9 @@
-import { WidgetParams } from '#/core/widget';
+import { BridgeMessage } from '#/core/bridge';
+import { WidgetEvents, WidgetParams } from '#/core/widget';
+import { RedirectPayload } from '#/utils/url';
 import { OAuthName } from '#/widgets/oauthList';
+
+import { OneTapInternalEvents } from './events';
 
 export interface OneTapStyles {
   /**
@@ -39,3 +43,15 @@ export interface OneTapParams extends WidgetParams {
    */
   oauthList?: OAuthName[];
 }
+
+export interface OneTapBridgeFullAuthParams {
+  uuid: string;
+  screen?: string;
+  sdk_oauth?: OAuthName;
+}
+
+type OneTapBridgeParams = OneTapBridgeFullAuthParams | RedirectPayload;
+type OneTapEvents = OneTapInternalEvents | WidgetEvents;
+
+export type OneTapBridgeMessage = BridgeMessage<OneTapEvents, OneTapBridgeParams>;
+

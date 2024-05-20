@@ -1,4 +1,13 @@
+import { OAUTH2_CODE_TYPE } from '#/auth/constants';
 import { Languages, Scheme } from '#/types';
+import { OAuthName } from '#/widgets/oauthList';
+
+export enum AuthStatsFlowSource {
+  BUTTON_ONE_TAP = 'button_one_tap',
+  BUTTON_ONE_TAP_ALTERNATIVE = 'button_one_tap_alternative',
+  FLOATING_ONE_TAP = 'floating_one_tap',
+  FLOATING_ONE_TAP_ALTERNATIVE = 'floating_one_tap_alternative'
+}
 
 export interface AuthParams {
   /**
@@ -14,12 +23,16 @@ export interface AuthParams {
   /**
    * @ignore
    */
-  action?: AuthAction;
-
+  provider?: OAuthName;
   /**
    * @ignore
    */
   screen?: string;
+
+  /**
+   * @ignore
+   */
+  statsFlowSource?: AuthStatsFlowSource;
 }
 
 export enum AuthErrorCode {
@@ -42,34 +55,21 @@ export enum AuthErrorCode {
    * Авторизация завершилась ошибкой
    */
   AuthorizationFailed = 103,
+  /**
+   * Проверка стейта завершилась с ошибкой
+   */
+  StateMismatch = 104,
 }
 
 export type AuthErrorText = Record<AuthErrorCode, string>;
 
-export interface AuthError {
-  /**
-   * Код ошибки
-   */
-  code: AuthErrorCode;
-
-  /**
-   * Текст ошибки
-   */
-  text: string;
-
-  /**
-   * Расширенная информация об ошибке
-   */
-  details?: any;
-}
-
-export type AuthToken = 'silent_token';
+export type AuthToken = typeof OAUTH2_CODE_TYPE;
 
 export interface AuthResponse {
   /**
-   * Токен, полученный после прохождения авторизации
+   * Код, полученный после прохождения авторизации
    */
-  token: string;
+  code: string;
 
   /**
    * Вид токена
@@ -77,24 +77,89 @@ export interface AuthResponse {
   type: AuthToken;
 
   /**
-   * Время жизни токена
+   * Состояние, указанное в конфиге
    */
-  ttl: number;
-}
+  state: string;
 
-type AuthActionNames = 'sdk_oauth';
-
-interface AuthAction {
-  name: AuthActionNames;
-  params: any;
+  /**
+   * Идентификатор устройства, использовавшийся для создания кода
+   */
+  device_id: string;
 }
 
 export interface AuthQueryParams {
   uuid?: string;
   lang_id?: Languages;
   scheme?: Scheme;
-  screen?: string;
-  response_type: string; // и под токены
-  action?: string;
+  response_type: string;
+  code_challenge: string;
+  code_challenge_method: string;
+  scope?: string;
   origin?: string;
+  client_id: number;
+  state?: string;
+  provider?: OAuthName;
+  screen?: string;
+  oauth_version?: number;
+  prompt: string;
+  stats_flow_source?: string;
+}
+
+export interface AuthError {
+  /**
+   * Текст ошибки
+   */
+  error: string;
+
+  /**
+   * Расширенная информация об ошибке
+   */
+  error_description?: string;
+
+  /**
+   * Страница HTML с человеко-понятным описанием ошибки.
+   */
+  error_uri?: string;
+
+  /**
+   * Строка переданная в изначальном запросе.
+   */
+  state?: string;
+
+  /**
+   * Код ошибки, возникшей во время работы SDK
+   */
+  code?: AuthErrorCode;
+}
+
+export interface TokenResult {
+  access_token: string;
+  expires_in: number;
+  id_token: string;
+  refresh_token: string;
+  state: string;
+  token_type: string;
+  user_id: number;
+  scope: string;
+}
+
+export interface LogoutResult {
+  response: number;
+}
+
+interface UserData {
+  avatar: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  user_id: string;
+}
+
+export interface PublicInfoResult {
+  user: UserData;
+}
+
+export interface UserInfoResult {
+  user: Partial<UserData>;
 }

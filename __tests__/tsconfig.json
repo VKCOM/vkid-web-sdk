@@ -1,4 +1,9 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["./**/*.ts"]
+  "include": [
+    "./**/*.ts"
+  ],
+  "compilerOptions": {
+    "target": "es2015"
+  }
 }

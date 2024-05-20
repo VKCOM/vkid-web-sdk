@@ -1,17 +1,19 @@
-import { AuthParams } from '#/auth/types';
-import { BridgeMessage } from '#/core/bridge';
+import { AuthError, AuthParams, AuthStatsFlowSource } from '#/auth/types';
+import { ProductionStatsEventScreen } from '#/core/analytics';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isValidHeight, validator } from '#/core/validator';
 import { Widget, WidgetEvents } from '#/core/widget';
-import { WidgetState } from '#/core/widget/types';
+import { WidgetError, WidgetErrorCode, WidgetState } from '#/core/widget/types';
 import { Languages, Scheme } from '#/types';
-import { AgreementsDialog } from '#/widgets/agreementsDialog/agreementsDialog';
-import { AgreementsDialogPublicEvents } from '#/widgets/agreementsDialog/events';
+import { RedirectPayload } from '#/utils/url';
+import { AgreementsDialog, AgreementsDialogBridgeMessage, AgreementsDialogPublicEvents } from '#/widgets/agreementsDialog';
+import { AgreementsDialogStatsFlowSource } from '#/widgets/agreementsDialog/types';
 import { OAuthList, OAuthListParams, OAuthName } from '#/widgets/oauthList';
 
+import { OneTapStatsButtonType, OneTapStatsCollector } from './analytics';
 import { OneTapInternalEvents } from './events';
 import { getOneTapTemplate } from './template';
-import { OneTapParams, OneTapStyles } from './types';
+import { OneTapBridgeFullAuthParams, OneTapBridgeMessage, OneTapParams, OneTapStyles } from './types';
 
 const defaultStylesParams: Required<OneTapStyles> = {
   width: 0,
@@ -22,27 +24,47 @@ const defaultStylesParams: Required<OneTapStyles> = {
 const BUTTON_SPACING = 12;
 
 export class OneTap extends Widget<OneTapParams> {
+  private readonly analytics: OneTapStatsCollector;
   protected vkidAppName = 'button_one_tap_auth';
+  private statsBtnType: OneTapStatsButtonType | null = null;
 
-  protected onBridgeMessageHandler(event: BridgeMessage<OneTapInternalEvents | WidgetEvents>) {
+  public constructor() {
+    super();
+    this.analytics = new OneTapStatsCollector(OneTap.config);
+  }
+
+  private readonly setStatsButtonType = (type: OneTapStatsButtonType) => {
+    if (!this.statsBtnType) {
+      this.statsBtnType = type;
+    }
+  }
+
+  protected onBridgeMessageHandler(event: OneTapBridgeMessage) {
     switch (event.handler) {
       // TODO: hidePreloadButton на событие ошибки
       case OneTapInternalEvents.LOGIN_SUCCESS: {
-        this.redirectWithPayload(event.params);
+        const params = event.params as RedirectPayload;
+        this.redirectWithPayload(params);
         break;
       }
       case OneTapInternalEvents.SHOW_FULL_AUTH: {
-        const params: Partial<AuthParams> = {};
-        if (event.params.screen) {
-          params.screen = event.params.screen;
+        const params = event.params as OneTapBridgeFullAuthParams;
+        const authParams: Partial<AuthParams> = {};
+
+        if (params.screen) {
+          authParams.screen = params.screen;
+          authParams.statsFlowSource = AuthStatsFlowSource.BUTTON_ONE_TAP_ALTERNATIVE;
         }
-        if (event.params.sdk_oauth) {
-          params.action = { name: 'sdk_oauth', params: { oauth: event.params.sdk_oauth } };
+
+        if (params.sdk_oauth) {
+          authParams.provider = params.sdk_oauth;
         }
-        this.openFullAuth(params);
+
+        this.openFullAuth(authParams);
         break;
       }
       case OneTapInternalEvents.NOT_AUTHORIZED: {
+        this.analytics.sendNoSessionFound();
         this.setState(WidgetState.NOT_LOADED);
         clearTimeout(this.timeoutTimer);
         this.elements?.iframe?.remove();
@@ -58,15 +80,21 @@ export class OneTap extends Widget<OneTapParams> {
       }
     }
   }
+  protected onErrorHandler(error: WidgetError) {
+    this.statsBtnType && this.analytics.sendOneTapButtonNoUserShow(this.statsBtnType);
+    this.analytics.sendFrameLoadingFailed();
+    super.onErrorHandler(error);
+  }
 
   private createAgreementsDialogWidget() {
     const params = {
       container: document.body,
-      lang: this.lang,
+      lang_id: this.lang,
       scheme: this.scheme,
+      stats_flow_source: AgreementsDialogStatsFlowSource.BUTTON_ONE_TAP,
     };
     const agreementsDialog = new AgreementsDialog();
-    const acceptHandler = (event: BridgeMessage<AgreementsDialogPublicEvents & WidgetEvents>) => {
+    const acceptHandler = (event: AgreementsDialogBridgeMessage) => {
       this.bridge.sendMessage({
         handler: OneTapInternalEvents.START_AUTHORIZE,
         params: event.params,
@@ -81,11 +109,26 @@ export class OneTap extends Widget<OneTapParams> {
 
   private openFullAuth(value?: AuthParams) {
     const params = {
+      statsFlowSource: AuthStatsFlowSource.BUTTON_ONE_TAP,
       ...value,
       lang: this.lang,
       scheme: this.scheme,
     };
-    OneTap.__auth.login(params);
+
+    OneTap.auth.login(params)
+      .catch((error: AuthError) => {
+        this.events.emit(WidgetEvents.ERROR, {
+          code: WidgetErrorCode.AuthError,
+          text: error.error,
+        });
+      });
+  }
+
+  private login(value?: AuthParams) {
+    this.statsBtnType && this.analytics.sendOneTapButtonNoUserTap(this.statsBtnType)
+      .finally(() => {
+        this.openFullAuth(value);
+      });
   }
 
   private renderOAuthList(params: OAuthListParams) {
@@ -93,7 +136,10 @@ export class OneTap extends Widget<OneTapParams> {
       return;
     }
     const oauthList = new OAuthList();
-    oauthList.render(params);
+    oauthList.render({
+      ...params,
+      flowSource: ProductionStatsEventScreen.NOWHERE,
+    });
   }
 
   @validator<OneTapParams>({ styles: [isValidHeight] })
@@ -112,17 +158,19 @@ export class OneTap extends Widget<OneTapParams> {
       providers: providers.join(','),
     };
 
+    this.analytics.sendSdkInit();
     this.templateRenderer = getOneTapTemplate({
       width: params.styles?.width || defaultStylesParams.width,
       iframeHeight: oneTapParams.show_alternative_login ? oneTapParams.style_height * 2 + BUTTON_SPACING : oneTapParams.style_height,
       height: oneTapParams.style_height,
       borderRadius: oneTapParams.style_border_radius,
-      openFullAuth: this.openFullAuth.bind(this),
+      login: this.login.bind(this),
       skin: oneTapParams.button_skin,
       scheme: oneTapParams.scheme,
       lang: oneTapParams.lang_id,
       renderOAuthList: this.renderOAuthList.bind(this),
       providers,
+      setStatsButtonType: this.setStatsButtonType.bind(this),
     });
 
     return super.render({ container: params.container, ...oneTapParams });

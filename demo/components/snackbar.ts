@@ -65,7 +65,8 @@ export const showAuthSuccessSnackbar = () => {
   showSnackbar('auth_success');
 };
 
-export const showAuthErrorSnackbar = () => {
+export const showAuthErrorSnackbar = (e?: unknown) => {
+  e && console.error(e);
   showSnackbar('auth_error');
 };
 

@@ -40,7 +40,12 @@ export const initAuthButtons = (demoStore: DemoStore) => {
   authButtonIds.forEach((item) => {
     const button = document.getElementById(item) as HTMLElement;
 
-    button.onclick = () => VKID.Auth.login();
+    button.onclick = () => VKID.Auth.login({
+      lang: demoStore.lang,
+      scheme: demoStore.scheme,
+    }).catch((e: VKID.AuthError) => {
+      console.error('Ошибка Auth.login()', e);
+    });
   });
 };
 

@@ -8,7 +8,8 @@ describe('DataService', () => {
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
       .addLabel('Component', 'DataService')
-      .addLabel('Suite', 'Units');
+      .addLabel('Suite', 'Units')
+      .addLabel('Project', 'VKIDSDK');
   });
   test('Must return data on successful completion', async () => {
     const dataService = new DataService();

@@ -1,3 +1,11 @@
 export { Auth } from './auth';
 export { AuthErrorCode } from './types';
-export type { AuthParams, AuthError, AuthResponse } from './types';
+export type {
+  AuthError,
+  AuthParams,
+  AuthResponse,
+  LogoutResult,
+  PublicInfoResult,
+  TokenResult,
+  UserInfoResult,
+} from './types';

@@ -15,7 +15,7 @@ jest.mock('crypto-js/enc-base64', () => ({
 }));
 
 jest.mock('nanoid/non-secure', () => ({
-  nanoid: () => 'verifier',
+  nanoid: () => 'nanoid',
   customAlphabet: (data, length) => () => `abc`
 }));
 
@@ -30,3 +30,16 @@ window.env = {
   VERSION: JSON.stringify(version),
   DOMAIN: JSON.stringify('vk.com'),
 };
+
+/**
+ * Mock fetch
+ */
+
+global.fetch = jest.fn(() => Promise.resolve({
+  json: () => Promise.resolve(),
+}));
+
+jest.mock('#/utils/request', () => ({
+  request: jest.fn().mockReturnValue(Promise.resolve()),
+  getStatsUrl: (value) => value,
+}));

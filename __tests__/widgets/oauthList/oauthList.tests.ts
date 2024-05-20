@@ -1,5 +1,7 @@
-import { Config, Languages, OAuthList, OAuthName } from '#/index';
+import { Config, ConfigAuthMode, Languages, OAuthList, OAuthName, Prompt } from '#/index';
 import { singleButtonText } from '#/widgets/oauthList/lang';
+
+import { wait } from '../../utils';
 
 const APP_ID = 100;
 
@@ -30,7 +32,7 @@ describe('OAuthList', () => {
   });
 
   beforeEach(() => {
-    Config.set({ app: APP_ID });
+    Config.init({ app: APP_ID, redirectUrl: 'redirectUrl', codeVerifier: 'codeVerifier', state: 'state', mode: ConfigAuthMode.Redirect });
     oauthList = new OAuthList();
 
     container = document.createElement('div', {});
@@ -42,7 +44,8 @@ describe('OAuthList', () => {
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
       .addLabel('Component', 'OAuthList')
-      .addLabel('Suite', 'Units');
+      .addLabel('Suite', 'Units')
+      .addLabel('Project', 'VKIDSDK');
   });
 
   afterEach(() => {
@@ -69,11 +72,15 @@ describe('OAuthList', () => {
     expect(oauthListDiv?.getAttribute('data-single-mode')).not.toBeNull();
   });
 
-  test('Should open auth with correct action', () => {
-    oauthList.render({ container, oauthList: [OAuthName.VK] });
-    const vkidButton = container.querySelector('[data-oauth="vkid"]') as HTMLDivElement;
+  test('Should open authorize with correct params', async () => {
+    oauthList.render({ container, oauthList: [OAuthName.OK] });
+    const vkidButton = container.querySelector('[data-oauth="ok_ru"]') as HTMLDivElement;
     vkidButton.click();
-    const action = JSON.stringify({ name: 'sdk_oauth', params: { oauth: 'vkid' } });
-    expect(assignFn).toBeCalledWith(expect.stringContaining(`action=${encodeURIComponent(btoa(action))}`));
+    await wait(0);
+    const callArgs: string[] = assignFn.mock.calls[0];
+    const searchParams = new URLSearchParams(new URL(callArgs[0]).search);
+
+    expect(searchParams.get('provider')).toEqual('ok_ru');
+    expect(searchParams.get('prompt')).toEqual(Prompt.Login);
   });
 });

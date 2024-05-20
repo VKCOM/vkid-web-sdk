@@ -10,7 +10,8 @@ describe('Validator', () => {
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
       .addLabel('Component', 'Validator')
-      .addLabel('Suite', 'Units');
+      .addLabel('Suite', 'Units')
+      .addLabel('Project', 'VKIDSDK');
   });
   it('one parameter, one rule', () => {
     const correctParams = { value1: 'Langley' };

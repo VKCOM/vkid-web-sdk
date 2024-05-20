@@ -1,8 +1,13 @@
-import { ConfigAuthMode } from '#/core/config';
+import { TokenResult } from '#/auth/types';
+import { ConfigAuthMode, Prompt } from '#/core/config';
 import { Languages, Scheme } from '#/types';
 import { FloatingOneTapContentId } from '#/widgets/floatingOneTap';
 
 export interface DemoStore {
+  app: number;
+  state: string;
+  codeVerifier: string;
+  codeChallenge: string;
   contentId: FloatingOneTapContentId;
   lang: Languages;
   scheme: Scheme;
@@ -13,4 +18,9 @@ export interface DemoStore {
   enable_basicAuth: boolean;
   enable_oneTap: boolean;
   enable_floatingOneTap: boolean;
+  prompt: Prompt[];
+  authResult?: TokenResult & { updated_at: Date };
+  deviceId: string;
+  vkidDomain: string;
+  scope: string;
 }

@@ -1,17 +1,19 @@
-import { AuthParams } from '#/auth/types';
-import { BridgeMessage } from '#/core/bridge';
+import { AuthError, AuthParams, AuthStatsFlowSource } from '#/auth/types';
+import { ProductionStatsEventScreen } from '#/core/analytics';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isRequired, validator } from '#/core/validator';
 import { Widget, WidgetEvents } from '#/core/widget';
-import { WidgetState } from '#/core/widget/types';
+import { WidgetError, WidgetErrorCode, WidgetState } from '#/core/widget/types';
 import { Languages, Scheme } from '#/types';
-import { AgreementsDialog } from '#/widgets/agreementsDialog/agreementsDialog';
-import { AgreementsDialogInternalEvents } from '#/widgets/agreementsDialog/events';
+import { RedirectPayload } from '#/utils/url';
+import { AgreementsDialog, AgreementsDialogPublicEvents, AgreementsDialogBridgeMessage } from '#/widgets/agreementsDialog';
+import { AgreementsDialogStatsFlowSource } from '#/widgets/agreementsDialog/types';
 import { OAuthList, OAuthListParams, OAuthName } from '#/widgets/oauthList';
 
+import { FloatingOneTapStatsCollector } from './analytics';
 import { FloatingOneTapInternalEvents } from './events';
 import { getFloatingOneTapTemplate } from './template';
-import { FloatingOneTapContentId, FloatingOneTapIndent, FloatingOneTapParams } from './types';
+import { FloatingOneTapBridgeFullAuthParams, FloatingOneTapBridgeMessage, FloatingOneTapContentId, FloatingOneTapIndent, FloatingOneTapParams } from './types';
 
 const defaultIndent: Required<FloatingOneTapIndent> = {
   top: 12,
@@ -20,23 +22,35 @@ const defaultIndent: Required<FloatingOneTapIndent> = {
 };
 
 export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>> {
+  private readonly analytics: FloatingOneTapStatsCollector;
   protected vkidAppName = 'floating_one_tap_auth';
 
-  protected onBridgeMessageHandler(event: BridgeMessage<FloatingOneTapInternalEvents | WidgetEvents>) {
+  public constructor() {
+    super();
+    this.analytics = new FloatingOneTapStatsCollector(FloatingOneTap.config);
+  }
+
+  protected onBridgeMessageHandler(event: FloatingOneTapBridgeMessage) {
     switch (event.handler) {
       case FloatingOneTapInternalEvents.LOGIN_SUCCESS: {
-        this.redirectWithPayload(event.params);
+        const params = event.params as RedirectPayload;
+        this.redirectWithPayload(params);
         break;
       }
       case FloatingOneTapInternalEvents.SHOW_FULL_AUTH: {
-        const params: Partial<AuthParams> = {};
-        if (event.params.screen) {
-          params.screen = event.params.screen;
+        const params = event.params as FloatingOneTapBridgeFullAuthParams;
+        const authParams: Partial<AuthParams> = {};
+
+        if (params.screen) {
+          authParams.screen = params.screen;
+          authParams.statsFlowSource = AuthStatsFlowSource.FLOATING_ONE_TAP_ALTERNATIVE;
         }
-        if (event.params.sdk_oauth) {
-          params.action = { name: 'sdk_oauth', params: { oauth: event.params.sdk_oauth } };
+
+        if (params.sdk_oauth) {
+          authParams.provider = params.sdk_oauth;
         }
-        this.openFullAuth(params);
+
+        this.openFullAuth(authParams);
         break;
       }
       case FloatingOneTapInternalEvents.NOT_AUTHORIZED: {
@@ -59,33 +73,55 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
     }
   }
 
+  protected onErrorHandler(error: WidgetError) {
+    this.analytics.sendIframeLoadingFailed();
+    this.analytics.sendNoUserButtonShow();
+    super.onErrorHandler(error);
+  }
+
   private createAgreementsDialogWidget() {
     const params = {
       container: document.body,
       lang: this.lang,
       scheme: this.scheme,
+      stats_flow_source: AgreementsDialogStatsFlowSource.FLOATING_ONE_TAP,
     };
     const agreementsDialog = new AgreementsDialog();
-    const acceptHandler = (event: BridgeMessage<AgreementsDialogInternalEvents & WidgetEvents>) => {
+    const acceptHandler = (event: AgreementsDialogBridgeMessage) => {
       this.bridge.sendMessage({
         handler: FloatingOneTapInternalEvents.START_AUTHORIZE,
         params: event.params,
       });
-      agreementsDialog.off(AgreementsDialogInternalEvents.ACCEPT, acceptHandler);
+      agreementsDialog.off(AgreementsDialogPublicEvents.ACCEPT, acceptHandler);
       agreementsDialog.close();
     };
 
-    agreementsDialog.on(AgreementsDialogInternalEvents.ACCEPT, acceptHandler);
+    agreementsDialog.on(AgreementsDialogPublicEvents.ACCEPT, acceptHandler);
     agreementsDialog.render(params);
   }
 
   private openFullAuth(value?: AuthParams) {
     const params = {
+      statsFlowSource: AuthStatsFlowSource.FLOATING_ONE_TAP,
       ...value,
       lang: this.lang,
       scheme: this.scheme,
     };
-    FloatingOneTap.__auth.login(params);
+
+    FloatingOneTap.auth.login(params)
+      .catch((error: AuthError) => {
+        this.events.emit(WidgetEvents.ERROR, {
+          code: WidgetErrorCode.AuthError,
+          text: error.error,
+        });
+      });
+  }
+
+  private login(value?: AuthParams) {
+    this.analytics.sendNoUserButtonTap()
+      .finally(() => {
+        this.openFullAuth(value);
+      });
   }
 
   private renderOAuthList(params: OAuthListParams) {
@@ -93,7 +129,10 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
       return;
     }
     const oauthList = new OAuthList();
-    oauthList.render(params);
+    oauthList.render({
+      ...params,
+      flowSource: ProductionStatsEventScreen.FLOATING_ONE_TAP,
+    });
   }
 
   @validator<FloatingOneTapParams>({ appName: [isRequired] })
@@ -110,8 +149,9 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
       providers: providers.join(','),
     };
 
+    this.analytics.sendSdkInit();
     this.templateRenderer = getFloatingOneTapTemplate({
-      openFullAuth: this.openFullAuth.bind(this),
+      login: this.login.bind(this),
       close: this.close.bind(this),
       scheme: this.scheme,
       lang: this.lang,
@@ -121,7 +161,11 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
       renderOAuthList: this.renderOAuthList.bind(this),
       providers,
     });
-
+    this.analytics.sendScreenProcessed({
+      scheme: this.scheme,
+      lang: this.lang,
+      contentId: queryParams.content_id,
+    });
     return super.render({ container: document.body, ...queryParams });
   }
 }

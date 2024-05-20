@@ -9,6 +9,7 @@ import {
 } from '#/widgets/agreementsDialog/events';
 
 import { version } from '../../../package.json';
+import { WINDOW_LOCATION_URL } from '../../constants';
 
 class TestAgreementsDialog extends AgreementsDialog {
   public onBridgeMessageHandler(event: BridgeMessage<AgreementsDialogInternalEvents | WidgetEvents>) {
@@ -23,7 +24,7 @@ let agreementsDialog: TestAgreementsDialog;
 
 describe('Agreements Dialog', () => {
   beforeEach(() => {
-    Config.set({ app: APP_ID, redirectUrl: 'test' });
+    Config.init({ app: APP_ID, redirectUrl: 'test', state: 'state', codeVerifier: 'codeVerifier' });
     agreementsDialog = new TestAgreementsDialog();
 
     agreementsDialog.render({ container: document.body });
@@ -35,7 +36,8 @@ describe('Agreements Dialog', () => {
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
       .addLabel('Component', 'Agreements Dialog')
-      .addLabel('Suite', 'Units');
+      .addLabel('Suite', 'Units')
+      .addLabel('Project', 'VKIDSDK');
   });
 
   afterEach(() => {
@@ -46,21 +48,24 @@ describe('Agreements Dialog', () => {
     expect(iframeElement).toBeTruthy();
 
     const frameSrc = iframeElement.getAttribute('src') as string;
-    const location = frameSrc.split(/[?&]/);
+    const location = new URL(frameSrc);
+    const searchParams = new URLSearchParams(location.search);
+
+    expect(location.href.split('?')[0]).toEqual('https://id.vk.com/user_policy_agreements');
 
     const expectArr = [
-      expect(location[0]).toEqual('https://id.vk.com/user_policy_agreements'),
-      expect(location[1]).toContain('code_challenge=stringified_SHA256-STRING'),
-      expect(location[2]).toContain('code_challenge_method=s256'),
-      expect(location[3]).toContain('origin=https%3A%2F%2Frnd-service.ru'),
-      expect(frameSrc).toContain('uuid'),
-      expect(location[5]).toContain(`v=%22${version}%22`),
-      expect(location[6]).toContain('sdk_type=vkid'),
-      expect(location[7]).toContain('app_id=100'),
-      expect(location[8]).toContain('redirect_uri=test'),
+      expect(searchParams.get('origin')).toEqual(WINDOW_LOCATION_URL),
+      expect(searchParams.get('code_challenge')).toEqual('stringified_SHA256-STRING'),
+      expect(searchParams.get('code_challenge_method')).toEqual('s256'),
+      expect(searchParams.get('v')).toEqual(`\"${version}\"`),
+      expect(searchParams.get('sdk_type')).toEqual('vkid'),
+      expect(searchParams.get('app_id')).toEqual(APP_ID.toString()),
+      expect(searchParams.get('redirect_uri')).toEqual(Config.get().redirectUrl),
+      expect(searchParams.get('oauth_version')).toEqual('2'),
+      expect(searchParams.get('state')).toEqual(Config.get().state),
     ];
 
-    expect(location.length).toEqual(expectArr.length);
+    expect([...new Set(searchParams.keys())].length).toEqual(expectArr.length);
   });
 
   test('Must close the iframe on the decline event', () => {

@@ -1,14 +1,14 @@
-import { BridgeMessage } from '#/core/bridge';
-import { Widget, WidgetEvents } from '#/core/widget';
+import { Widget } from '#/core/widget';
 
 import { AgreementsDialogInternalEvents, AgreementsDialogPublicEvents } from './events';
 import { getAgreementsDialogTemplate } from './template';
+import { AgreementsDialogBridgeMessage, AgreementsDialogParams } from './types';
 
-export class AgreementsDialog extends Widget {
+export class AgreementsDialog extends Widget<AgreementsDialogParams> {
   protected vkidAppName = 'user_policy_agreements';
   protected templateRenderer = getAgreementsDialogTemplate;
 
-  protected onBridgeMessageHandler(event: BridgeMessage<AgreementsDialogInternalEvents | WidgetEvents>) {
+  protected onBridgeMessageHandler(event: AgreementsDialogBridgeMessage) {
     switch (event.handler) {
       case AgreementsDialogInternalEvents.DECLINE: {
         this.close();

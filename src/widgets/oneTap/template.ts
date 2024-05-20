@@ -7,13 +7,15 @@ import { getButtonFontSize, getButtonLogoSize, getButtonPadding } from '#/utils/
 import { OAuthListParams, OAuthName } from '#/widgets/oauthList';
 import { longLang, providerLang, shortLang } from '#/widgets/oneTap/lang';
 
+import { OneTapStatsButtonType } from './analytics';
 import { OneTapParams, OneTapStyles } from './types';
 
 type OneTapTemplateParams = Required<OneTapStyles> & Pick<OneTapParams, 'skin'> & Pick<WidgetParams, 'scheme' | 'lang'> & {
-  openFullAuth?: void;
+  login?: VoidFunction;
   iframeHeight?: number;
   renderOAuthList: (params: OAuthListParams) => void;
   providers?: OAuthName[];
+  setStatsButtonType: (type: OneTapStatsButtonType) => void;
 };
 
 const logoSvg = `
@@ -34,12 +36,13 @@ export const getOneTapTemplate = ({
   height,
   iframeHeight,
   borderRadius,
-  openFullAuth,
+  login,
   skin,
   scheme,
   lang = Languages.RUS,
   renderOAuthList,
   providers,
+  setStatsButtonType,
 }: OneTapTemplateParams) => (id: string) => {
   let textIconLimit = 0;
   let textLongLimit = 0;
@@ -61,7 +64,7 @@ export const getOneTapTemplate = ({
   }, 100);
   buttonEl.classList.add(`VkIdWebSdk__button_${id}`);
   buttonEl.classList.add(`VkIdWebSdk__button_reset_${id}`);
-  openFullAuth && (buttonEl.onclick = openFullAuth);
+  login && (buttonEl.onclick = login);
 
   const btnInEl = document.createElement('span');
   btnInEl.classList.add(`VkIdWebSdk__button_in_${id}`);
@@ -105,6 +108,7 @@ export const getOneTapTemplate = ({
       const containerWidth = containerEl.clientWidth;
 
       if (hasTextContainer && containerWidth < textIconLimit) {
+        setStatsButtonType('icon');
         buttonEl.setAttribute('style', `width: ${height}px;`);
         textContainerEl.remove();
         spinnerEl.remove();
@@ -137,6 +141,8 @@ export const getOneTapTemplate = ({
           textContainerEl.appendChild(textLongEl);
         }, ANIMATION_TIMEOUT);
       }
+
+      setStatsButtonType('default');
     };
     const observer = new ResizeObserver(debounce(observeCallback, 500));
     observer.observe(containerEl);

@@ -26,6 +26,10 @@
 
 ---
 
+ℹ️ Версия VK ID SDK 2.0.0-alpha поддерживает авторизацию по протоколу [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-10), а также способы входа через аккаунты Одноклассников и Mail.ru. Если вы хотите участвовать в тестировании этой версии SDK или узнать о ней подробнее, напишите нам на почту devsupport@corp.vk.com.
+
+---
+
 VK ID SDK сейчас находится в бета-тестировании. О проблемах вы можете сообщить с помощью <a href="https://github.com/VKCOM/vkid-web-sdk/issues">issues репозитория</a>.
 
 ---
@@ -53,7 +57,7 @@ pnpm add @vkid/sdk
 **CDN:**
 
 ```html
-<script src="https://unpkg.com/@vkid/sdk@latest/dist-sdk/umd/index.js"></script>
+<script src="https://unpkg.com/@vkid/sdk@2.0.0-alpha/dist-sdk/umd/index.js"></script>
 ```
 
 > Обратите внимание: Для работы авторизации нужен APP_ID. Вы получите его, когда [создадите](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/create-application) приложение в кабинете подключения VK ID.
@@ -66,15 +70,20 @@ pnpm add @vkid/sdk
 ```javascript
 import * as VKID from '@vkid/sdk';
 
-VKID.Config.set({
+VKID.Config.init({
   app: APP_ID,
-  redirectUrl: 'https://example.com'
+  redirectUrl: 'https://example.com',
+  state: 'state',
+  codeVerifier: 'codeVerifier',
+  scope: 'phone email',
 });
 
 
 const authButton = document.createElement('button');
 authButton.onclick = () => {
-  VKID.Auth.login(); // После авторизации будет редирект на адрес, указанный в параметре redirect_uri
+  // После авторизации будет редирект на адрес, указанный в параметре redirectUrl
+  VKID.Auth.login()
+    .catch(console.error);
 };
 
 document.getElementById('container').appendChild(authButton);
@@ -87,9 +96,12 @@ document.getElementById('container').appendChild(authButton);
 ```javascript
 import * as VKID from '@vkid/sdk';
 
-VKID.Config.set({
+VKID.Config.init({
   app: APP_ID,
-  redirectUrl: 'https://example.com'
+  redirectUrl: 'https://example.com',
+  state: 'state',
+  codeVerifier: 'codeVerifier',
+  scope: 'phone email',
 });
 
 const oneTap = new VKID.OneTap();
@@ -97,16 +109,18 @@ const oneTap = new VKID.OneTap();
 const container = document.getElementById('VkIdSdkOneTap');
 
 if (container) {
-  oneTap.render({ container });
+  oneTap
+    .render({ container })
+    .on(VKID.WidgetEvents.ERROR, console.error);
 }
 ```
 </details>
 
 ## Документация
 
-- [Что такое VK ID](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/intro/start-page)
-- [Создание приложения](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/create-application)
-- [Требования к дизайну](https://id.vk.com/business/go/docs/ru/vkid/archive/1.60/vk-id/guidelines/design-rules)
+- [Что такое VK ID](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id-2/intro/start-page)
+- [Создание приложения](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id-2/connection/create-application)
+- [Требования к дизайну](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id-2/connection/guidelines/design-rules-oauth)
 - [Спецификация](https://vkcom.github.io/vkid-web-sdk/)
 
 ## Contributing

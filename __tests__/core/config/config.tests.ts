@@ -8,7 +8,8 @@ describe('Config', () => {
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
       .addLabel('Component', 'Config')
-      .addLabel('Suite', 'Units');
+      .addLabel('Suite', 'Units')
+      .addLabel('Project', 'VKIDSDK');
   });
   it('Should get default properties', () => {
     const config = new Config();
@@ -25,8 +26,9 @@ describe('Config', () => {
     const config = new Config();
     const OVERRIDE_STRING = 'Ryoji';
 
-    config.set({
+    config.init({
       app: 100,
+      codeVerifier: OVERRIDE_STRING,
       state: OVERRIDE_STRING,
       redirectUrl: OVERRIDE_STRING,
       __loginDomain: OVERRIDE_STRING,
@@ -37,6 +39,7 @@ describe('Config', () => {
     expect(config.get()).toBeTruthy();
     expect(config.get().app).toBe(100);
     expect(config.get().state).toBe(OVERRIDE_STRING);
+    expect(config.get().codeVerifier).toBe(OVERRIDE_STRING);
     expect(config.get().redirectUrl).toBe(OVERRIDE_STRING);
     expect(config.get().__loginDomain).toBe(OVERRIDE_STRING);
     expect(config.get().__oauthDomain).toBe(OVERRIDE_STRING);

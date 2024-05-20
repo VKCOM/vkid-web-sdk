@@ -3,6 +3,7 @@ import { BridgeMessage } from '#/core/bridge';
 import { BRIDGE_MESSAGE_TYPE_SDK } from '#/core/bridge/bridge';
 import { Widget, WidgetEvents } from '#/core/widget';
 import { Config } from '#/index';
+import { codeVerifier as codeVerifierCookie, state as stateCookie } from '#/utils/cookie';
 
 const APP_ID = 100;
 
@@ -19,9 +20,9 @@ class TestWidget extends Widget {
 
 let widget: TestWidget;
 
-describe('Data Policy', () => {
+describe('Widget', () => {
   beforeEach(() => {
-    Config.set({ app: APP_ID });
+    Config.init({ app: APP_ID, redirectUrl: 'test', state: 'state', codeVerifier: 'codeVerifier' });
     widget = new TestWidget();
 
     container = document.createElement('div', {});
@@ -35,8 +36,9 @@ describe('Data Policy', () => {
       .feature('Units')
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
-      .addLabel('Component', 'Data Policy')
-      .addLabel('Suite', 'Units');
+      .addLabel('Component', 'Widget')
+      .addLabel('Suite', 'Units')
+      .addLabel('Project', 'VKIDSDK');
   });
 
   afterEach(() => {
@@ -55,7 +57,6 @@ describe('Data Policy', () => {
     expect(urlParams.get('origin')).toContain(location.protocol + '//' + location.host);
     expect(urlParams.get('code_challenge_method')).toContain('s256');
     expect(frameSrc).toContain('id.vk.');
-    expect(frameSrc).toContain('uuid');
   });
 
   test('Should remove root after close()', () => {
@@ -114,5 +115,18 @@ describe('Data Policy', () => {
     });
 
     expect(onHandlerFn).toBeCalledWith({ code: 1, text: 'internal error', details: { msg: 1 } });
+  });
+
+  test('Should set state and codeVerifier params to cookie after widget load', async () => {
+    const { codeVerifier, state } = Config.get();
+
+    codeVerifierCookie('1');
+    stateCookie('1');
+
+    widget = new TestWidget();
+    widget.render({ container });
+
+    expect(codeVerifier).toEqual(codeVerifierCookie());
+    expect(state).toEqual(stateCookie());
   });
 });

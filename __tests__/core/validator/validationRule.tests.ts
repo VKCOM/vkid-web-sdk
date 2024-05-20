@@ -8,7 +8,8 @@ describe('isNumber rule', () => {
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
       .addLabel('Component', 'isNumber rule')
-      .addLabel('Suite', 'Units');
+      .addLabel('Suite', 'Units')
+      .addLabel('Project', 'VKIDSDK');
   });
   it('should return true', () => {
     expect(isNumber(1).result).toBeTruthy();
@@ -36,7 +37,8 @@ describe('isRequired rule', () => {
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
       .addLabel('Component', 'isRequired')
-      .addLabel('Suite', 'Units');
+      .addLabel('Suite', 'Units')
+      .addLabel('Project', 'VKIDSDK');
   });
   it('should return true', () => {
     expect(isRequired(1).result).toBeTruthy();
@@ -62,7 +64,8 @@ describe('isValidAppId rule', () => {
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
       .addLabel('Component', 'isValidAppId rule')
-      .addLabel('Suite', 'Units');
+      .addLabel('Suite', 'Units')
+      .addLabel('Project', 'VKIDSDK');
   });
   it('should return true', () => {
     expect(isValidAppId(undefined).result).toBeTruthy();
@@ -87,7 +90,8 @@ describe('isValidHeight rule', () => {
       .addLabel('Platform', 'Web')
       .addLabel('Product', 'VK ID SDK')
       .addLabel('Component', 'isValidHeight rule')
-      .addLabel('Suite', 'Units');
+      .addLabel('Suite', 'Units')
+      .addLabel('Project', 'VKIDSDK');
   });
   it('should return true', () => {
     expect(isValidHeight(undefined).result).toBeTruthy();
