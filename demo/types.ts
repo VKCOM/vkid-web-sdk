@@ -23,4 +23,6 @@ export interface DemoStore {
   deviceId: string;
   vkidDomain: string;
   scope: string;
+  fastAuthEnabledOnetap: '' | '1';
+  fastAuthEnabledFloatingOnetap: '' | '1';
 }

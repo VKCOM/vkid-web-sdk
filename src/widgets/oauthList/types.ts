@@ -36,4 +36,8 @@ export interface OAuthListParams extends WidgetParams {
    * @ignore
    */
   flowSource?: ProductionStatsEventScreen.MULTIBRANDING | ProductionStatsEventScreen.NOWHERE | ProductionStatsEventScreen.FLOATING_ONE_TAP;
+  /**
+   * @ignore
+   */
+  uniqueSessionId?: string;
 }

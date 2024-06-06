@@ -26,6 +26,7 @@ describe('FloatingOneTapStatsCollector', () => {
   beforeAll(() => {
     const config = new Config();
     statsCollector = new FloatingOneTapStatsCollector(config);
+    statsCollector.setUniqueSessionId('id');
   });
 
   beforeEach(() => {
@@ -62,6 +63,9 @@ describe('FloatingOneTapStatsCollector', () => {
             name: 'sdk_type',
             value: 'vkid',
           }, {
+            name: 'unique_session_id',
+            value: 'id',
+          }, {
             name: 'theme_type',
             value: Scheme.DARK,
           }, {
@@ -87,6 +91,9 @@ describe('FloatingOneTapStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }],
     })));
   });
@@ -103,6 +110,9 @@ describe('FloatingOneTapStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }],
     })));
   });
@@ -119,6 +129,9 @@ describe('FloatingOneTapStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }],
     })));
   });
@@ -135,6 +148,9 @@ describe('FloatingOneTapStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }],
     })));
   });

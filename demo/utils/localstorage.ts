@@ -40,6 +40,8 @@ export const getDemoStoreFromLS = (): DemoStore => {
     deviceId: '',
     vkidDomain: '',
     scope: '',
+    fastAuthEnabledOnetap: '1',
+    fastAuthEnabledFloatingOnetap: '1',
   };
 
   try {

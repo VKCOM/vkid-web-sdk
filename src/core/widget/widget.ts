@@ -5,10 +5,9 @@ import { Dispatcher } from '#/core/dispatcher';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isRequired, validator } from '#/core/validator';
 import { Languages, Scheme } from '#/types';
-import { codeVerifier, state } from '#/utils/cookie';
-import { generateCodeChallenge } from '#/utils/oauth';
 import { getRedirectWithPayloadUrl, getVKIDUrl, RedirectPayload } from '#/utils/url';
 import { uuid } from '#/utils/uuid';
+import { OneTapInternalEvents } from '#/widgets/oneTap/events';
 
 import { WIDGET_ERROR_TEXT } from './constants';
 import { WidgetEvents } from './events';
@@ -17,9 +16,8 @@ import { WidgetElements, WidgetError, WidgetErrorCode, WidgetParams, WidgetState
 
 const MODULE_LOAD_TIMEOUT = 5000;
 const MODULE_CHANGE_STATE_TIMEOUT = 300;
-const CODE_CHALLENGE_METHOD = 's256';
 
-export class Widget<P = WidgetParams> extends Dispatcher {
+export class Widget<P extends object = WidgetParams> extends Dispatcher {
   /**
    * @ignore
    */
@@ -53,6 +51,12 @@ export class Widget<P = WidgetParams> extends Dispatcher {
     this.container = container;
     this.renderTemplate();
     this.registerElements();
+
+    if ('fastAuthDisabled' in params && params['fastAuthDisabled']) {
+      this.setState(WidgetState.NOT_LOADED);
+      return this;
+    }
+
     this.loadWidgetFrame(otherParams as P);
 
     return this;
@@ -115,6 +119,7 @@ export class Widget<P = WidgetParams> extends Dispatcher {
   protected onErrorHandler(error: WidgetError) {
     clearTimeout(this.timeoutTimer);
     this.setState(WidgetState.NOT_LOADED);
+    this.events.emit(OneTapInternalEvents.AUTHENTICATION_INFO, { is_online: false });
     this.events.emit(WidgetEvents.ERROR, error);
     this.elements?.iframe?.remove();
   }
@@ -166,16 +171,10 @@ export class Widget<P = WidgetParams> extends Dispatcher {
   }
 
   protected getWidgetFrameSrc(config: ConfigData, params: P): string {
-    codeVerifier(config.codeVerifier);
-    state(config.state);
-
     const queryParams = {
       ...params,
       origin: location.protocol + '//' + location.host,
       oauth_version: 2,
-      code_challenge: config.codeChallenge ?? generateCodeChallenge(codeVerifier()),
-      code_challenge_method: CODE_CHALLENGE_METHOD,
-      state: state(),
     };
 
     return getVKIDUrl(this.vkidAppName, queryParams, config);

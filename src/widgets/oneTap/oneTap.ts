@@ -6,8 +6,6 @@ import { Widget, WidgetEvents } from '#/core/widget';
 import { WidgetError, WidgetErrorCode, WidgetState } from '#/core/widget/types';
 import { Languages, Scheme } from '#/types';
 import { RedirectPayload } from '#/utils/url';
-import { AgreementsDialog, AgreementsDialogBridgeMessage, AgreementsDialogPublicEvents } from '#/widgets/agreementsDialog';
-import { AgreementsDialogStatsFlowSource } from '#/widgets/agreementsDialog/types';
 import { OAuthList, OAuthListParams, OAuthName } from '#/widgets/oauthList';
 
 import { OneTapStatsButtonType, OneTapStatsCollector } from './analytics';
@@ -27,6 +25,7 @@ export class OneTap extends Widget<OneTapParams> {
   private readonly analytics: OneTapStatsCollector;
   protected vkidAppName = 'button_one_tap_auth';
   private statsBtnType: OneTapStatsButtonType | null = null;
+  private fastAuthDisabled: boolean;
 
   public constructor() {
     super();
@@ -36,6 +35,9 @@ export class OneTap extends Widget<OneTapParams> {
   private readonly setStatsButtonType = (type: OneTapStatsButtonType) => {
     if (!this.statsBtnType) {
       this.statsBtnType = type;
+      if (this.fastAuthDisabled) {
+        this.statsBtnType && this.analytics.sendOneTapButtonNoUserShow(this.statsBtnType);
+      }
     }
   }
 
@@ -53,11 +55,11 @@ export class OneTap extends Widget<OneTapParams> {
 
         if (params.screen) {
           authParams.screen = params.screen;
-          authParams.statsFlowSource = AuthStatsFlowSource.BUTTON_ONE_TAP_ALTERNATIVE;
         }
 
         if (params.sdk_oauth) {
           authParams.provider = params.sdk_oauth;
+          authParams.statsFlowSource = AuthStatsFlowSource.MULTIBRANDING;
         }
 
         this.openFullAuth(authParams);
@@ -70,8 +72,8 @@ export class OneTap extends Widget<OneTapParams> {
         this.elements?.iframe?.remove();
         break;
       }
-      case OneTapInternalEvents.SHOW_AGREEMENTS_DIALOG: {
-        this.createAgreementsDialogWidget();
+      case OneTapInternalEvents.AUTHENTICATION_INFO: {
+        this.events.emit(OneTapInternalEvents.AUTHENTICATION_INFO, event.params);
         break;
       }
       default: {
@@ -81,36 +83,16 @@ export class OneTap extends Widget<OneTapParams> {
     }
   }
   protected onErrorHandler(error: WidgetError) {
-    this.statsBtnType && this.analytics.sendOneTapButtonNoUserShow(this.statsBtnType);
     this.analytics.sendFrameLoadingFailed();
+    this.statsBtnType && this.analytics.sendOneTapButtonNoUserShow(this.statsBtnType);
     super.onErrorHandler(error);
-  }
-
-  private createAgreementsDialogWidget() {
-    const params = {
-      container: document.body,
-      lang_id: this.lang,
-      scheme: this.scheme,
-      stats_flow_source: AgreementsDialogStatsFlowSource.BUTTON_ONE_TAP,
-    };
-    const agreementsDialog = new AgreementsDialog();
-    const acceptHandler = (event: AgreementsDialogBridgeMessage) => {
-      this.bridge.sendMessage({
-        handler: OneTapInternalEvents.START_AUTHORIZE,
-        params: event.params,
-      });
-      agreementsDialog.off(AgreementsDialogPublicEvents.ACCEPT, acceptHandler);
-      agreementsDialog.close();
-    };
-
-    agreementsDialog.on(AgreementsDialogPublicEvents.ACCEPT, acceptHandler);
-    agreementsDialog.render(params);
   }
 
   private openFullAuth(value?: AuthParams) {
     const params = {
       statsFlowSource: AuthStatsFlowSource.BUTTON_ONE_TAP,
       ...value,
+      uniqueSessionId: this.id,
       lang: this.lang,
       scheme: this.scheme,
     };
@@ -139,6 +121,7 @@ export class OneTap extends Widget<OneTapParams> {
     oauthList.render({
       ...params,
       flowSource: ProductionStatsEventScreen.NOWHERE,
+      uniqueSessionId: this.id,
     });
   }
 
@@ -146,6 +129,7 @@ export class OneTap extends Widget<OneTapParams> {
   public render(params: OneTapParams) {
     this.lang = params?.lang || Languages.RUS;
     this.scheme = params?.scheme || Scheme.LIGHT;
+    this.fastAuthDisabled = params.fastAuthEnabled === false;
     const providers = (params.oauthList || []).filter((provider) => provider !== OAuthName.VK);
 
     const oneTapParams: Record<string, any> = {
@@ -156,8 +140,10 @@ export class OneTap extends Widget<OneTapParams> {
       scheme: this.scheme,
       lang_id: this.lang,
       providers: providers.join(','),
+      uuid: this.id,
     };
 
+    this.analytics.setUniqueSessionId(this.id);
     this.analytics.sendSdkInit();
     this.templateRenderer = getOneTapTemplate({
       width: params.styles?.width || defaultStylesParams.width,
@@ -172,6 +158,11 @@ export class OneTap extends Widget<OneTapParams> {
       providers,
       setStatsButtonType: this.setStatsButtonType.bind(this),
     });
+    this.analytics.sendScreenProceed();
+
+    if (this.fastAuthDisabled) {
+      oneTapParams.fastAuthDisabled = true;
+    }
 
     return super.render({ container: params.container, ...oneTapParams });
   }

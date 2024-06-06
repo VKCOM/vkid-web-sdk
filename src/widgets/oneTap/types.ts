@@ -42,6 +42,11 @@ export interface OneTapParams extends WidgetParams {
    * Список внешних сервисов авторизации
    */
   oauthList?: OAuthName[];
+  /**
+   * Отображение состояния кнопки "Продолжить как"
+   * @defaultValue `true`
+   */
+  fastAuthEnabled?: boolean;
 }
 
 export interface OneTapBridgeFullAuthParams {

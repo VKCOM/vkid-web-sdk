@@ -5,7 +5,7 @@ import { Config, ConfigAuthMode, Prompt } from '#/core/config';
 import { clearCodeVerifierCookie, clearStateCookie, codeVerifier, state } from '#/utils/cookie';
 import { isDomainAllowed } from '#/utils/domain';
 import { generateCodeChallenge } from '#/utils/oauth';
-import { getRedirectWithPayloadUrl, getVKIDUrl, RedirectPayload } from '#/utils/url';
+import { getRedirectWithPayloadUrl, getVKIDUrl, RedirectPayload, encodeStatsInfo } from '#/utils/url';
 import { ExternalOAuthName } from '#/widgets/oauthList';
 
 import { AUTH_ERROR_TEXT, OAUTH2_RESPONSE, OAUTH2_RESPONSE_TYPE } from './constants';
@@ -130,7 +130,10 @@ export class Auth {
       state: state(),
       provider: params?.provider,
       prompt: authorizePrompt.join(' ').trim(),
-      stats_flow_source: params?.statsFlowSource,
+      stats_info: encodeStatsInfo({
+        flow_source: params?.statsFlowSource,
+        session_id: params?.uniqueSessionId,
+      }),
     };
 
     let url = getVKIDUrl('authorize', queryParams, config);
@@ -202,7 +205,6 @@ export class Auth {
     const queryParams = {
       grant_type: 'refresh_token',
       redirect_uri: config.redirectUrl,
-      scope: config.scope,
       client_id: config.app,
       device_id: deviceId,
       state: state(),

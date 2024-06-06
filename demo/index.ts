@@ -90,7 +90,7 @@ function handleSelectParamsChange() {
 
   document.querySelector('html')?.setAttribute('data-scheme', demoStore.scheme);
 }
-['lang', 'scheme', 'contentId', 'oauthes', 'onetapSkin'].forEach((item) => {
+['lang', 'scheme', 'contentId', 'oauthes', 'onetapSkin', 'fastAuthEnabledOnetap', 'fastAuthEnabledFloatingOnetap'].forEach((item) => {
   document.getElementById(item)?.addEventListener('change', handleSelectParamsChange);
 });
 

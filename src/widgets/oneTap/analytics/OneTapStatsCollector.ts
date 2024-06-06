@@ -3,11 +3,26 @@ import { RegistrationStatsCollector, ProductionStatsEventScreen } from '#/core/a
 import { OneTapStatsButtonType } from './types';
 
 export class OneTapStatsCollector extends RegistrationStatsCollector {
+  private uniqueSessionId: string;
+
+  public setUniqueSessionId(id: string) {
+    this.uniqueSessionId = id;
+  }
+
   private getFields() {
-    return [{
+    const fields = [{
       name: 'sdk_type',
       value: 'vkid',
     }];
+
+    if (this.uniqueSessionId) {
+      fields.push({
+        name: 'unique_session_id',
+        value: this.uniqueSessionId,
+      });
+    }
+
+    return fields;
   }
 
   public sendFrameLoadingFailed() {
@@ -47,6 +62,13 @@ export class OneTapStatsCollector extends RegistrationStatsCollector {
   public sendSdkInit() {
     void this.logEvent(ProductionStatsEventScreen.NOWHERE, {
       event_type: 'sdk_init',
+      fields: this.getFields(),
+    });
+  }
+
+  public sendScreenProceed() {
+    void this.logEvent(ProductionStatsEventScreen.NOWHERE, {
+      event_type: 'screen_proceed',
       fields: this.getFields(),
     });
   }

@@ -3,7 +3,6 @@ import { BridgeMessage } from '#/core/bridge';
 import { BRIDGE_MESSAGE_TYPE_SDK } from '#/core/bridge/bridge';
 import { Widget, WidgetEvents } from '#/core/widget';
 import { Config } from '#/index';
-import { codeVerifier as codeVerifierCookie, state as stateCookie } from '#/utils/cookie';
 
 const APP_ID = 100;
 
@@ -55,7 +54,6 @@ describe('Widget', () => {
     expect(urlParams.get('v')).toContain(VERSION);
     expect(urlParams.get('app_id')).toContain(APP_ID.toString());
     expect(urlParams.get('origin')).toContain(location.protocol + '//' + location.host);
-    expect(urlParams.get('code_challenge_method')).toContain('s256');
     expect(frameSrc).toContain('id.vk.');
   });
 
@@ -115,18 +113,5 @@ describe('Widget', () => {
     });
 
     expect(onHandlerFn).toBeCalledWith({ code: 1, text: 'internal error', details: { msg: 1 } });
-  });
-
-  test('Should set state and codeVerifier params to cookie after widget load', async () => {
-    const { codeVerifier, state } = Config.get();
-
-    codeVerifierCookie('1');
-    stateCookie('1');
-
-    widget = new TestWidget();
-    widget.render({ container });
-
-    expect(codeVerifier).toEqual(codeVerifierCookie());
-    expect(state).toEqual(stateCookie());
   });
 });

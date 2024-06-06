@@ -3,7 +3,7 @@ import { querystring } from '@vkontakte/vkjs';
 import { VERSION } from '#/constants';
 import { Config, ConfigData } from '#/core/config';
 
-import { RedirectPayload } from './types';
+import { RedirectPayload, StatsInfoParams } from './types';
 
 export const getVKIDUrl = (module: string, params: Record<string, any>, config: ConfigData): string => {
   const queryParams: Record<string, any> = {
@@ -25,4 +25,12 @@ export const getVKIDUrl = (module: string, params: Record<string, any>, config: 
 export const getRedirectWithPayloadUrl = (payload: RedirectPayload, config: Config): string => {
   const params = Object.keys(payload).map((key: keyof RedirectPayload) => encodeURIComponent(key) + '=' + encodeURIComponent(payload[key])).join('&');
   return `${config.get().redirectUrl}?${params}`;
+};
+
+export const encodeStatsInfo = (params: StatsInfoParams) => {
+  const hasParams = Object.values(params).filter(Boolean).length;
+
+  if (hasParams) {
+    return btoa(JSON.stringify(params));
+  }
 };

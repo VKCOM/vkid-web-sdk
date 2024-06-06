@@ -2,6 +2,7 @@ import { OAUTH2_RESPONSE, OAUTH2_RESPONSE_TYPE } from '#/auth/constants';
 import { AuthStatsFlowSource } from '#/auth/types';
 import { Auth, AuthParams, AuthResponse, Config, ConfigAuthMode, Languages, Prompt, Scheme } from '#/index';
 import { codeVerifier as codeVerifierCookie, state as stateCookie } from '#/utils/cookie';
+import { encodeStatsInfo } from '#/utils/url';
 
 import { version } from '../../package.json';
 import { WINDOW_LOCATION_HOST } from '../constants';
@@ -95,7 +96,9 @@ describe('Auth', () => {
       expect(searchParams.get('app_id')).toEqual(APP_ID.toString()),
       expect(searchParams.get('redirect_uri')).toEqual(Config.get().redirectUrl),
       expect(searchParams.get('prompt')).toEqual(''),
-      expect(searchParams.get('stats_flow_source')).toEqual(AuthStatsFlowSource.BUTTON_ONE_TAP),
+      expect(searchParams.get('stats_info')).toEqual(encodeStatsInfo({
+        flow_source: AuthStatsFlowSource.BUTTON_ONE_TAP,
+      })),
       expect(searchParams.get('screen')).toEqual(params.screen),
       expect(searchParams.get('oauth_version')).toEqual('2'),
     ];
