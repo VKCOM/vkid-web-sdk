@@ -23,6 +23,7 @@ describe('OneTapStatsCollector', () => {
   beforeAll(() => {
     const config = new Config();
     statsCollector = new OneTapStatsCollector(config);
+    statsCollector.setUniqueSessionId('id');
   });
 
   beforeEach(() => {
@@ -48,6 +49,9 @@ describe('OneTapStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }],
     })));
   });
@@ -64,6 +68,9 @@ describe('OneTapStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }],
     })));
   });
@@ -80,6 +87,9 @@ describe('OneTapStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }, {
         name: 'button_type',
         value: 'default',
@@ -100,6 +110,9 @@ describe('OneTapStatsCollector', () => {
         name: 'sdk_type',
         value: 'vkid',
       }, {
+        name: 'unique_session_id',
+        value: 'id',
+      }, {
         name: 'button_type',
         value: 'default',
       }],
@@ -118,6 +131,28 @@ describe('OneTapStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
+      }],
+    })));
+  });
+
+  it('Log ScreenProceed', async () => {
+    void statsCollector.sendScreenProceed();
+    await wait(0);
+
+    const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
+
+    expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
+    expect(events).toMatchObject(expect.objectContaining(getEvent({
+      event_type: 'screen_proceed',
+      fields: [{
+        name: 'sdk_type',
+        value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }],
     })));
   });

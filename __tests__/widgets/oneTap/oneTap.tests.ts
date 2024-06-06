@@ -77,14 +77,12 @@ describe('OneTap', () => {
       expect(searchParams.get('lang_id')).toEqual('0'),
       expect(searchParams.get('providers')).toEqual(''),
       expect(searchParams.get('origin')).toEqual(WINDOW_LOCATION_URL),
-      expect(searchParams.get('code_challenge')).toEqual('stringified_SHA256-STRING'),
-      expect(searchParams.get('code_challenge_method')).toEqual('s256'),
       expect(searchParams.get('v')).toBeTruthy(),
       expect(searchParams.get('sdk_type')).toEqual('vkid'),
       expect(searchParams.get('app_id')).toEqual('100'),
       expect(searchParams.get('redirect_uri')).toEqual('test'),
       expect(searchParams.get('oauth_version')).toEqual('2'),
-      expect(searchParams.get('state')).toEqual(Config.get().state),
+      expect(searchParams.get('uuid')).toEqual('abc'),
     ];
 
     expect([...new Set(searchParams.keys())].length).toEqual(expectArr.length);
@@ -164,6 +162,17 @@ describe('OneTap', () => {
       type: BRIDGE_MESSAGE_TYPE_SDK,
       handler: WidgetEvents.ERROR,
       params: { uuid: 'token' },
+    });
+
+    const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
+    expect(oneTapEl?.getAttribute('data-state')).toEqual('not_loaded');
+  });
+
+  test('Must be in not_loaded state if fastAuthEnabled = false', () => {
+    oneTap.render({
+      container,
+      showAlternativeLogin: 1,
+      fastAuthEnabled: false,
     });
 
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');

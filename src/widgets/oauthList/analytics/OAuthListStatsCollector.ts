@@ -2,11 +2,26 @@ import { RegistrationStatsCollector } from '#/core/analytics';
 import { MultibrandingButtonShowParams, MultibrandingButtonTapParams, MultibrandingOauthAddedParams, MultibrandingOauthParamsScreen } from '#/widgets/oauthList/analytics/types';
 
 export class OAuthListStatsCollector extends RegistrationStatsCollector {
+  private uniqueSessionId: string;
+
+  public setUniqueSessionId(id: string) {
+    this.uniqueSessionId = id;
+  }
+
   private getFields() {
-    return [{
+    const fields = [{
       name: 'sdk_type',
       value: 'vkid',
     }];
+
+    if (this.uniqueSessionId) {
+      fields.push({
+        name: 'unique_session_id',
+        value: this.uniqueSessionId,
+      });
+    }
+
+    return fields;
   }
 
   public sendMultibrandingOauthAdded({ screen, fields }: MultibrandingOauthAddedParams) {

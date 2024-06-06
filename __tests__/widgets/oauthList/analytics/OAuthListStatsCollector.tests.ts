@@ -24,6 +24,7 @@ describe('OAuthListStatsCollector', () => {
   beforeAll(() => {
     const config = new Config();
     statsCollector = new OAuthListStatsCollector(config);
+    statsCollector.setUniqueSessionId('id');
   });
 
   beforeEach(() => {
@@ -68,6 +69,9 @@ describe('OAuthListStatsCollector', () => {
         name: 'sdk_type',
         value: 'vkid',
       }, {
+        name: 'unique_session_id',
+        value: 'id',
+      }, {
         name: 'vk',
         value: '1',
       }, {
@@ -108,6 +112,9 @@ describe('OAuthListStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }, {
         name: 'vk',
         value: '0',
@@ -150,6 +157,9 @@ describe('OAuthListStatsCollector', () => {
         name: 'sdk_type',
         value: 'vkid',
       }, {
+        name: 'unique_session_id',
+        value: 'id',
+      }, {
         name: 'vk',
         value: '0',
       }, {
@@ -191,6 +201,9 @@ describe('OAuthListStatsCollector', () => {
         name: 'sdk_type',
         value: 'vkid',
       }, {
+        name: 'unique_session_id',
+        value: 'id',
+      }, {
         name: 'vk',
         value: '1',
       }, {
@@ -219,6 +232,9 @@ describe('OAuthListStatsCollector', () => {
         name: 'sdk_type',
         value: 'vkid',
       }, {
+        name: 'unique_session_id',
+        value: 'id',
+      }, {
         name: 'button_type',
         value: 'default',
       }],
@@ -240,6 +256,9 @@ describe('OAuthListStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }, {
         name: 'button_type',
         value: 'default',
@@ -263,6 +282,9 @@ describe('OAuthListStatsCollector', () => {
         name: 'sdk_type',
         value: 'vkid',
       }, {
+        name: 'unique_session_id',
+        value: 'id',
+      }, {
         name: 'button_type',
         value: 'default',
       }],
@@ -284,6 +306,9 @@ describe('OAuthListStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }, {
         name: 'button_type',
         value: 'icon',
@@ -307,6 +332,9 @@ describe('OAuthListStatsCollector', () => {
         name: 'sdk_type',
         value: 'vkid',
       }, {
+        name: 'unique_session_id',
+        value: 'id',
+      }, {
         name: 'button_type',
         value: 'icon',
       }],
@@ -328,6 +356,9 @@ describe('OAuthListStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }, {
         name: 'button_type',
         value: 'icon',
@@ -351,6 +382,9 @@ describe('OAuthListStatsCollector', () => {
         name: 'sdk_type',
         value: 'vkid',
       }, {
+        name: 'unique_session_id',
+        value: 'id',
+      }, {
         name: 'button_type',
         value: 'default',
       }],
@@ -372,6 +406,9 @@ describe('OAuthListStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }, {
         name: 'button_type',
         value: 'default',
@@ -395,6 +432,9 @@ describe('OAuthListStatsCollector', () => {
         name: 'sdk_type',
         value: 'vkid',
       }, {
+        name: 'unique_session_id',
+        value: 'id',
+      }, {
         name: 'button_type',
         value: 'default',
       }],
@@ -416,6 +456,9 @@ describe('OAuthListStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }, {
         name: 'button_type',
         value: 'icon',
@@ -439,6 +482,9 @@ describe('OAuthListStatsCollector', () => {
         name: 'sdk_type',
         value: 'vkid',
       }, {
+        name: 'unique_session_id',
+        value: 'id',
+      }, {
         name: 'button_type',
         value: 'icon',
       }],
@@ -461,6 +507,9 @@ describe('OAuthListStatsCollector', () => {
         name: 'sdk_type',
         value: 'vkid',
       }, {
+        name: 'unique_session_id',
+        value: 'id',
+      }, {
         name: 'button_type',
         value: 'icon',
       }],
@@ -479,6 +528,9 @@ describe('OAuthListStatsCollector', () => {
       fields: [{
         name: 'sdk_type',
         value: 'vkid',
+      }, {
+        name: 'unique_session_id',
+        value: 'id',
       }],
     })));
   });

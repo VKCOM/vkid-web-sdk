@@ -6,8 +6,6 @@ import { Widget, WidgetEvents } from '#/core/widget';
 import { WidgetError, WidgetErrorCode, WidgetState } from '#/core/widget/types';
 import { Languages, Scheme } from '#/types';
 import { RedirectPayload } from '#/utils/url';
-import { AgreementsDialog, AgreementsDialogPublicEvents, AgreementsDialogBridgeMessage } from '#/widgets/agreementsDialog';
-import { AgreementsDialogStatsFlowSource } from '#/widgets/agreementsDialog/types';
 import { OAuthList, OAuthListParams, OAuthName } from '#/widgets/oauthList';
 
 import { FloatingOneTapStatsCollector } from './analytics';
@@ -43,11 +41,11 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
 
         if (params.screen) {
           authParams.screen = params.screen;
-          authParams.statsFlowSource = AuthStatsFlowSource.FLOATING_ONE_TAP_ALTERNATIVE;
         }
 
         if (params.sdk_oauth) {
           authParams.provider = params.sdk_oauth;
+          authParams.statsFlowSource = AuthStatsFlowSource.MULTIBRANDING;
         }
 
         this.openFullAuth(authParams);
@@ -60,10 +58,6 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
           this.setState(WidgetState.LOADED);
         }, 500);
         clearTimeout(this.timeoutTimer);
-        break;
-      }
-      case FloatingOneTapInternalEvents.SHOW_AGREEMENTS_DIALOG: {
-        this.createAgreementsDialogWidget();
         break;
       }
       default: {
@@ -79,31 +73,11 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
     super.onErrorHandler(error);
   }
 
-  private createAgreementsDialogWidget() {
-    const params = {
-      container: document.body,
-      lang: this.lang,
-      scheme: this.scheme,
-      stats_flow_source: AgreementsDialogStatsFlowSource.FLOATING_ONE_TAP,
-    };
-    const agreementsDialog = new AgreementsDialog();
-    const acceptHandler = (event: AgreementsDialogBridgeMessage) => {
-      this.bridge.sendMessage({
-        handler: FloatingOneTapInternalEvents.START_AUTHORIZE,
-        params: event.params,
-      });
-      agreementsDialog.off(AgreementsDialogPublicEvents.ACCEPT, acceptHandler);
-      agreementsDialog.close();
-    };
-
-    agreementsDialog.on(AgreementsDialogPublicEvents.ACCEPT, acceptHandler);
-    agreementsDialog.render(params);
-  }
-
   private openFullAuth(value?: AuthParams) {
     const params = {
       statsFlowSource: AuthStatsFlowSource.FLOATING_ONE_TAP,
       ...value,
+      uniqueSessionId: this.id,
       lang: this.lang,
       scheme: this.scheme,
     };
@@ -132,6 +106,7 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
     oauthList.render({
       ...params,
       flowSource: ProductionStatsEventScreen.FLOATING_ONE_TAP,
+      uniqueSessionId: this.id,
     });
   }
 
@@ -147,8 +122,10 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
       show_alternative_login: params?.showAlternativeLogin ? 1 : 0,
       content_id: params?.contentId || FloatingOneTapContentId.SIGN_IN_TO_SERVICE,
       providers: providers.join(','),
+      uuid: this.id,
     };
 
+    this.analytics.setUniqueSessionId(this.id);
     this.analytics.sendSdkInit();
     this.templateRenderer = getFloatingOneTapTemplate({
       login: this.login.bind(this),
@@ -161,11 +138,18 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
       renderOAuthList: this.renderOAuthList.bind(this),
       providers,
     });
+
     this.analytics.sendScreenProcessed({
       scheme: this.scheme,
       lang: this.lang,
       contentId: queryParams.content_id,
     });
+
+    if (params.fastAuthEnabled === false) {
+      this.analytics.sendNoUserButtonShow();
+      queryParams.fastAuthDisabled = true;
+    }
+
     return super.render({ container: document.body, ...queryParams });
   }
 }

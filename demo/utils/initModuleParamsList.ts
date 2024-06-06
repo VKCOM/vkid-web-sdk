@@ -47,6 +47,16 @@ const oauthesOptions = [
   { value: OAuthName.MAIL + ',' + OAuthName.OK, text: 'Mail.ru + OK.ru' },
 ];
 
+const fastAuthEnabledOnetapOptions = [
+  { value: '1', text: 'Вкл' },
+  { value: '', text: 'Выкл' },
+];
+
+const fastAuthEnabledFloatingOnetapOptions = [
+  { value: '1', text: 'Вкл' },
+  { value: '', text: 'Выкл' },
+];
+
 const promptOptions = [
   { value: Prompt.Login, text: 'Login' },
   { value: Prompt.Consent, text: 'Consent' },
@@ -86,6 +96,21 @@ export const initModuleParamsList = (store: DemoStore) => {
   <select id="oauthes" name="oauthes">
     ${oauthesOptions.map(({ text, value }) => `<option ${store.oauthes === value ? 'selected' : ''} value="${value}">${text}</option>`).join('')}
   </select>
+  <br />
+  <details>
+    <summary>"Продолжить как" в вантапах</summary>
+    <br />
+    <label for="fastAuthEnabledOnetap">Кнопка</label>
+    <select id="fastAuthEnabledOnetap" name="fastAuthEnabledOnetap">
+      ${fastAuthEnabledOnetapOptions.map(({ text, value }) => `<option ${store.fastAuthEnabledOnetap === value ? 'selected' : ''} value="${value}">${text}</option>`).join('')}
+    </select>
+    <br />
+    <label for="fastAuthEnabledFloatingOnetap">Шторка</label>
+    <select id="fastAuthEnabledFloatingOnetap" name="fastAuthEnabledFloatingOnetap">
+      ${fastAuthEnabledFloatingOnetapOptions.map(({ text, value }) => `<option ${store.fastAuthEnabledFloatingOnetap === value ? 'selected' : ''} value="${value}">${text}</option>`).join('')}
+    </select>
+    <br />
+  </details>
   <br />
   <div class="prompt">
     <details>

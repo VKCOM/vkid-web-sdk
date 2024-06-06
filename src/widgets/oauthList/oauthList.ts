@@ -1,4 +1,5 @@
 import type { AuthError, AuthParams } from '#/auth';
+import { AuthStatsFlowSource } from '#/auth/types';
 import { ProductionStatsEventScreen } from '#/core/analytics';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isNotEmptyOAuthList, validator } from '#/core/validator';
@@ -15,6 +16,7 @@ export class OAuthList extends Widget<OAuthListParams> {
   private readonly analytics: OAuthListStatsCollector;
   private providers: OAuthName[];
   private flowSource: MultibrandingOauthParamsScreen;
+  private uniqueSessionId: string;
 
   public constructor() {
     super();
@@ -65,7 +67,9 @@ export class OAuthList extends Widget<OAuthListParams> {
     this.scheme = params?.scheme || Scheme.LIGHT;
     this.providers = params.oauthList;
     this.flowSource = params?.flowSource || ProductionStatsEventScreen.MULTIBRANDING;
+    this.uniqueSessionId = params?.uniqueSessionId || this.id;
 
+    this.analytics.setUniqueSessionId(this.uniqueSessionId);
     if (this.flowSource === ProductionStatsEventScreen.MULTIBRANDING) {
       this.analytics.sendSdkInit(this.flowSource);
     }
@@ -99,6 +103,8 @@ export class OAuthList extends Widget<OAuthListParams> {
       lang: this.lang,
       scheme: this.scheme,
       provider: oauth,
+      statsFlowSource: AuthStatsFlowSource.MULTIBRANDING,
+      uniqueSessionId: this.uniqueSessionId,
     };
 
     switch (oauth) {

@@ -3,10 +3,9 @@ import { Languages, Scheme } from '#/types';
 import { OAuthName } from '#/widgets/oauthList';
 
 export enum AuthStatsFlowSource {
-  BUTTON_ONE_TAP = 'button_one_tap',
-  BUTTON_ONE_TAP_ALTERNATIVE = 'button_one_tap_alternative',
-  FLOATING_ONE_TAP = 'floating_one_tap',
-  FLOATING_ONE_TAP_ALTERNATIVE = 'floating_one_tap_alternative'
+  BUTTON_ONE_TAP = 'from_one_tap',
+  FLOATING_ONE_TAP = 'from_floating_one_tap',
+  MULTIBRANDING = 'from_multibranding'
 }
 
 export interface AuthParams {
@@ -28,11 +27,14 @@ export interface AuthParams {
    * @ignore
    */
   screen?: string;
-
   /**
    * @ignore
    */
   statsFlowSource?: AuthStatsFlowSource;
+  /**
+   * @ignore
+   */
+  uniqueSessionId?: string;
 }
 
 export enum AuthErrorCode {
@@ -102,7 +104,7 @@ export interface AuthQueryParams {
   screen?: string;
   oauth_version?: number;
   prompt: string;
-  stats_flow_source?: string;
+  stats_info?: string;
 }
 
 export interface AuthError {
