@@ -1,3 +1,4 @@
+import { VERSION } from '#/constants';
 import type { Config } from '#/core/config';
 import { getStatsUrl, request } from '#/utils/request';
 
@@ -36,6 +37,7 @@ export class ProductionStatsCollector {
       this.timeoutId = window.setTimeout(() => {
         const params = {
           events: JSON.stringify(this.stackEvents),
+          sak_version: VERSION,
         };
         this.stackEvents = [];
         const url = getStatsUrl('stat_events_vkid_sdk', this.config);

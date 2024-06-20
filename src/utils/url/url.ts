@@ -23,8 +23,10 @@ export const getVKIDUrl = (module: string, params: Record<string, any>, config: 
 };
 
 export const getRedirectWithPayloadUrl = (payload: RedirectPayload, config: Config): string => {
+  const redirectUrlFromConfig = config.get().redirectUrl;
+  const containsQuery = redirectUrlFromConfig.includes('?');
   const params = Object.keys(payload).map((key: keyof RedirectPayload) => encodeURIComponent(key) + '=' + encodeURIComponent(payload[key])).join('&');
-  return `${config.get().redirectUrl}?${params}`;
+  return `${redirectUrlFromConfig}${containsQuery ? '&' : '?'}${params}`;
 };
 
 export const encodeStatsInfo = (params: StatsInfoParams) => {
