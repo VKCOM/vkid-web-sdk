@@ -63,6 +63,10 @@ describe('Auth', () => {
       expect(searchParams.get('app_id')).toEqual(APP_ID.toString()),
       expect(searchParams.get('redirect_uri')).toEqual(Config.get().redirectUrl),
       expect(searchParams.get('prompt')).toEqual(''),
+      expect(searchParams.get('stats_info')).toEqual(encodeStatsInfo({
+        flow_source: AuthStatsFlowSource.AUTH,
+        session_id: 'abc',
+      })),
     ];
 
     expect([...new Set(searchParams.keys())].length).toEqual(expectArr.length);
@@ -98,6 +102,7 @@ describe('Auth', () => {
       expect(searchParams.get('prompt')).toEqual(''),
       expect(searchParams.get('stats_info')).toEqual(encodeStatsInfo({
         flow_source: AuthStatsFlowSource.BUTTON_ONE_TAP,
+        session_id: 'abc',
       })),
       expect(searchParams.get('screen')).toEqual(params.screen),
       expect(searchParams.get('oauth_version')).toEqual('2'),
@@ -125,6 +130,10 @@ describe('Auth', () => {
       expect(searchParams.get('app_id')).toEqual(APP_ID.toString()),
       expect(searchParams.get('redirect_uri')).toEqual(Config.get().redirectUrl),
       expect(searchParams.get('prompt')).toEqual(''),
+      expect(searchParams.get('stats_info')).toEqual(encodeStatsInfo({
+        flow_source: AuthStatsFlowSource.AUTH,
+        session_id: 'abc',
+      })),
     ];
 
     expect([...new Set(searchParams.keys())].length).toEqual(expectArr.length);
@@ -156,13 +165,17 @@ describe('Auth', () => {
       expect(searchParams.get('app_id')).toEqual(APP_ID.toString()),
       expect(searchParams.get('redirect_uri')).toEqual(Config.get().redirectUrl),
       expect(searchParams.get('prompt')).toEqual([Prompt.Login, Prompt.Consent].join(' ').trim()),
+      expect(searchParams.get('stats_info')).toEqual(encodeStatsInfo({
+        flow_source: AuthStatsFlowSource.AUTH,
+        session_id: 'abc',
+      })),
     ];
 
     expect([...new Set(searchParams.keys())].length).toEqual(expectArr.length);
   });
 
   test('Must redirect with payload', async () => {
-    Config.update({ mode: ConfigAuthMode.InNewTab });
+    Config.update({ mode: ConfigAuthMode.InNewTab, redirectUrl: 'https://id.vk.com?query=123' });
 
     const response: AuthResponse = {
       code: 'code',
@@ -199,6 +212,7 @@ describe('Auth', () => {
       expect(searchParams.get('code')).toEqual('code'),
       expect(searchParams.get('state')).toEqual('state'),
       expect(searchParams.get('device_id')).toEqual('device_id'),
+      expect(searchParams.get('query')).toEqual('123'),
     ];
 
     expect([...new Set(searchParams.keys())].length).toEqual(expectArr.length);

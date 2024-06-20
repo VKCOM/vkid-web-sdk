@@ -3,6 +3,7 @@ import { Languages, Scheme } from '#/types';
 import { OAuthName } from '#/widgets/oauthList';
 
 export enum AuthStatsFlowSource {
+  AUTH = 'from_custom_auth',
   BUTTON_ONE_TAP = 'from_one_tap',
   FLOATING_ONE_TAP = 'from_floating_one_tap',
   MULTIBRANDING = 'from_multibranding'

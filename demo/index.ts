@@ -1,6 +1,6 @@
 import './styles.css';
 import * as VKID from '@vkid/sdk';
-import { ConfigData } from '@vkid/sdk';
+import { ConfigAuthMode, ConfigData } from '@vkid/sdk';
 
 import { initHandleAuth } from './utils/handleAuth';
 import { initAuthButtons } from './utils/initAuthButtons';
@@ -34,7 +34,7 @@ if (demoStore.codeChallenge) {
 
 const vkidDomain = vkidDomainLS();
 if (vkidDomain) {
-  VKID.Config.update({ __vkidDomain: vkidDomain });
+  VKID.Config.update({ __vkidDomain: vkidDomain, mode: ConfigAuthMode.Redirect });
 }
 
 initHandleAuth(demoStore);

@@ -6,6 +6,7 @@ import { clearCodeVerifierCookie, clearStateCookie, codeVerifier, state } from '
 import { isDomainAllowed } from '#/utils/domain';
 import { generateCodeChallenge } from '#/utils/oauth';
 import { getRedirectWithPayloadUrl, getVKIDUrl, RedirectPayload, encodeStatsInfo } from '#/utils/url';
+import { uuid } from '#/utils/uuid';
 import { ExternalOAuthName } from '#/widgets/oauthList';
 
 import { AUTH_ERROR_TEXT, OAUTH2_RESPONSE, OAUTH2_RESPONSE_TYPE } from './constants';
@@ -14,6 +15,7 @@ import {
   AuthErrorCode,
   AuthParams,
   AuthQueryParams,
+  AuthStatsFlowSource,
   LogoutResult,
   PublicInfoResult,
   TokenResult,
@@ -32,6 +34,7 @@ export class Auth {
 
   private opener: Window | null;
   private interval: number;
+  private readonly id: string = uuid();
 
   private readonly close = () => {
     this.opener && this.opener.close();
@@ -131,8 +134,8 @@ export class Auth {
       provider: params?.provider,
       prompt: authorizePrompt.join(' ').trim(),
       stats_info: encodeStatsInfo({
-        flow_source: params?.statsFlowSource,
-        session_id: params?.uniqueSessionId,
+        flow_source: params?.statsFlowSource || AuthStatsFlowSource.AUTH,
+        session_id: params?.uniqueSessionId || this.id,
       }),
     };
 
