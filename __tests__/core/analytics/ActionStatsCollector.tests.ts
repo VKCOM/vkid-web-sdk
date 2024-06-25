@@ -1,7 +1,10 @@
-import { ProductionStatsEventScreen } from '#/core/analytics';
-import { ActionStatsCollector } from '#/core/analytics/ActionStatsCollector';
-import { ProductionStatsCollector } from '#/core/analytics/ProductionStatsCollector';
-import { ProductionStatsEventTypes, ProductionStatsTypeActions } from '#/core/analytics/types';
+import {
+  ProductionStatsEventScreen,
+  ActionStatsCollector,
+  ProductionStatsCollector,
+  ProductionStatsEventTypes,
+  ProductionStatsTypeActions,
+} from '#/core/analytics';
 import { Config } from '#/core/config';
 import { request } from '#/utils/request';
 
@@ -26,10 +29,13 @@ describe('ActionStatsCollector', () => {
     const productStatsCollector = new ProductionStatsCollector(config);
     const actionStatsCollector = new ActionStatsCollector(productStatsCollector);
 
-    void actionStatsCollector.logEvent(ProductionStatsEventScreen.NOWHERE, {
-      type: ProductionStatsTypeActions.TYPE_REGISTRATION_ITEM,
-      [ProductionStatsTypeActions.TYPE_REGISTRATION_ITEM]: {
-        event_type: 'screen_proceed',
+    void actionStatsCollector.logEvent({
+      screen: ProductionStatsEventScreen.NOWHERE,
+      event: {
+        type: ProductionStatsTypeActions.TYPE_REGISTRATION_ITEM,
+        [ProductionStatsTypeActions.TYPE_REGISTRATION_ITEM]: {
+          event_type: 'screen_proceed',
+        },
       },
     });
 

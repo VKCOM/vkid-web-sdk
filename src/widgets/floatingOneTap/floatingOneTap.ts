@@ -126,7 +126,6 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
     };
 
     this.analytics.setUniqueSessionId(this.id);
-    this.analytics.sendSdkInit();
     this.templateRenderer = getFloatingOneTapTemplate({
       login: this.login.bind(this),
       close: this.close.bind(this),

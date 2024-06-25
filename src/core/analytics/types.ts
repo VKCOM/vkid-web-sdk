@@ -4,6 +4,7 @@ export enum ProductionStatsEventTypes {
 
 export enum ProductionStatsTypeActions {
   TYPE_REGISTRATION_ITEM = 'type_registration_item',
+  TYPE_SAK_SESSION_EVENT_ITEM = 'type_sak_sessions_event_item',
 }
 
 export enum ProductionStatsEventScreen {
@@ -26,15 +27,14 @@ export interface ProductionStatsBaseEvent {
   screen?: ProductionStatsEventScreen;
 }
 
-export type ActionStatsEventItem = RegistrationStatsEvent;
+export type ActionStatsEventItem = RegistrationStatsEvent | SakSessionStatsEvent;
 
 export interface ActionStatsEvent extends ProductionStatsBaseEvent {
   type: ProductionStatsEventTypes.TYPE_ACTION;
   [ProductionStatsEventTypes.TYPE_ACTION]: ActionStatsEventItem;
 }
 
-type RegistrationStatsEventTypes = 'sdk_init'
-| 'iframe_loading_failed'
+type RegistrationStatsEventTypes = 'iframe_loading_failed'
 | 'no_session_found'
 | 'onetap_button_no_user_show'
 | 'onetap_button_no_user_tap'
@@ -47,7 +47,10 @@ type RegistrationStatsEventTypes = 'sdk_init'
 | 'mail_button_show'
 | 'vk_button_tap'
 | 'ok_button_tap'
-| 'mail_button_tap';
+| 'mail_button_tap'
+| 'custom_auth_start';
+
+type SakSessionEventTypes = 'vkid_sdk_init';
 
 export interface RegistrationStatsEventParams {
   event_type: RegistrationStatsEventTypes;
@@ -56,9 +59,23 @@ export interface RegistrationStatsEventParams {
   fields?: ProductionStatsFieldsItem[];
 }
 
+export interface SakSessionStatsEventParams {
+  step: SakSessionEventTypes;
+}
+
+export interface ActionStatsParams {
+  screen?: ProductionStatsEventScreen;
+  event: ActionStatsEventItem;
+}
+
 export interface RegistrationStatsEvent {
   type: ProductionStatsTypeActions.TYPE_REGISTRATION_ITEM;
   [ProductionStatsTypeActions.TYPE_REGISTRATION_ITEM]: RegistrationStatsEventParams;
+}
+
+export interface SakSessionStatsEvent {
+  type: ProductionStatsTypeActions.TYPE_SAK_SESSION_EVENT_ITEM;
+  [ProductionStatsTypeActions.TYPE_SAK_SESSION_EVENT_ITEM]: SakSessionStatsEventParams;
 }
 
 export type ProductionStatsEvent = ActionStatsEvent;

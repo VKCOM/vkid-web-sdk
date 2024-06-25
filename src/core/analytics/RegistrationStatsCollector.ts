@@ -1,16 +1,11 @@
-import type { Config } from '#/core/config';
-
 import { ActionStatsCollector } from './ActionStatsCollector';
-import { ProductionStatsCollector } from './ProductionStatsCollector';
 import { ProductionStatsEventScreen, ProductionStatsTypeActions, RegistrationStatsEvent, RegistrationStatsEventParams } from './types';
 
 export class RegistrationStatsCollector {
-  private readonly productStatsCollector: ProductionStatsCollector;
   private readonly actionStatsCollector: ActionStatsCollector;
 
-  public constructor(config: Config) {
-    this.productStatsCollector = new ProductionStatsCollector(config);
-    this.actionStatsCollector = new ActionStatsCollector(this.productStatsCollector);
+  public constructor(actionStatsCollector: ActionStatsCollector) {
+    this.actionStatsCollector = actionStatsCollector;
   }
 
   public logEvent(screen: ProductionStatsEventScreen, event: RegistrationStatsEventParams) {
@@ -19,6 +14,6 @@ export class RegistrationStatsCollector {
       [ProductionStatsTypeActions.TYPE_REGISTRATION_ITEM]: event,
     };
 
-    return this.actionStatsCollector.logEvent(screen, statsEvent);
+    return this.actionStatsCollector.logEvent({ screen, event: statsEvent });
   }
 }

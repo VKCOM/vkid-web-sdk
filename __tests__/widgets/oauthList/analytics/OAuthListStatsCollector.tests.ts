@@ -1,5 +1,9 @@
-import { ProductionStatsEventScreen } from '#/core/analytics';
-import { ProductionStatsEventTypes, ProductionStatsTypeActions, RegistrationStatsEventParams } from '#/core/analytics/types';
+import {
+  ProductionStatsEventScreen,
+  RegistrationStatsEventParams,
+  ProductionStatsEventTypes,
+  ProductionStatsTypeActions,
+} from '#/core/analytics';
 import { Config } from '#/core/config';
 import { request } from '#/utils/request';
 import { OAuthName } from '#/widgets/oauthList';
@@ -11,7 +15,7 @@ const requestMocked = jest.mocked(request);
 
 let statsCollector: OAuthListStatsCollector;
 
-const getEvent = (event: RegistrationStatsEventParams) => ({
+const getRegistrationEvent = (event: RegistrationStatsEventParams) => ({
   screen: ProductionStatsEventScreen.MULTIBRANDING,
   type: ProductionStatsEventTypes.TYPE_ACTION,
   [ProductionStatsEventTypes.TYPE_ACTION]: {
@@ -63,7 +67,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'multibranding_oauth_added',
       fields: [{
         name: 'sdk_type',
@@ -107,7 +111,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'multibranding_oauth_added',
       fields: [{
         name: 'sdk_type',
@@ -151,7 +155,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'multibranding_oauth_added',
       fields: [{
         name: 'sdk_type',
@@ -195,7 +199,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'multibranding_oauth_added',
       fields: [{
         name: 'sdk_type',
@@ -226,7 +230,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'ok_button_show',
       fields: [{
         name: 'sdk_type',
@@ -251,7 +255,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'mail_button_show',
       fields: [{
         name: 'sdk_type',
@@ -276,7 +280,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'vk_button_show',
       fields: [{
         name: 'sdk_type',
@@ -301,7 +305,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'ok_button_show',
       fields: [{
         name: 'sdk_type',
@@ -326,7 +330,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'mail_button_show',
       fields: [{
         name: 'sdk_type',
@@ -351,7 +355,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'vk_button_show',
       fields: [{
         name: 'sdk_type',
@@ -376,7 +380,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'ok_button_tap',
       fields: [{
         name: 'sdk_type',
@@ -401,7 +405,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'mail_button_tap',
       fields: [{
         name: 'sdk_type',
@@ -426,7 +430,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'vk_button_tap',
       fields: [{
         name: 'sdk_type',
@@ -451,7 +455,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'ok_button_tap',
       fields: [{
         name: 'sdk_type',
@@ -476,7 +480,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'mail_button_tap',
       fields: [{
         name: 'sdk_type',
@@ -501,7 +505,7 @@ describe('OAuthListStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'vk_button_tap',
       fields: [{
         name: 'sdk_type',
@@ -512,25 +516,6 @@ describe('OAuthListStatsCollector', () => {
       }, {
         name: 'button_type',
         value: 'icon',
-      }],
-    })));
-  });
-
-  it('Log SDK Init', async () => {
-    void statsCollector.sendSdkInit(ProductionStatsEventScreen.MULTIBRANDING);
-    await wait(0);
-
-    const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
-
-    expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
-      event_type: 'sdk_init',
-      fields: [{
-        name: 'sdk_type',
-        value: 'vkid',
-      }, {
-        name: 'unique_session_id',
-        value: 'id',
       }],
     })));
   });
