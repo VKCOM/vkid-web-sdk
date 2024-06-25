@@ -3,9 +3,6 @@
     <img width="150" class="figure" src="https://unpkg.com/@vkid/sdk@0.0.1-alpha/logo.svg"/>
   </h1>
   <p align="center">
-    <a href="https://npmjs.com/package/@vkid/sdk">
-      <img src="https://img.shields.io/badge/stability-beta-red">
-    </a>
     <a href="LICENSE">
       <img src="https://img.shields.io/npm/l/@vkid/sdk?maxAge=3600">
     </a>
@@ -53,7 +50,7 @@ pnpm add @vkid/sdk
 **CDN:**
 
 ```html
-<script src="https://unpkg.com/@vkid/sdk@2.0.0-alpha.3/dist-sdk/umd/index.js"></script>
+<script src="https://unpkg.com/@vkid/sdk@2.0.0/dist-sdk/umd/index.js"></script>
 ```
 
 > Обратите внимание: Для работы авторизации нужен APP_ID. Вы получите его, когда [создадите](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/create-application) приложение в кабинете подключения VK ID.
