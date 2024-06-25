@@ -70,9 +70,6 @@ export class OAuthList extends Widget<OAuthListParams> {
     this.uniqueSessionId = params?.uniqueSessionId || this.id;
 
     this.analytics.setUniqueSessionId(this.uniqueSessionId);
-    if (this.flowSource === ProductionStatsEventScreen.MULTIBRANDING) {
-      this.analytics.sendSdkInit(this.flowSource);
-    }
 
     this.templateRenderer = getOAuthListTemplate({
       lang: this.lang,

@@ -1,6 +1,10 @@
-import { ProductionStatsEventScreen } from '#/core/analytics';
-import { ProductionStatsCollector } from '#/core/analytics/ProductionStatsCollector';
-import { ProductionStatsEvent, ProductionStatsEventTypes, ProductionStatsTypeActions } from '#/core/analytics/types';
+import {
+  ProductionStatsEventScreen,
+  ProductionStatsCollector,
+  ProductionStatsEventTypes,
+  ProductionStatsTypeActions,
+  ProductionStatsEvent,
+} from '#/core/analytics';
 import { Config } from '#/core/config';
 import { request } from '#/utils/request';
 

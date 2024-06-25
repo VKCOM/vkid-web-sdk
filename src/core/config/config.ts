@@ -1,10 +1,12 @@
 import { LOGIN_DOMAIN, OAUTH_DOMAIN, VKID_DOMAIN } from '#/constants';
+import { ActionStatsCollector, ProductionStatsCollector, SakSessionStatsCollector } from '#/core/analytics';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isNumber, isRequired, validator } from '#/core/validator';
 
 import { ConfigAuthMode, ConfigData, PKSE, Prompt } from './types';
 
 export class Config {
+  private readonly sakSessionStatsCollector: SakSessionStatsCollector;
   private store: ConfigData = {
     app: 0,
     redirectUrl: '',
@@ -18,9 +20,17 @@ export class Config {
     __vkidDomain: VKID_DOMAIN,
   };
 
+  public constructor() {
+    const productStatsCollector = new ProductionStatsCollector(this);
+    const actionStatsCollector = new ActionStatsCollector(productStatsCollector);
+    this.sakSessionStatsCollector = new SakSessionStatsCollector(actionStatsCollector);
+  }
+
   @validator<ConfigData>({ app: [isRequired, isNumber], redirectUrl: [isRequired] })
   public init(config: Pick<ConfigData, 'app' | 'redirectUrl'> & PKSE & Partial<ConfigData>): this {
-    return this.set(config);
+    this.set(config);
+    this.sakSessionStatsCollector.sendSdkInit();
+    return this;
   }
 
   public update(config: Partial<ConfigData>): this {

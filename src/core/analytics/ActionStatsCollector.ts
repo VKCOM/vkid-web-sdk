@@ -1,5 +1,5 @@
 import { ProductionStatsCollector } from './ProductionStatsCollector';
-import { ActionStatsEvent, ActionStatsEventItem, ProductionStatsEventScreen, ProductionStatsEventTypes } from './types';
+import { ActionStatsEvent, ActionStatsParams, ProductionStatsEventTypes } from './types';
 
 export class ActionStatsCollector {
   private readonly productStatsCollector: ProductionStatsCollector;
@@ -8,11 +8,11 @@ export class ActionStatsCollector {
     this.productStatsCollector = productStatsCollector;
   }
 
-  public logEvent(screen: ProductionStatsEventScreen, event: ActionStatsEventItem) {
+  public logEvent(params: ActionStatsParams) {
     const statsEvent: ActionStatsEvent = {
-      ...this.productStatsCollector.getBaseEvent(screen),
+      ...this.productStatsCollector.getBaseEvent(params.screen),
       type: ProductionStatsEventTypes.TYPE_ACTION,
-      [ProductionStatsEventTypes.TYPE_ACTION]: event,
+      [ProductionStatsEventTypes.TYPE_ACTION]: params.event,
     };
 
     return this.productStatsCollector.logEvent(statsEvent);

@@ -144,7 +144,6 @@ export class OneTap extends Widget<OneTapParams> {
     };
 
     this.analytics.setUniqueSessionId(this.id);
-    this.analytics.sendSdkInit();
     this.templateRenderer = getOneTapTemplate({
       width: params.styles?.width || defaultStylesParams.width,
       iframeHeight: oneTapParams.show_alternative_login ? oneTapParams.style_height * 2 + BUTTON_SPACING : oneTapParams.style_height,

@@ -1,5 +1,9 @@
-import { ProductionStatsEventScreen } from '#/core/analytics';
-import { ProductionStatsEventTypes, ProductionStatsTypeActions, RegistrationStatsEventParams } from '#/core/analytics/types';
+import {
+  ProductionStatsEventScreen,
+  RegistrationStatsEventParams,
+  ProductionStatsEventTypes,
+  ProductionStatsTypeActions,
+} from '#/core/analytics';
 import { Config } from '#/core/config';
 import { Languages, Scheme } from '#/types';
 import { request } from '#/utils/request';
@@ -13,7 +17,7 @@ const requestMocked = jest.mocked(request);
 
 let statsCollector: FloatingOneTapStatsCollector;
 
-const getEvent = (event: RegistrationStatsEventParams) => ({
+const getRegistrationEvent = (event: RegistrationStatsEventParams) => ({
   screen: ProductionStatsEventScreen.FLOATING_ONE_TAP,
   type: ProductionStatsEventTypes.TYPE_ACTION,
   [ProductionStatsEventTypes.TYPE_ACTION]: {
@@ -86,7 +90,7 @@ describe('FloatingOneTapStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'iframe_loading_failed',
       fields: [{
         name: 'sdk_type',
@@ -105,7 +109,7 @@ describe('FloatingOneTapStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'no_user_button_show',
       fields: [{
         name: 'sdk_type',
@@ -124,27 +128,8 @@ describe('FloatingOneTapStatsCollector', () => {
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
 
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
+    expect(events).toMatchObject(expect.objectContaining(getRegistrationEvent({
       event_type: 'no_user_button_tap',
-      fields: [{
-        name: 'sdk_type',
-        value: 'vkid',
-      }, {
-        name: 'unique_session_id',
-        value: 'id',
-      }],
-    })));
-  });
-
-  it('Log SDK Init', async () => {
-    void statsCollector.sendSdkInit();
-    await wait(0);
-
-    const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
-
-    expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
-    expect(events).toMatchObject(expect.objectContaining(getEvent({
-      event_type: 'sdk_init',
       fields: [{
         name: 'sdk_type',
         value: 'vkid',

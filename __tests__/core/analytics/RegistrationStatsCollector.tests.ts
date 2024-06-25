@@ -1,5 +1,11 @@
-import { ProductionStatsEventScreen, RegistrationStatsCollector } from '#/core/analytics';
-import { ProductionStatsEventTypes, ProductionStatsTypeActions } from '#/core/analytics/types';
+import {
+  ProductionStatsEventScreen,
+  RegistrationStatsCollector,
+  ActionStatsCollector,
+  ProductionStatsCollector,
+  ProductionStatsEventTypes,
+  ProductionStatsTypeActions,
+} from '#/core/analytics';
 import { Config } from '#/core/config';
 import { request } from '#/utils/request';
 
@@ -21,7 +27,9 @@ describe('RegistrationStatsCollector', () => {
 
   it('Log event', async () => {
     const config = new Config();
-    const registrationStatsCollector = new RegistrationStatsCollector(config);
+    const productionStatsCollector = new ProductionStatsCollector(config);
+    const actionStatsCollector = new ActionStatsCollector(productionStatsCollector);
+    const registrationStatsCollector = new RegistrationStatsCollector(actionStatsCollector);
 
     void registrationStatsCollector.logEvent(ProductionStatsEventScreen.NOWHERE, {
       event_type: 'screen_proceed',

@@ -1,10 +1,18 @@
-import { RegistrationStatsCollector, ProductionStatsEventScreen } from '#/core/analytics';
+import { ProductionStatsEventScreen, RegistrationStatsCollector, ActionStatsCollector, ProductionStatsCollector } from '#/core/analytics';
+import { Config } from '#/core/config';
 
 import { TEXT_TYPE } from './constants';
 import { ScreenProcessedParams } from './types';
 
-export class FloatingOneTapStatsCollector extends RegistrationStatsCollector {
+export class FloatingOneTapStatsCollector {
+  private readonly registrationStatsCollector: RegistrationStatsCollector;
   private uniqueSessionId: string;
+
+  public constructor(config: Config) {
+    const productStatsCollector = new ProductionStatsCollector(config);
+    const actionStatsCollector = new ActionStatsCollector(productStatsCollector);
+    this.registrationStatsCollector = new RegistrationStatsCollector(actionStatsCollector);
+  }
 
   public setUniqueSessionId(id: string) {
     this.uniqueSessionId = id;
@@ -27,7 +35,7 @@ export class FloatingOneTapStatsCollector extends RegistrationStatsCollector {
   }
 
   public sendScreenProcessed(params: ScreenProcessedParams) {
-    void this.logEvent(ProductionStatsEventScreen.NOWHERE, {
+    void this.registrationStatsCollector.logEvent(ProductionStatsEventScreen.NOWHERE, {
       event_type: 'screen_proceed',
       screen_to: ProductionStatsEventScreen.FLOATING_ONE_TAP,
       fields: [...this.getFields(), {
@@ -44,29 +52,22 @@ export class FloatingOneTapStatsCollector extends RegistrationStatsCollector {
   }
 
   public sendIframeLoadingFailed() {
-    void this.logEvent(ProductionStatsEventScreen.FLOATING_ONE_TAP, {
+    void this.registrationStatsCollector.logEvent(ProductionStatsEventScreen.FLOATING_ONE_TAP, {
       event_type: 'iframe_loading_failed',
       fields: this.getFields(),
     });
   }
 
   public sendNoUserButtonShow() {
-    void this.logEvent(ProductionStatsEventScreen.FLOATING_ONE_TAP, {
+    void this.registrationStatsCollector.logEvent(ProductionStatsEventScreen.FLOATING_ONE_TAP, {
       event_type: 'no_user_button_show',
       fields: this.getFields(),
     });
   }
 
   public sendNoUserButtonTap() {
-    return this.logEvent(ProductionStatsEventScreen.FLOATING_ONE_TAP, {
+    return this.registrationStatsCollector.logEvent(ProductionStatsEventScreen.FLOATING_ONE_TAP, {
       event_type: 'no_user_button_tap',
-      fields: this.getFields(),
-    });
-  }
-
-  public sendSdkInit() {
-    void this.logEvent(ProductionStatsEventScreen.FLOATING_ONE_TAP, {
-      event_type: 'sdk_init',
       fields: this.getFields(),
     });
   }

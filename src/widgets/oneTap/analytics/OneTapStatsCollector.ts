@@ -1,9 +1,17 @@
-import { RegistrationStatsCollector, ProductionStatsEventScreen } from '#/core/analytics';
+import { ProductionStatsEventScreen, RegistrationStatsCollector, ActionStatsCollector, ProductionStatsCollector } from '#/core/analytics';
+import { Config } from '#/core/config';
 
 import { OneTapStatsButtonType } from './types';
 
-export class OneTapStatsCollector extends RegistrationStatsCollector {
+export class OneTapStatsCollector {
+  private readonly registrationStatsCollector: RegistrationStatsCollector;
   private uniqueSessionId: string;
+
+  public constructor(config: Config) {
+    const productStatsCollector = new ProductionStatsCollector(config);
+    const actionStatsCollector = new ActionStatsCollector(productStatsCollector);
+    this.registrationStatsCollector = new RegistrationStatsCollector(actionStatsCollector);
+  }
 
   public setUniqueSessionId(id: string) {
     this.uniqueSessionId = id;
@@ -26,21 +34,21 @@ export class OneTapStatsCollector extends RegistrationStatsCollector {
   }
 
   public sendFrameLoadingFailed() {
-    void this.logEvent(ProductionStatsEventScreen.NOWHERE, {
+    void this.registrationStatsCollector.logEvent(ProductionStatsEventScreen.NOWHERE, {
       event_type: 'iframe_loading_failed',
       fields: this.getFields(),
     });
   }
 
   public sendNoSessionFound() {
-    void this.logEvent(ProductionStatsEventScreen.NOWHERE, {
+    void this.registrationStatsCollector.logEvent(ProductionStatsEventScreen.NOWHERE, {
       event_type: 'no_session_found',
       fields: this.getFields(),
     });
   }
 
   public sendOneTapButtonNoUserShow(buttonType: OneTapStatsButtonType = 'default') {
-    void this.logEvent(ProductionStatsEventScreen.NOWHERE, {
+    void this.registrationStatsCollector.logEvent(ProductionStatsEventScreen.NOWHERE, {
       event_type: 'onetap_button_no_user_show',
       fields: [...this.getFields(), {
         name: 'button_type',
@@ -50,7 +58,7 @@ export class OneTapStatsCollector extends RegistrationStatsCollector {
   }
 
   public sendOneTapButtonNoUserTap(buttonType: OneTapStatsButtonType = 'default') {
-    return this.logEvent(ProductionStatsEventScreen.NOWHERE, {
+    return this.registrationStatsCollector.logEvent(ProductionStatsEventScreen.NOWHERE, {
       event_type: 'onetap_button_no_user_tap',
       fields: [...this.getFields(), {
         name: 'button_type',
@@ -59,15 +67,8 @@ export class OneTapStatsCollector extends RegistrationStatsCollector {
     });
   }
 
-  public sendSdkInit() {
-    void this.logEvent(ProductionStatsEventScreen.NOWHERE, {
-      event_type: 'sdk_init',
-      fields: this.getFields(),
-    });
-  }
-
   public sendScreenProceed() {
-    void this.logEvent(ProductionStatsEventScreen.NOWHERE, {
+    void this.registrationStatsCollector.logEvent(ProductionStatsEventScreen.NOWHERE, {
       event_type: 'screen_proceed',
       fields: this.getFields(),
     });

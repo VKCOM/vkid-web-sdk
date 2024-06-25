@@ -1,5 +1,6 @@
 import { querystring } from '@vkontakte/vkjs';
 
+import { AuthStatsCollector } from '#/auth/analytics/AuthStatsCollector';
 import { AuthDataService } from '#/auth/authDataService';
 import { Config, ConfigAuthMode, Prompt } from '#/core/config';
 import { clearCodeVerifierCookie, clearStateCookie, codeVerifier, state } from '#/utils/cookie';
@@ -35,6 +36,11 @@ export class Auth {
   private opener: Window | null;
   private interval: number;
   private readonly id: string = uuid();
+  private readonly analytics: AuthStatsCollector;
+
+  public constructor() {
+    this.analytics = new AuthStatsCollector(Auth.config);
+  }
 
   private readonly close = () => {
     this.opener && this.opener.close();
@@ -111,6 +117,12 @@ export class Auth {
   public readonly login = (params?: AuthParams) => {
     const config = Auth.config.get();
     const { scope, app, codeChallenge, prompt } = config;
+    const flowSource = params?.statsFlowSource || AuthStatsFlowSource.AUTH;
+    const sessionId = params?.uniqueSessionId || this.id;
+
+    if (flowSource === AuthStatsFlowSource.AUTH) {
+      this.analytics.setUniqueSessionId(sessionId);
+    }
 
     codeVerifier(config.codeVerifier);
     state(config.state);
@@ -134,8 +146,8 @@ export class Auth {
       provider: params?.provider,
       prompt: authorizePrompt.join(' ').trim(),
       stats_info: encodeStatsInfo({
-        flow_source: params?.statsFlowSource || AuthStatsFlowSource.AUTH,
-        session_id: params?.uniqueSessionId || this.id,
+        flow_source: flowSource,
+        session_id: sessionId,
       }),
     };
 
@@ -151,9 +163,17 @@ export class Auth {
     }
 
     if (config.mode === ConfigAuthMode.InNewTab) {
+      if (flowSource === AuthStatsFlowSource.AUTH) {
+        void this.analytics.sendCustomAuthStart(params?.provider);
+      }
       queryParams.origin = location.protocol + '//' + location.hostname;
       return this.loginInNewTab(url);
     } else {
+      if (flowSource === AuthStatsFlowSource.AUTH) {
+        return this.analytics.sendCustomAuthStart(params?.provider).finally(() => {
+          void this.loginByRedirect(url);
+        });
+      }
       return this.loginByRedirect(url);
     }
   }
