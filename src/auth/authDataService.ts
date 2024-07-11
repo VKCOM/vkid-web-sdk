@@ -13,6 +13,8 @@ export class AuthDataService extends DataService<AuthResponse, AuthError> {
       code: payload.code,
       state: payload.state,
       device_id: payload.device_id,
+      expires_in: payload.expires_in,
+      ext_id: payload.ext_id,
     });
   }
 

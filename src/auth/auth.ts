@@ -3,7 +3,7 @@ import { querystring } from '@vkontakte/vkjs';
 import { AuthStatsCollector } from '#/auth/analytics/AuthStatsCollector';
 import { AuthDataService } from '#/auth/authDataService';
 import { Config, ConfigAuthMode, Prompt } from '#/core/config';
-import { clearCodeVerifierCookie, clearStateCookie, codeVerifier, state } from '#/utils/cookie';
+import { clearCodeVerifierCookie, clearStateCookie, codeVerifier, setExtIdCookie, state } from '#/utils/cookie';
 import { isDomainAllowed } from '#/utils/domain';
 import { generateCodeChallenge } from '#/utils/oauth';
 import { getRedirectWithPayloadUrl, getVKIDUrl, RedirectPayload, encodeStatsInfo } from '#/utils/url';
@@ -37,6 +37,7 @@ export class Auth {
   private interval: number;
   private readonly id: string = uuid();
   private readonly analytics: AuthStatsCollector;
+  private state: string;
 
   public constructor() {
     this.analytics = new AuthStatsCollector(Auth.config);
@@ -59,8 +60,8 @@ export class Auth {
     }
 
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-    if (data.action === OAUTH2_RESPONSE + state()) {
-      if (state() !== data.payload.state) {
+    if (data.action === OAUTH2_RESPONSE + this.state) {
+      if (this.state !== data.payload.state) {
         this.dataService.sendStateMismatchError();
       } else {
         this.dataService.sendSuccessData(data.payload);
@@ -102,9 +103,11 @@ export class Auth {
 
     return this.dataService.value
       .then((payload) => {
+        setExtIdCookie(payload.ext_id);
+        delete payload.ext_id;
         // Сбрасываем после проверки
         clearStateCookie();
-        Auth.config.update({ state: Auth.config.get().state });
+        this.state = '';
         this.redirectWithPayload(payload);
       });
   }
@@ -125,7 +128,7 @@ export class Auth {
     }
 
     codeVerifier(config.codeVerifier);
-    state(config.state);
+    this.state = state(config.state);
 
     const authorizePrompt = [...prompt as Prompt[]];
     // Если открыто из 3-в-1, добавляем login в начало
@@ -142,7 +145,7 @@ export class Auth {
       client_id: app,
       response_type: OAUTH2_RESPONSE_TYPE,
       scope,
-      state: state(),
+      state: this.state,
       provider: params?.provider,
       prompt: authorizePrompt.join(' ').trim(),
       stats_info: encodeStatsInfo({
@@ -157,7 +160,7 @@ export class Auth {
       Object.assign(queryParams, {
         oauth_version: 2,
         screen: params?.screen,
-        redirect_state: state(),
+        redirect_state: this.state,
       });
       url = getVKIDUrl('auth', queryParams, config);
     }
@@ -179,7 +182,7 @@ export class Auth {
   }
 
   protected checkState(stateToCheck: string): AuthError | undefined {
-    if (state() !== stateToCheck) {
+    if (this.state !== stateToCheck) {
       return {
         code: AuthErrorCode.StateMismatch,
         error: AUTH_ERROR_TEXT[AuthErrorCode.StateMismatch],
@@ -187,18 +190,19 @@ export class Auth {
       };
     }
     clearStateCookie();
+    this.state = '';
   }
 
   public exchangeCode(code: string, deviceId: string) {
     const config = Auth.config.get();
-    state(config.state);
+    this.state = state(config.state);
 
     const queryParams = {
       grant_type: 'authorization_code',
       redirect_uri: config.redirectUrl,
       client_id: config.app,
       code_verifier: codeVerifier(),
-      state: state(),
+      state: this.state,
       device_id: deviceId,
     };
 
@@ -216,21 +220,20 @@ export class Auth {
         }
         // Сбрасываем динамические параметры после обмена кода
         clearCodeVerifierCookie();
-        Auth.config.update({ state: config.state, codeVerifier: config.codeVerifier });
         return res;
       });
   }
 
   public refreshToken(refreshToken: string, deviceId: string) {
     const config = Auth.config.get();
-    state(config.state);
+    this.state = state(config.state);
 
     const queryParams = {
       grant_type: 'refresh_token',
       redirect_uri: config.redirectUrl,
       client_id: config.app,
       device_id: deviceId,
-      state: state(),
+      state: this.state,
     };
 
     const queryParamsString = querystring.stringify(queryParams);

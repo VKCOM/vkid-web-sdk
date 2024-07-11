@@ -182,6 +182,7 @@ describe('Auth', () => {
       type: 'code_v2',
       state: 'state',
       device_id: 'device_id',
+      expires_in: 600,
     };
     const opener = {
       closed: false,
@@ -213,6 +214,7 @@ describe('Auth', () => {
       expect(searchParams.get('state')).toEqual('state'),
       expect(searchParams.get('device_id')).toEqual('device_id'),
       expect(searchParams.get('query')).toEqual('123'),
+      expect(searchParams.get('expires_in')).toEqual('600'),
     ];
 
     expect([...new Set(searchParams.keys())].length).toEqual(expectArr.length);
