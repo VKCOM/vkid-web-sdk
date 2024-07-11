@@ -23,7 +23,7 @@
 
 ---
 
-ℹ️ Версия VK ID SDK 2.0.0 поддерживает авторизацию по протоколу [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-10), а также способы входа через аккаунты Одноклассников и Mail.ru.
+ℹ️ Версия VK ID SDK 2.1.0 поддерживает авторизацию по протоколу [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-10), а также способы входа через аккаунты Одноклассников и Mail.ru.
 
 ---
 
@@ -32,25 +32,25 @@
 **NPM:**
 
 ```sh
-npm i @vkid/sdk
+npm i @vkid/sdk@^2.0.0
 ```
 
 **YARN:**
 
 ```sh
-yarn add @vkid/sdk
+yarn add @vkid/sdk@^2.0.0
 ```
 
 **PNPM:**
 
 ```sh
-pnpm add @vkid/sdk
+pnpm add @vkid/sdk@^2.0.0
 ```
 
 **CDN:**
 
 ```html
-<script src="https://unpkg.com/@vkid/sdk@2.0.0/dist-sdk/umd/index.js"></script>
+<script src="https://unpkg.com/@vkid/sdk@<3.0.0/dist-sdk/umd/index.js"></script>
 ```
 
 > Обратите внимание: Для работы авторизации нужен APP_ID. Вы получите его, когда [создадите](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/create-application) приложение в кабинете подключения VK ID.

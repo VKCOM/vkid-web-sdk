@@ -21,7 +21,7 @@ export const vkidDomainLS = (domain?: string) => {
 
 export const getDemoStoreFromLS = (): DemoStore => {
   const defaultDemoStore: DemoStore = {
-    app: 7303035,
+    app: 51988436,
     state: '',
     codeVerifier: '',
     codeChallenge: '',

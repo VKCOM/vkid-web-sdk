@@ -60,7 +60,7 @@ export function cookie(name: string, params: SetCookieParams): string {
   value = getCookie(name);
 
   if (!value) {
-    value = nanoid();
+    value = nanoid(48);
     setCookie(name, { ...params, value });
   }
 
@@ -73,3 +73,23 @@ export const codeVerifier = (value?: ParamValue) => cookie('codeVerifier', { val
 export const clearStateCookie = () => clearCookie('state');
 export const clearCodeVerifierCookie = () => clearCookie('codeVerifier');
 
+const COOKIE_EXPIRES_TIME_1_YEAR = 31_536_000_000;
+
+export function setExtIdCookie(value?: string) {
+  if (!value) {
+    return;
+  }
+  try {
+    const expireTime = new Date(new Date().getTime() + COOKIE_EXPIRES_TIME_1_YEAR).toUTCString();
+    const allowedDomain = location.host.split('.').slice(-2).join('.');
+
+    document.cookie = [
+      `vkidExtId=${encodeURIComponent(value || '')}`,
+      `expires=${expireTime}`, // 1 year
+      'path=/',
+      `domain=.${allowedDomain}`, // .domain.com
+      'SameSite=Strict',
+      'Secure',
+    ].join('; ');
+  } catch (e) {}
+}

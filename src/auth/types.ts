@@ -88,6 +88,16 @@ export interface AuthResponse {
    * Идентификатор устройства, использовавшийся для создания кода
    */
   device_id: string;
+
+  /**
+   * Срок жизни кода авторизации в секундах
+   */
+  expires_in: number;
+
+  /**
+   * @ignore
+   */
+  ext_id?: string;
 }
 
 export interface AuthQueryParams {

@@ -5,6 +5,7 @@ export interface RedirectPayload {
   type: AuthToken;
   state: string;
   device_id: string;
+  expires_in: number;
 }
 
 export interface StatsInfoParams {
