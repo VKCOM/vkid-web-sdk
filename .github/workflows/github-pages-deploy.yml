@@ -1,13 +1,8 @@
 name: Deploy Docs and Demo on Release
 
 on:
-  push:
-    branches:
-      - DT-21533  # Укажите здесь вашу тестовую ветку
-
-# on:
-#   release:
-#     types: [published]
+  release:
+    types: [published]
 
 jobs:
   build:
