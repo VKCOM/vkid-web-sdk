@@ -1,0 +1,23 @@
+:root {
+  --demo_accent_alternate: #0077ff;
+
+  --demo_vkui--color_background_accent: #2688EB;
+  --demo_vkui--color_background_accent--hover: #2483E4;
+  --demo_vkui--color_background_accent--active: #237EDD;
+  --demo_vkui--color_background_secondary: #f5f5f5;
+  --demo_vkui--color_background_content: #ffffff;
+  --demo_vkui--color_field_border_alpha: rgba(0, 0, 0, .12);
+  --demo_vkui--color_field_border_alpha--dark: rgba(255, 255, 255, 0.12);
+  --demo_vkui--color_text_secondary--dark: #76787a;
+  --demo_vkui--color_text_primary--dark: #e1e3e6;
+
+  --demo_vkui-light-text-secondary: #818C99;
+  --demo_vkui-light-text-text-contrast: #ffffff;
+
+  --demo_vkui--size_border_radius--regular: 8px;
+  --demo_vkui--animation_easing_platform: cubic-bezier(0.4,0,0.2,1);
+  --demo_vkui--elevation4: 0px 0px 8px rgba(0,0,0,.12),0px 16px 16px rgba(0,0,0,.16);
+
+  --demo_background_page: #ebedf0;
+  --demo_light-button-primary-foreground: #FFF;
+}
