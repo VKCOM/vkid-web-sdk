@@ -1,8 +1,13 @@
 name: Deploy Docs and Demo on Release
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - DT-21533  # Укажите здесь вашу тестовую ветку
+
+# on:
+#   release:
+#     types: [published]
 
 jobs:
   build:
@@ -32,8 +37,8 @@ jobs:
     - name: Move documentation to public/docs
       run: mv ./docs ./public/docs
 
-    - name: Move demo to public/demo
-      run: mv ./demo ./public/demo
+    - name: Move dist-demo to public/demo
+      run: mv ./dist-demo ./public/demo
 
     - name: Deploy to GitHub Pages
       uses: jamesives/github-pages-deploy-action@v4
