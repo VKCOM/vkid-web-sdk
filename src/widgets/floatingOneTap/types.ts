@@ -45,6 +45,10 @@ export enum FloatingOneTapContentId {
    * Оформление заказа
    */
   MAKE_ORDER_WITHOUT_SERVICE = 5,
+  /**
+   * Быстрая регистрация
+   */
+  FAST_REGISTRATION = 6,
 }
 
 export interface FloatingOneTapParams extends Omit<WidgetParams, 'container'> {

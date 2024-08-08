@@ -2,7 +2,7 @@ import { ProductionStatsEventScreen, RegistrationStatsCollector, ActionStatsColl
 import { Config } from '#/core/config';
 
 import { TEXT_TYPE } from './constants';
-import { ScreenProcessedParams } from './types';
+import { ScreenProceedParams } from './types';
 
 export class FloatingOneTapStatsCollector {
   private readonly registrationStatsCollector: RegistrationStatsCollector;
@@ -34,7 +34,7 @@ export class FloatingOneTapStatsCollector {
     return fields;
   }
 
-  public sendScreenProcessed(params: ScreenProcessedParams) {
+  public sendScreenProceed(params: ScreenProceedParams) {
     void this.registrationStatsCollector.logEvent(ProductionStatsEventScreen.NOWHERE, {
       event_type: 'screen_proceed',
       screen_to: ProductionStatsEventScreen.FLOATING_ONE_TAP,

@@ -1,9 +1,8 @@
-import * as VKID from '#/index';
-import { OAuthName } from '#/index';
-import { OneTapInternalEvents } from '#/widgets/oneTap/events';
+import * as VKID from '@vkid/sdk';
 
 import { showAuthInfoSnackbar, showInitErrorSnackbar } from '#demo/components/snackbar';
 import { DemoStore } from '#demo/types';
+import { handleCallbackAuth } from '#demo/utils/handleAuth';
 
 export const createOneTap = (demoStore: DemoStore) => {
   const container = document.getElementById('oneTap') as HTMLElement;
@@ -14,13 +13,15 @@ export const createOneTap = (demoStore: DemoStore) => {
     lang: Number(demoStore.lang),
     scheme: demoStore.scheme,
     skin: demoStore.onetapSkin as VKID.OneTapParams['skin'],
-    oauthList: demoStore.oauthes ? demoStore.oauthes.split(',') as OAuthName[] : undefined,
+    oauthList: demoStore.oauthes ? demoStore.oauthes.split(',') as VKID.OAuthName[] : undefined,
     fastAuthEnabled: !!demoStore.fastAuthEnabledOnetap,
+    contentId: Number(demoStore.buttonOneTapContentId),
   };
 
   const oneTap = new VKID.OneTap();
   oneTap.on(VKID.WidgetEvents.ERROR, showInitErrorSnackbar)
-    .on(OneTapInternalEvents.AUTHENTICATION_INFO, showAuthInfoSnackbar)
+    .on(VKID.OneTapInternalEvents.LOGIN_SUCCESS, handleCallbackAuth)
+    .on(VKID.OneTapInternalEvents.AUTHENTICATION_INFO, showAuthInfoSnackbar)
     .render(params);
 
   return oneTap;
@@ -30,15 +31,17 @@ export const createFloatingOneTap = (demoStore: DemoStore) => {
   const params = {
     appName: 'VK ID Demo',
     showAlternativeLogin: true,
-    contentId: Number(demoStore.contentId),
     lang: Number(demoStore.lang),
     scheme: demoStore.scheme,
-    oauthList: demoStore.oauthes ? demoStore.oauthes.split(',') as OAuthName[] : undefined,
+    oauthList: demoStore.oauthes ? demoStore.oauthes.split(',') as VKID.OAuthName[] : undefined,
     fastAuthEnabled: !!demoStore.fastAuthEnabledFloatingOnetap,
+    contentId: Number(demoStore.floatingOneTapContentId),
   };
 
   const floatingOneTap = new VKID.FloatingOneTap();
-  floatingOneTap.on(VKID.WidgetEvents.ERROR, showInitErrorSnackbar)
+  floatingOneTap
+    .on(VKID.FloatingOneTapInternalEvents.LOGIN_SUCCESS, handleCallbackAuth)
+    .on(VKID.WidgetEvents.ERROR, showInitErrorSnackbar)
     .render(params);
 
   return floatingOneTap;
@@ -48,7 +51,9 @@ export const createOAuthList = (demoStore: DemoStore) => {
   const container = document.getElementById('oauthList') as HTMLElement;
 
   const oauthList = new VKID.OAuthList();
-  oauthList.on(VKID.WidgetEvents.ERROR, showInitErrorSnackbar)
+  oauthList
+    .on(VKID.OAuthListInternalEvents.LOGIN_SUCCESS, handleCallbackAuth)
+    .on(VKID.WidgetEvents.ERROR, showInitErrorSnackbar)
     .render({
       container,
       scheme: demoStore.scheme,

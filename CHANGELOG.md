@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.2.0
+
+### Новое
+- Добавлена возможность открыть авторизацию в новом окне для всех модулей.
+- Добавлена возможность менять текста в [кнопке One Tap](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/web/onetap).
+- Добавлен новый сценарий "Быстрая регистрация" в [шторку авторизации](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/web/auth). 
+
 ## 2.1.0
 
 ### Новое

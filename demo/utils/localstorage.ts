@@ -1,5 +1,4 @@
-import * as VKID from '#/index';
-import { ConfigAuthMode } from '#/index';
+import * as VKID from '@vkid/sdk';
 
 import { DemoStore } from '#demo/types';
 
@@ -25,12 +24,14 @@ export const getDemoStoreFromLS = (): DemoStore => {
     state: '',
     codeVerifier: '',
     codeChallenge: '',
-    contentId: VKID.FloatingOneTapContentId.SIGN_IN_TO_SERVICE,
+    floatingOneTapContentId: VKID.FloatingOneTapContentId.SIGN_IN_TO_SERVICE,
+    buttonOneTapContentId: VKID.OneTapContentId.SIGN_IN,
     lang: VKID.Languages.RUS,
     scheme: VKID.Scheme.LIGHT,
     onetapSkin: 'primary',
     oauthes: '',
-    mode: ConfigAuthMode.Redirect,
+    mode: VKID.ConfigAuthMode.InNewTab,
+    responseMode: VKID.ConfigResponseMode.Redirect,
 
     enable_oauthList: true,
     enable_basicAuth: true,
@@ -48,7 +49,13 @@ export const getDemoStoreFromLS = (): DemoStore => {
     const stringStore = localStorage.getItem('vkid_demo:store');
     if (stringStore) {
       const lsStore = JSON.parse(stringStore);
-      return { ...defaultDemoStore, ...lsStore };
+      return {
+        ...defaultDemoStore,
+        ...lsStore,
+        lang: Number(lsStore.lang),
+        floatingOneTapContentId: Number(lsStore.floatingOneTapContentId),
+        buttonOneTapContentId: Number(lsStore.buttonOneTapContentId),
+      };
     }
     saveDemoStoreInLS(defaultDemoStore);
   } catch (e) {}

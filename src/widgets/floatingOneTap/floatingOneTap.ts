@@ -1,12 +1,13 @@
 import { AuthError, AuthParams, AuthStatsFlowSource } from '#/auth/types';
 import { ProductionStatsEventScreen } from '#/core/analytics';
+import { ConfigAuthMode } from '#/core/config';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isRequired, validator } from '#/core/validator';
 import { Widget, WidgetEvents } from '#/core/widget';
 import { WidgetError, WidgetErrorCode, WidgetState } from '#/core/widget/types';
 import { Languages, Scheme } from '#/types';
 import { RedirectPayload } from '#/utils/url';
-import { OAuthList, OAuthListParams, OAuthName } from '#/widgets/oauthList';
+import { OAuthList, OAuthListInternalEvents, OAuthListParams, OAuthName } from '#/widgets/oauthList';
 
 import { FloatingOneTapStatsCollector } from './analytics';
 import { FloatingOneTapInternalEvents } from './events';
@@ -28,13 +29,12 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
     this.analytics = new FloatingOneTapStatsCollector(FloatingOneTap.config);
   }
 
+  private readonly sendSuccessLoginEvent = (params: RedirectPayload) => {
+    this.events.emit(FloatingOneTapInternalEvents.LOGIN_SUCCESS, params);
+  }
+
   protected onBridgeMessageHandler(event: FloatingOneTapBridgeMessage) {
     switch (event.handler) {
-      case FloatingOneTapInternalEvents.LOGIN_SUCCESS: {
-        const params = event.params as RedirectPayload;
-        this.redirectWithPayload(params);
-        break;
-      }
       case FloatingOneTapInternalEvents.SHOW_FULL_AUTH: {
         const params = event.params as FloatingOneTapBridgeFullAuthParams;
         const authParams: Partial<AuthParams> = {};
@@ -83,6 +83,7 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
     };
 
     FloatingOneTap.auth.login(params)
+      .then(this.sendSuccessLoginEvent)
       .catch((error: AuthError) => {
         this.events.emit(WidgetEvents.ERROR, {
           code: WidgetErrorCode.AuthError,
@@ -92,10 +93,15 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
   }
 
   private login(value?: AuthParams) {
-    this.analytics.sendNoUserButtonTap()
-      .finally(() => {
-        this.openFullAuth(value);
-      });
+    if (this.config.get().mode === ConfigAuthMode.Redirect) {
+      this.analytics.sendNoUserButtonTap()
+        .finally(() => {
+          this.openFullAuth(value);
+        });
+    } else {
+      void this.analytics.sendNoUserButtonTap();
+      this.openFullAuth(value);
+    }
   }
 
   private renderOAuthList(params: OAuthListParams) {
@@ -103,11 +109,13 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
       return;
     }
     const oauthList = new OAuthList();
-    oauthList.render({
-      ...params,
-      flowSource: ProductionStatsEventScreen.FLOATING_ONE_TAP,
-      uniqueSessionId: this.id,
-    });
+    oauthList
+      .on(OAuthListInternalEvents.LOGIN_SUCCESS, this.sendSuccessLoginEvent)
+      .render({
+        ...params,
+        flowSource: ProductionStatsEventScreen.FLOATING_ONE_TAP,
+        uniqueSessionId: this.id,
+      });
   }
 
   @validator<FloatingOneTapParams>({ appName: [isRequired] })
@@ -138,7 +146,7 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
       providers,
     });
 
-    this.analytics.sendScreenProcessed({
+    this.analytics.sendScreenProceed({
       scheme: this.scheme,
       lang: this.lang,
       contentId: queryParams.content_id,

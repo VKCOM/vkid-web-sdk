@@ -1,6 +1,6 @@
 import { BRIDGE_MESSAGE_TYPE_SDK } from '#/core/bridge/bridge';
 import { WidgetEvents } from '#/core/widget';
-import { Config, Languages, OAuthName, OneTapSkin } from '#/index';
+import { Config, Languages, OAuthName, OneTapContentId, OneTapSkin } from '#/index';
 import { Scheme } from '#/types';
 import { OneTap } from '#/widgets/oneTap';
 import { OneTapBridgeMessage } from '#/widgets/oneTap/types';
@@ -39,6 +39,7 @@ describe('OneTap', () => {
     oneTap = new TestOneTap();
 
     container = document.createElement('div', {});
+
     document.body.append(container);
 
     reporter
@@ -83,6 +84,7 @@ describe('OneTap', () => {
       expect(searchParams.get('redirect_uri')).toEqual('test'),
       expect(searchParams.get('oauth_version')).toEqual('2'),
       expect(searchParams.get('uuid')).toEqual('abc'),
+      expect(searchParams.get('content_id')).toEqual(`${OneTapContentId.SIGN_IN}`),
     ];
 
     expect([...new Set(searchParams.keys())].length).toEqual(expectArr.length);
@@ -194,17 +196,6 @@ describe('OneTap', () => {
     const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
     await wait(400);
     expect(oneTapEl?.getAttribute('data-state')).toEqual('loaded');
-  });
-
-  test('Must render oauthlist if oauthList param exists', async () => {
-    oneTap.render({
-      container,
-      oauthList: [OAuthName.MAIL, OAuthName.OK],
-    });
-    await wait(0);
-    const oneTapEl = document.querySelector('[data-test-id="oneTap"]');
-    const oauthListEl = oneTapEl?.querySelector('[data-test-id="oauthList"]');
-    expect(oauthListEl).toBeTruthy();
   });
 
   test('Must not render oauthlist if only OAuthName.VK', async () => {

@@ -45,7 +45,7 @@ describe('FloatingOneTapStatsCollector', () => {
   });
 
   it('Log ScreenProcessed', async () => {
-    void statsCollector.sendScreenProcessed({
+    void statsCollector.sendScreenProceed({
       lang: Languages.RUS,
       scheme: Scheme.DARK,
       contentId: FloatingOneTapContentId.SIGN_IN_TO_ACCOUNT,
@@ -79,6 +79,7 @@ describe('FloatingOneTapStatsCollector', () => {
             name: 'text_type',
             value: TEXT_TYPE[FloatingOneTapContentId.SIGN_IN_TO_ACCOUNT],
           }],
+
         },
       } }));
   });

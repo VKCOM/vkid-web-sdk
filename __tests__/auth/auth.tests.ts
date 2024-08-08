@@ -6,6 +6,7 @@ import { encodeStatsInfo } from '#/utils/url';
 
 import { version } from '../../package.json';
 import { WINDOW_LOCATION_HOST } from '../constants';
+import { wait } from '../utils';
 
 const APP_ID = 100;
 
@@ -34,7 +35,7 @@ describe('Auth', () => {
   });
 
   beforeEach(() => {
-    Config.init({ app: APP_ID, redirectUrl: 'https://id.vk.com', state: 'state', codeVerifier: 'codeVerifier', mode: ConfigAuthMode.Redirect });
+    Config.init({ app: APP_ID, redirectUrl: 'https://id.vk.com', state: 'state', codeVerifier: 'codeVerifier', mode: ConfigAuthMode.InNewTab });
     reporter
       .addLabel('layer', 'unit')
       .feature('Units')
@@ -46,7 +47,10 @@ describe('Auth', () => {
   });
 
   test('Should redirect to url with default fields', async () => {
-    await Auth.login();
+    Config.update({ mode: ConfigAuthMode.Redirect });
+
+    void Auth.login();
+    await wait(100);
     expect(assignFn).toHaveBeenCalled();
 
     const callArgs: string[] = assignFn.mock.calls[0];
@@ -73,6 +77,8 @@ describe('Auth', () => {
   });
 
   test('Should redirect to url with additional fields', async () => {
+    Config.update({ mode: ConfigAuthMode.Redirect });
+
     const params: AuthParams = {
       scheme: Scheme.LIGHT,
       lang: Languages.RUS,
@@ -80,7 +86,8 @@ describe('Auth', () => {
       statsFlowSource: AuthStatsFlowSource.BUTTON_ONE_TAP,
     };
 
-    await Auth.login(params);
+    void Auth.login(params);
+    await wait(100);
     expect(assignFn).toHaveBeenCalled();
 
     const callArgs: string[] = assignFn.mock.calls[0];
@@ -112,7 +119,6 @@ describe('Auth', () => {
   });
 
   test('Opens a window with default fields', () => {
-    Config.update({ mode: ConfigAuthMode.InNewTab });
     Auth.login().catch(console.error);
     expect(openFn).toHaveBeenCalled();
 
@@ -130,6 +136,7 @@ describe('Auth', () => {
       expect(searchParams.get('app_id')).toEqual(APP_ID.toString()),
       expect(searchParams.get('redirect_uri')).toEqual(Config.get().redirectUrl),
       expect(searchParams.get('prompt')).toEqual(''),
+      expect(searchParams.get('origin')).toEqual(location.protocol + '//' + location.hostname),
       expect(searchParams.get('stats_info')).toEqual(encodeStatsInfo({
         flow_source: AuthStatsFlowSource.AUTH,
         session_id: 'abc',
@@ -140,7 +147,7 @@ describe('Auth', () => {
   });
 
   test('Opens a window with additional fields', () => {
-    Config.update({ mode: ConfigAuthMode.InNewTab, prompt: [Prompt.Login, Prompt.Consent] });
+    Config.update({ prompt: [Prompt.Login, Prompt.Consent] });
     const params: AuthParams = {
       scheme: Scheme.LIGHT,
       lang: Languages.RUS,
@@ -165,6 +172,7 @@ describe('Auth', () => {
       expect(searchParams.get('app_id')).toEqual(APP_ID.toString()),
       expect(searchParams.get('redirect_uri')).toEqual(Config.get().redirectUrl),
       expect(searchParams.get('prompt')).toEqual([Prompt.Login, Prompt.Consent].join(' ').trim()),
+      expect(searchParams.get('origin')).toEqual(location.protocol + '//' + location.hostname),
       expect(searchParams.get('stats_info')).toEqual(encodeStatsInfo({
         flow_source: AuthStatsFlowSource.AUTH,
         session_id: 'abc',
@@ -175,7 +183,7 @@ describe('Auth', () => {
   });
 
   test('Must redirect with payload', async () => {
-    Config.update({ mode: ConfigAuthMode.InNewTab, redirectUrl: 'https://id.vk.com?query=123' });
+    Config.update({ redirectUrl: 'https://id.vk.com?query=123' });
 
     const response: AuthResponse = {
       code: 'code',
@@ -200,7 +208,7 @@ describe('Auth', () => {
       });
     });
 
-    await Auth.login();
+    void Auth.login();
     expect(openFn).toHaveBeenCalled();
     expect(closeFn).toHaveBeenCalled();
     expect(assignFn).toHaveBeenCalled();
@@ -221,7 +229,8 @@ describe('Auth', () => {
   });
 
   test('Should fetch oauth2/auth with authorization_code exchange params', async () => {
-    await Auth.login();
+    void Auth.login();
+
     const { redirectUrl, app, codeVerifier, state } = Config.get();
     const mockResponse = { json() {
       return Promise.resolve(JSON.parse('{ "state": "state" }'));
@@ -248,10 +257,13 @@ describe('Auth', () => {
   });
 
   test('Should set state and codeVerifier params to cookie after login()', async () => {
+    Config.update({ mode: ConfigAuthMode.Redirect });
+
     codeVerifierCookie('1');
     stateCookie('1');
 
-    await Auth.login();
+    void Auth.login();
+
     const { codeVerifier, state } = Config.get();
 
     expect(codeVerifier).toEqual(codeVerifierCookie());

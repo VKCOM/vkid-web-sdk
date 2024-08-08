@@ -1,17 +1,18 @@
 import { AuthError, AuthParams, AuthStatsFlowSource } from '#/auth/types';
 import { ProductionStatsEventScreen } from '#/core/analytics';
+import { ConfigAuthMode } from '#/core/config';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isValidHeight, validator } from '#/core/validator';
 import { Widget, WidgetEvents } from '#/core/widget';
 import { WidgetError, WidgetErrorCode, WidgetState } from '#/core/widget/types';
 import { Languages, Scheme } from '#/types';
 import { RedirectPayload } from '#/utils/url';
-import { OAuthList, OAuthListParams, OAuthName } from '#/widgets/oauthList';
+import { OAuthList, OAuthListInternalEvents, OAuthListParams, OAuthName } from '#/widgets/oauthList';
 
 import { OneTapStatsButtonType, OneTapStatsCollector } from './analytics';
 import { OneTapInternalEvents } from './events';
 import { getOneTapTemplate } from './template';
-import { OneTapBridgeFullAuthParams, OneTapBridgeMessage, OneTapParams, OneTapStyles } from './types';
+import { OneTapBridgeFullAuthParams, OneTapBridgeMessage, OneTapContentId, OneTapParams, OneTapSkin, OneTapStyles } from './types';
 
 const defaultStylesParams: Required<OneTapStyles> = {
   width: 0,
@@ -24,7 +25,7 @@ const BUTTON_SPACING = 12;
 export class OneTap extends Widget<OneTapParams> {
   private readonly analytics: OneTapStatsCollector;
   protected vkidAppName = 'button_one_tap_auth';
-  private statsBtnType: OneTapStatsButtonType | null = null;
+  private statsBtnType: OneTapStatsButtonType;
   private fastAuthDisabled: boolean;
 
   public constructor() {
@@ -41,14 +42,12 @@ export class OneTap extends Widget<OneTapParams> {
     }
   }
 
+  private readonly sendSuccessLoginEvent = (params: RedirectPayload) => {
+    this.events.emit(OneTapInternalEvents.LOGIN_SUCCESS, params);
+  }
+
   protected onBridgeMessageHandler(event: OneTapBridgeMessage) {
     switch (event.handler) {
-      // TODO: hidePreloadButton на событие ошибки
-      case OneTapInternalEvents.LOGIN_SUCCESS: {
-        const params = event.params as RedirectPayload;
-        this.redirectWithPayload(params);
-        break;
-      }
       case OneTapInternalEvents.SHOW_FULL_AUTH: {
         const params = event.params as OneTapBridgeFullAuthParams;
         const authParams: Partial<AuthParams> = {};
@@ -84,7 +83,7 @@ export class OneTap extends Widget<OneTapParams> {
   }
   protected onErrorHandler(error: WidgetError) {
     this.analytics.sendFrameLoadingFailed();
-    this.statsBtnType && this.analytics.sendOneTapButtonNoUserShow(this.statsBtnType);
+    this.analytics.sendOneTapButtonNoUserShow(this.statsBtnType);
     super.onErrorHandler(error);
   }
 
@@ -98,6 +97,7 @@ export class OneTap extends Widget<OneTapParams> {
     };
 
     OneTap.auth.login(params)
+      .then(this.sendSuccessLoginEvent)
       .catch((error: AuthError) => {
         this.events.emit(WidgetEvents.ERROR, {
           code: WidgetErrorCode.AuthError,
@@ -107,10 +107,15 @@ export class OneTap extends Widget<OneTapParams> {
   }
 
   private login(value?: AuthParams) {
-    this.statsBtnType && this.analytics.sendOneTapButtonNoUserTap(this.statsBtnType)
-      .finally(() => {
-        this.openFullAuth(value);
-      });
+    if (this.config.get().mode === ConfigAuthMode.Redirect) {
+      this.analytics.sendOneTapButtonNoUserTap(this.statsBtnType)
+        .finally(() => {
+          this.openFullAuth(value);
+        });
+    } else {
+      void this.analytics.sendOneTapButtonNoUserTap(this.statsBtnType);
+      this.openFullAuth(value);
+    }
   }
 
   private renderOAuthList(params: OAuthListParams) {
@@ -118,11 +123,13 @@ export class OneTap extends Widget<OneTapParams> {
       return;
     }
     const oauthList = new OAuthList();
-    oauthList.render({
-      ...params,
-      flowSource: ProductionStatsEventScreen.NOWHERE,
-      uniqueSessionId: this.id,
-    });
+    oauthList
+      .on(OAuthListInternalEvents.LOGIN_SUCCESS, this.sendSuccessLoginEvent)
+      .render({
+        ...params,
+        flowSource: ProductionStatsEventScreen.NOWHERE,
+        uniqueSessionId: this.id,
+      });
   }
 
   @validator<OneTapParams>({ styles: [isValidHeight] })
@@ -136,7 +143,8 @@ export class OneTap extends Widget<OneTapParams> {
       style_height: params.styles?.height || defaultStylesParams.height,
       style_border_radius: params.styles?.borderRadius || defaultStylesParams.borderRadius,
       show_alternative_login: params?.showAlternativeLogin ? 1 : 0,
-      button_skin: params.skin || 'primary',
+      button_skin: params.skin || OneTapSkin.Primary,
+      content_id: params?.contentId || OneTapContentId.SIGN_IN,
       scheme: this.scheme,
       lang_id: this.lang,
       providers: providers.join(','),
@@ -153,11 +161,17 @@ export class OneTap extends Widget<OneTapParams> {
       skin: oneTapParams.button_skin,
       scheme: oneTapParams.scheme,
       lang: oneTapParams.lang_id,
+      contentId: oneTapParams.content_id,
       renderOAuthList: this.renderOAuthList.bind(this),
       providers,
       setStatsButtonType: this.setStatsButtonType.bind(this),
     });
-    this.analytics.sendScreenProceed();
+    this.analytics.sendScreenProceed({
+      scheme: this.scheme,
+      lang: this.lang,
+      skin: oneTapParams.button_skin,
+      contentId: oneTapParams.content_id,
+    });
 
     if (this.fastAuthDisabled) {
       oneTapParams.fastAuthDisabled = true;

@@ -2,15 +2,14 @@ import { debounce } from '@vkontakte/vkjs';
 import ResizeObserver from 'resize-observer-polyfill';
 
 import { WidgetParams } from '#/core/widget';
-import { Languages } from '#/types';
 import { getButtonFontSize, getButtonLogoSize, getButtonPadding } from '#/utils/styles';
 import { OAuthListParams, OAuthName } from '#/widgets/oauthList';
-import { longLang, providerLang, shortLang } from '#/widgets/oneTap/lang';
+import { getLongLang, getShortLang, providerLang } from '#/widgets/oneTap/langs';
 
 import { OneTapStatsButtonType } from './analytics';
 import { OneTapParams, OneTapStyles } from './types';
 
-type OneTapTemplateParams = Required<OneTapStyles> & Pick<OneTapParams, 'skin'> & Pick<WidgetParams, 'scheme' | 'lang'> & {
+type OneTapTemplateParams = Required<OneTapStyles & Pick<OneTapParams, 'skin' | 'contentId'> & Pick<WidgetParams, 'scheme' | 'lang'>> & {
   login?: VoidFunction;
   iframeHeight?: number;
   renderOAuthList: (params: OAuthListParams) => void;
@@ -39,7 +38,8 @@ export const getOneTapTemplate = ({
   login,
   skin,
   scheme,
-  lang = Languages.RUS,
+  contentId,
+  lang,
   renderOAuthList,
   providers,
   setStatsButtonType,
@@ -48,9 +48,9 @@ export const getOneTapTemplate = ({
   let textLongLimit = 0;
   let textShortWidth = 0;
   let textLongWidth = 0;
-  const initialText = shortLang[lang];
+  const initialText = getShortLang(contentId, lang);
   const shortText = providerLang;
-  const longText = longLang[lang];
+  const longText = getLongLang(contentId, lang);
   const textPadding = 8;
   const padding = getButtonPadding(height);
   const fontSize = getButtonFontSize(height);
@@ -101,6 +101,25 @@ export const getOneTapTemplate = ({
 
   const handleLoaded = () => {
     let ANIMATION_TIMEOUT = 0;
+    let renderedOauthList = false;
+
+    const addOauthList = () => {
+      if (providers?.length && !containerEl.contains(oauthListEl)) {
+        containerEl.appendChild(oauthListEl);
+        !renderedOauthList && renderOAuthList({
+          lang,
+          scheme,
+          container: oauthListEl,
+          oauthList: providers,
+          styles: {
+            borderRadius,
+            height,
+          },
+        });
+        renderedOauthList = true;
+      }
+    };
+
     const observeCallback = () => {
       const hasTextContainer = contentEl.contains(textContainerEl);
       const hasShortText = textContainerEl.contains(textShortEl);
@@ -108,6 +127,9 @@ export const getOneTapTemplate = ({
       const containerWidth = containerEl.clientWidth;
 
       if (hasTextContainer && containerWidth < textIconLimit) {
+        if (containerEl.contains(oauthListEl)) {
+          containerEl.removeChild(oauthListEl);
+        }
         setStatsButtonType('icon');
         buttonEl.setAttribute('style', `width: ${height}px;`);
         textContainerEl.remove();
@@ -140,6 +162,8 @@ export const getOneTapTemplate = ({
           textShortEl.remove();
           textContainerEl.appendChild(textLongEl);
         }, ANIMATION_TIMEOUT);
+
+        addOauthList();
       }
 
       setStatsButtonType('default');
@@ -151,20 +175,6 @@ export const getOneTapTemplate = ({
     if (oneTap) {
       oneTap.appendChild(containerEl);
       containerEl.appendChild(buttonEl);
-
-      if (providers?.length) {
-        containerEl.appendChild(oauthListEl);
-        renderOAuthList({
-          lang,
-          scheme,
-          container: oauthListEl,
-          oauthList: providers,
-          styles: {
-            borderRadius,
-            height,
-          },
-        });
-      }
       buttonEl.appendChild(btnInEl);
       btnInEl.appendChild(contentEl);
       contentEl.appendChild(logoEl);

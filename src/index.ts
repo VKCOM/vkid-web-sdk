@@ -9,12 +9,12 @@ import {
   TokenResult,
   UserInfoResult,
 } from './auth';
-import { Config, ConfigData, ConfigAuthMode, Prompt } from './core/config';
+import { Config, ConfigData, ConfigAuthMode, ConfigResponseMode, Prompt } from './core/config';
 import { Widget } from './core/widget';
 export { Languages, Scheme } from './types';
 
 const globalConfig = new Config();
-export { globalConfig as Config, ConfigAuthMode, Prompt };
+export { globalConfig as Config, ConfigAuthMode, ConfigResponseMode, Prompt };
 export type { ConfigData };
 
 /** Export Auth */
@@ -37,13 +37,13 @@ Widget.auth = globalAuth;
 export { WidgetEvents } from './core/widget';
 
 /** Export OneTap */
-export { OneTap, OneTapSkin } from './widgets/oneTap';
+export { OneTap, OneTapSkin, OneTapContentId, OneTapInternalEvents } from './widgets/oneTap';
 export type { OneTapParams, OneTapStyles } from './widgets/oneTap';
 
 /** Export FloatingOneTap */
-export { FloatingOneTap, FloatingOneTapContentId } from './widgets/floatingOneTap';
+export { FloatingOneTap, FloatingOneTapContentId, FloatingOneTapInternalEvents } from './widgets/floatingOneTap';
 export type { FloatingOneTapParams } from './widgets/floatingOneTap';
 
 /** Export OAuthList */
-export { OAuthList, OAuthName } from './widgets/oauthList';
+export { OAuthList, OAuthName, OAuthListInternalEvents } from './widgets/oauthList';
 export type { OAuthListParams, OAuthListStyles } from './widgets/oauthList';

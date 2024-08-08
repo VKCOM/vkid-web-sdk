@@ -3,7 +3,7 @@ import { ActionStatsCollector, ProductionStatsCollector, SakSessionStatsCollecto
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isNumber, isRequired, validator } from '#/core/validator';
 
-import { ConfigAuthMode, ConfigData, PKSE, Prompt } from './types';
+import { ConfigAuthMode, ConfigData, ConfigResponseMode, PKSE, Prompt } from './types';
 
 export class Config {
   private readonly sakSessionStatsCollector: SakSessionStatsCollector;
@@ -11,6 +11,7 @@ export class Config {
     app: 0,
     redirectUrl: '',
     mode: ConfigAuthMode.InNewTab,
+    responseMode: ConfigResponseMode.Redirect,
     codeVerifier: '',
     state: '',
     prompt: [Prompt.Default],
