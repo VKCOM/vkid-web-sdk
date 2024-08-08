@@ -31,6 +31,20 @@ const MAKE_ORDER: Lang = {
   [Languages.TURKEY]: 'VK ID aracılığıyla oluştur',
 };
 
+const CONTINUE: Lang = {
+  [Languages.RUS]: 'Продолжить с VK ID',
+  [Languages.UKR]: 'Продовжити з VK ID',
+  [Languages.BEL]: 'Працягнуць з VK ID',
+  [Languages.KAZ]: 'VK ID арқылы жалғастыру',
+  [Languages.UZB]: 'VK ID bilan davom etish',
+  [Languages.ENG]: 'Continue with VK ID',
+  [Languages.SPA]: 'Continuar con VK ID',
+  [Languages.GERMAN]: 'Mit VK ID fortfahren',
+  [Languages.POL]: 'Kontynuuj z VK ID',
+  [Languages.FRA]: 'Continuer avec VK ID',
+  [Languages.TURKEY]: 'VK ID ile devam et',
+};
+
 export const getButtonLang = (contentId: FloatingOneTapContentId, lang: Languages): string => {
   switch (contentId) {
     case FloatingOneTapContentId.SIGN_IN_TO_SERVICE:
@@ -41,6 +55,8 @@ export const getButtonLang = (contentId: FloatingOneTapContentId, lang: Language
     case FloatingOneTapContentId.MAKE_ORDER_WITH_SERVICE:
     case FloatingOneTapContentId.MAKE_ORDER_WITHOUT_SERVICE:
       return MAKE_ORDER[lang] || MAKE_ORDER[Languages.RUS];
+    case FloatingOneTapContentId.FAST_REGISTRATION:
+      return CONTINUE[lang] || CONTINUE[Languages.RUS];
     default:
       return SIGN_IN[Languages.RUS];
   }

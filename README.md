@@ -23,7 +23,7 @@
 
 ---
 
-ℹ️ Версия VK ID SDK 2.1.0 поддерживает авторизацию по протоколу [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-10), а также способы входа через аккаунты Одноклассников и Mail.ru.
+ℹ️ Версия VK ID SDK 2.2.0 поддерживает авторизацию по протоколу [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-10), а также способы входа через аккаунты Одноклассников и Mail.ru.
 
 ---
 
@@ -114,7 +114,7 @@ if (container) {
 - [Что такое VK ID](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/intro/start-page)
 - [Создание приложения](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/create-application)
 - [Требования к дизайну](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/guidelines/design-rules-oauth)
-- [Спецификация](https://vkcom.github.io/vkid-web-sdk/)
+- [Спецификация](https://vkcom.github.io/vkid-web-sdk/docs)
 
 ## Contributing
 

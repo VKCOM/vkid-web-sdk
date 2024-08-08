@@ -1,14 +1,16 @@
 import type { AuthError, AuthParams } from '#/auth';
 import { AuthStatsFlowSource } from '#/auth/types';
 import { ProductionStatsEventScreen } from '#/core/analytics';
+import { ConfigAuthMode } from '#/core/config';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isNotEmptyOAuthList, validator } from '#/core/validator';
 import { Widget, WidgetEvents } from '#/core/widget';
 import { WidgetErrorCode, WidgetState } from '#/core/widget/types';
 import { Languages, Scheme } from '#/types';
-import { MultibrandingOauthParamsScreen } from '#/widgets/oauthList/analytics/types';
+import { MultibrandingButtonTapParams, MultibrandingOauthParamsScreen } from '#/widgets/oauthList/analytics/types';
 
 import { MultibrandingStatsProviders, OAuthListStatsCollector } from './analytics';
+import { OAuthListInternalEvents } from './events';
 import { getOAuthListTemplate } from './template';
 import { OAuthListParams, OAuthName } from './types';
 
@@ -104,49 +106,43 @@ export class OAuthList extends Widget<OAuthListParams> {
       uniqueSessionId: this.uniqueSessionId,
     };
 
+    let sendProviderButtonTap: (params: MultibrandingButtonTapParams) => Promise<unknown>;
+
     switch (oauth) {
       case OAuthName.VK:
-        this.analytics.sendVkButtonTap({
-          screen: this.flowSource,
-          isIcon: this.providers.length > 1,
-        }).finally(() => {
-          OAuthList.auth.login(params)
-            .catch((error: AuthError) => {
-              this.events.emit(WidgetEvents.ERROR, {
-                code: WidgetErrorCode.AuthError,
-                text: error.error,
-              });
-            });
-        });
+        sendProviderButtonTap = this.analytics.sendVkButtonTap.bind(this.analytics);
         break;
       case OAuthName.OK:
-        this.analytics.sendOkButtonTap({
-          screen: this.flowSource,
-          isIcon: this.providers.length > 1,
-        }).finally(() => {
-          OAuthList.auth.login(params)
-            .catch((error: AuthError) => {
-              this.events.emit(WidgetEvents.ERROR, {
-                code: WidgetErrorCode.AuthError,
-                text: error.error,
-              });
-            });
-        });
+        sendProviderButtonTap = this.analytics.sendOkButtonTap.bind(this.analytics);
         break;
       case OAuthName.MAIL:
-        this.analytics.sendMailButtonTap({
-          screen: this.flowSource,
-          isIcon: this.providers.length > 1,
-        }).finally(() => {
-          OAuthList.auth.login(params)
-            .catch((error: AuthError) => {
-              this.events.emit(WidgetEvents.ERROR, {
-                code: WidgetErrorCode.AuthError,
-                text: error.error,
-              });
-            });
-        });
+        sendProviderButtonTap = this.analytics.sendMailButtonTap.bind(this.analytics);
         break;
+    }
+
+    const openFullAuth = () => {
+      OAuthList.auth.login(params)
+        .then((res) => {
+          this.events.emit(OAuthListInternalEvents.LOGIN_SUCCESS, res);
+        })
+        .catch((error: AuthError) => {
+          this.events.emit(WidgetEvents.ERROR, {
+            code: WidgetErrorCode.AuthError,
+            text: error.error,
+          });
+        });
+    };
+
+    const sendProviderButtonTapParams = {
+      screen: this.flowSource,
+      isIcon: this.providers.length > 1,
+    };
+
+    if (this.config.get().mode === ConfigAuthMode.Redirect) {
+      sendProviderButtonTap(sendProviderButtonTapParams).finally(openFullAuth);
+    } else {
+      void sendProviderButtonTap(sendProviderButtonTapParams);
+      openFullAuth();
     }
   }
 }

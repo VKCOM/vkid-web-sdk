@@ -1,4 +1,4 @@
-import { Languages, Scheme, ConfigAuthMode, FloatingOneTapContentId, OneTapSkin, OAuthName, Prompt } from '@vkid/sdk';
+import { Languages, Scheme, ConfigAuthMode, ConfigResponseMode, FloatingOneTapContentId, OneTapContentId, OneTapSkin, OAuthName, Prompt } from '@vkid/sdk';
 
 import { DemoStore } from '#demo/types';
 
@@ -22,17 +22,36 @@ const schemeOptions = [
 ];
 
 const modeOptions = [
-  { value: ConfigAuthMode.Redirect, text: 'Текущая вкладка' },
   { value: ConfigAuthMode.InNewTab, text: 'Новая вкладка' },
+  { value: ConfigAuthMode.Redirect, text: 'Текущая вкладка' },
+  { value: ConfigAuthMode.InNewWindow, text: 'Новое окно' },
 ];
 
-const contentIdOptions = [
+const responseModeOptions = [
+  { value: ConfigResponseMode.Redirect, text: 'Redirect' },
+  { value: ConfigResponseMode.Callback, text: 'Callback' },
+];
+
+const floatingOneTapContentIdOptions = [
   { value: FloatingOneTapContentId.SIGN_IN_TO_SERVICE, text: 'Войти в сервис' },
   { value: FloatingOneTapContentId.SIGN_IN_TO_ACCOUNT, text: 'Войти в аккаунт' },
   { value: FloatingOneTapContentId.REGISTRATION_FOR_EVENT, text: 'Регистрация на мероприятие' },
   { value: FloatingOneTapContentId.SUBMIT_APPLICATIONS, text: 'Подача заявки' },
   { value: FloatingOneTapContentId.MAKE_ORDER_WITH_SERVICE, text: 'Оформление заказа 1' },
   { value: FloatingOneTapContentId.MAKE_ORDER_WITHOUT_SERVICE, text: 'Оформление заказа 2' },
+  { value: FloatingOneTapContentId.FAST_REGISTRATION, text: 'Быстрая регистрация в сервисе' },
+];
+
+const buttonOneTapContentIdOptions = [
+  { value: OneTapContentId.SIGN_IN, text: 'Войти' },
+  { value: OneTapContentId.SIGN_UP, text: 'Записаться' },
+  { value: OneTapContentId.GET, text: 'Получить' },
+  { value: OneTapContentId.OPEN, text: 'Открыть' },
+  { value: OneTapContentId.CALCULATE, text: 'Рассчитать' },
+  { value: OneTapContentId.ORDER, text: 'Заказать' },
+  { value: OneTapContentId.PLACE_ORDER, text: 'Оформить заказ' },
+  { value: OneTapContentId.SUBMIT_REQUEST, text: 'Оставить заявку' },
+  { value: OneTapContentId.PARTICIPATE, text: 'Участвовать' },
 ];
 
 const onetapSkinOptions = [
@@ -82,9 +101,19 @@ export const initModuleParamsList = (store: DemoStore) => {
     ${modeOptions.map(({ text, value }) => `<option ${store.mode === value ? 'selected' : ''} value="${value}">${text}</option>`).join('')}
   </select>
   <br />
-  <label for="contentId">Тип:</label>
-  <select id="contentId" name="contentId">
-    ${contentIdOptions.map(({ text, value }) => `<option ${store.contentId === value ? 'selected' : ''} value="${value}">${text}</option>`).join('')}
+  <label for="responseMode">Режим получения данных:</label>
+  <select id="responseMode" name="responseMode">
+    ${responseModeOptions.map(({ text, value }) => `<option ${store.responseMode === value ? 'selected' : ''} value="${value}">${text}</option>`).join('')}
+  </select>
+  <br />
+  <label for="floatingOneTapContentId">Тип текстов в шторке:</label>
+  <select id="floatingOneTapContentId" name="floatingOneTapContentId">
+    ${floatingOneTapContentIdOptions.map(({ text, value }) => `<option ${store.floatingOneTapContentId === value ? 'selected' : ''} value="${value}">${text}</option>`).join('')}
+  </select>
+  <br />
+  <label for="buttonOneTapContentId">Тип текстов в вантапе:</label>
+  <select id="buttonOneTapContentId" name="buttonOneTapContentId">
+    ${buttonOneTapContentIdOptions.map(({ text, value }) => `<option ${store.buttonOneTapContentId === value ? 'selected' : ''} value="${value}">${text}</option>`).join('')}
   </select>
   <br />
   <label for="onetapSkin">Скин вантапа</label>

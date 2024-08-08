@@ -1,7 +1,8 @@
 import { ProductionStatsEventScreen, RegistrationStatsCollector, ActionStatsCollector, ProductionStatsCollector } from '#/core/analytics';
 import { Config } from '#/core/config';
 
-import { OneTapStatsButtonType } from './types';
+import { TEXT_TYPE } from './constants';
+import { OneTapStatsButtonType, ScreenProceedParams } from './types';
 
 export class OneTapStatsCollector {
   private readonly registrationStatsCollector: RegistrationStatsCollector;
@@ -67,10 +68,22 @@ export class OneTapStatsCollector {
     });
   }
 
-  public sendScreenProceed() {
+  public sendScreenProceed(params: ScreenProceedParams) {
     void this.registrationStatsCollector.logEvent(ProductionStatsEventScreen.NOWHERE, {
       event_type: 'screen_proceed',
-      fields: this.getFields(),
+      fields: [...this.getFields(), {
+        name: 'theme_type',
+        value: params.scheme,
+      }, {
+        name: 'style_type',
+        value: params.skin,
+      }, {
+        name: 'language',
+        value: params.lang.toString(),
+      }, {
+        name: 'text_type',
+        value: TEXT_TYPE[params.contentId],
+      }],
     });
   }
 }

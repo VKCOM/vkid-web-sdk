@@ -1,6 +1,12 @@
 export enum ConfigAuthMode {
   Redirect = 'redirect',
-  InNewTab = 'new_tab'
+  InNewTab = 'new_tab',
+  InNewWindow = 'new_window'
+}
+
+export enum ConfigResponseMode {
+  Redirect = 'redirect',
+  Callback = 'callback',
 }
 
 /**
@@ -29,6 +35,11 @@ export interface ConfigData {
    * @ignore
    */
   mode?: ConfigAuthMode;
+
+  /**
+   * @ignore
+   */
+  responseMode?: ConfigResponseMode;
 
   /**
    * @ignore

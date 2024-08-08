@@ -1,6 +1,7 @@
 import * as VKID from '#/index';
 
 import { DemoStore } from '#demo/types';
+import { handleCallbackAuth } from '#demo/utils/handleAuth';
 
 export const initAuthButtons = (demoStore: DemoStore) => {
   if (!demoStore.enable_basicAuth) { return; }
@@ -43,9 +44,11 @@ export const initAuthButtons = (demoStore: DemoStore) => {
     button.onclick = () => VKID.Auth.login({
       lang: demoStore.lang,
       scheme: demoStore.scheme,
-    }).catch((e: VKID.AuthError) => {
-      console.error('Ошибка Auth.login()', e);
-    });
+    })
+      .then(handleCallbackAuth)
+      .catch((e: VKID.AuthError) => {
+        console.error('Ошибка Auth.login()', e);
+      });
   });
 };
 

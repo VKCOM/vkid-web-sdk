@@ -1,12 +1,10 @@
-import {
-  ProductionStatsEventScreen,
-  RegistrationStatsEventParams,
-  ProductionStatsEventTypes,
-  ProductionStatsTypeActions,
-} from '#/core/analytics';
+import { ProductionStatsEventScreen, ProductionStatsEventTypes, ProductionStatsTypeActions, RegistrationStatsEventParams } from '#/core/analytics';
 import { Config } from '#/core/config';
+import { Languages, Scheme } from '#/types';
 import { request } from '#/utils/request';
+import { OneTapContentId, OneTapSkin } from '#/widgets/oneTap';
 import { OneTapStatsCollector } from '#/widgets/oneTap/analytics';
+import { TEXT_TYPE } from '#/widgets/oneTap/analytics/constants';
 
 import { wait } from '../../../utils';
 
@@ -124,7 +122,12 @@ describe('OneTapStatsCollector', () => {
   });
 
   it('Log ScreenProceed', async () => {
-    void statsCollector.sendScreenProceed();
+    void statsCollector.sendScreenProceed({
+      lang: Languages.RUS,
+      scheme: Scheme.DARK,
+      skin: OneTapSkin.Secondary,
+      contentId: OneTapContentId.CALCULATE,
+    });
     await wait(0);
 
     const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
@@ -138,6 +141,18 @@ describe('OneTapStatsCollector', () => {
       }, {
         name: 'unique_session_id',
         value: 'id',
+      }, {
+        name: 'theme_type',
+        value: Scheme.DARK,
+      }, {
+        name: 'style_type',
+        value: OneTapSkin.Secondary,
+      }, {
+        name: 'language',
+        value: Languages.RUS.toString(),
+      }, {
+        name: 'text_type',
+        value: TEXT_TYPE[OneTapContentId.CALCULATE],
       }],
     })));
   });

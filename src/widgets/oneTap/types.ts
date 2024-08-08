@@ -25,6 +25,45 @@ export enum OneTapSkin {
   Secondary = 'secondary',
 }
 
+export enum OneTapContentId {
+  /**
+   * Войти
+   */
+  SIGN_IN = 0,
+  /**
+   * Записаться
+   */
+  SIGN_UP = 1,
+  /**
+   * Получить
+   */
+  GET = 2,
+  /**
+   * Открыть
+   */
+  OPEN = 3,
+  /**
+   * Рассчитать
+   */
+  CALCULATE = 4,
+  /**
+   * Заказать
+   */
+  ORDER = 5,
+  /**
+   * Оформить заказ
+   */
+  PLACE_ORDER = 6,
+  /**
+   * Оставить заявку
+   */
+  SUBMIT_REQUEST = 7,
+  /**
+   * Участвовать
+   */
+  PARTICIPATE = 8,
+}
+
 export interface OneTapParams extends WidgetParams {
   /**
    * Отображение кнопки входа другим способом
@@ -43,6 +82,10 @@ export interface OneTapParams extends WidgetParams {
    */
   oauthList?: OAuthName[];
   /**
+   * Тип отображаемого контента
+   */
+  contentId?: OneTapContentId;
+  /**
    * Отображение состояния кнопки "Продолжить как"
    * @defaultValue `true`
    */
@@ -59,4 +102,3 @@ type OneTapBridgeParams = OneTapBridgeFullAuthParams | RedirectPayload;
 type OneTapEvents = OneTapInternalEvents | WidgetEvents;
 
 export type OneTapBridgeMessage = BridgeMessage<OneTapEvents, OneTapBridgeParams>;
-

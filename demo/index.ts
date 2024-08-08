@@ -90,7 +90,7 @@ function handleSelectParamsChange() {
 
   document.querySelector('html')?.setAttribute('data-scheme', demoStore.scheme);
 }
-['lang', 'scheme', 'contentId', 'oauthes', 'onetapSkin', 'fastAuthEnabledOnetap', 'fastAuthEnabledFloatingOnetap'].forEach((item) => {
+['lang', 'scheme', 'floatingOneTapContentId', 'buttonOneTapContentId', 'oauthes', 'onetapSkin', 'fastAuthEnabledOnetap', 'fastAuthEnabledFloatingOnetap'].forEach((item) => {
   document.getElementById(item)?.addEventListener('change', handleSelectParamsChange);
 });
 
@@ -101,8 +101,10 @@ function handleConfigParamsChange() {
   demoStore = Object.assign(demoStore, { [this.name]: this.value });
   saveDemoStoreInLS(demoStore);
 }
-const modeEl = document.getElementById('mode');
-modeEl && modeEl.addEventListener('change', handleConfigParamsChange);
+['mode', 'responseMode'].forEach((name) => {
+  const modeEl = document.getElementById(name);
+  modeEl && modeEl.addEventListener('change', handleConfigParamsChange);
+});
 
 function handleModuleEnabledCheckboxChange() {
   demoStore = Object.assign(demoStore, { [this.name]: this.checked });

@@ -2,26 +2,16 @@ import { querystring } from '@vkontakte/vkjs';
 
 import { AuthStatsCollector } from '#/auth/analytics/AuthStatsCollector';
 import { AuthDataService } from '#/auth/authDataService';
-import { Config, ConfigAuthMode, Prompt } from '#/core/config';
+import { Config, ConfigAuthMode, ConfigResponseMode, Prompt } from '#/core/config';
 import { clearCodeVerifierCookie, clearStateCookie, codeVerifier, setExtIdCookie, state } from '#/utils/cookie';
 import { isDomainAllowed } from '#/utils/domain';
 import { generateCodeChallenge } from '#/utils/oauth';
-import { getRedirectWithPayloadUrl, getVKIDUrl, RedirectPayload, encodeStatsInfo } from '#/utils/url';
+import { encodeStatsInfo, getRedirectWithPayloadUrl, getVKIDUrl, RedirectPayload } from '#/utils/url';
 import { uuid } from '#/utils/uuid';
 import { ExternalOAuthName } from '#/widgets/oauthList';
 
 import { AUTH_ERROR_TEXT, OAUTH2_RESPONSE, OAUTH2_RESPONSE_TYPE } from './constants';
-import {
-  AuthError,
-  AuthErrorCode,
-  AuthParams,
-  AuthQueryParams,
-  AuthStatsFlowSource,
-  LogoutResult,
-  PublicInfoResult,
-  TokenResult,
-  UserInfoResult,
-} from './types';
+import { AuthError, AuthErrorCode, AuthParams, AuthQueryParams, AuthStatsFlowSource, LogoutResult, PublicInfoResult, TokenResult, UserInfoResult } from './types';
 
 const CODE_CHALLENGE_METHOD = 's256';
 
@@ -64,7 +54,19 @@ export class Auth {
       if (this.state !== data.payload.state) {
         this.dataService.sendStateMismatchError();
       } else {
-        this.dataService.sendSuccessData(data.payload);
+        setExtIdCookie(data.payload.ext_id);
+        delete data.payload.ext_id;
+        // Сбрасываем после проверки
+        clearStateCookie();
+        this.state = '';
+
+        const { responseMode } = Auth.config.get();
+        if (responseMode === ConfigResponseMode.Redirect) {
+          this.redirectWithPayload(data.payload);
+          this.close();
+        } else {
+          this.dataService.sendSuccessData(data.payload);
+        }
       }
       return;
     }
@@ -92,8 +94,25 @@ export class Auth {
   }
 
   private readonly loginInNewTab = (url: string) => {
+    const opener = window.open(url, '_blank');
+    return this.handleWindowOpen(opener);
+  }
+
+  private readonly loginInNewWindow = (url: string) => {
+    const width = 800;
+    const height = 800;
+    const top = screen.height / 2 - height / 2;
+    const left = screen.width / 2 - width / 2;
+
+    const windowFeatures = `top=${top},left=${left},width=${width},height=${height},location`;
+
+    const opener = window.open(url, '_blank', windowFeatures);
+    return this.handleWindowOpen(opener);
+  }
+
+  private readonly handleWindowOpen = (opener: Window | null) => {
     this.dataService = new AuthDataService();
-    this.opener = window.open(url, '_blank');
+    this.opener = opener;
 
     if (this.opener) {
       this.subscribe();
@@ -101,15 +120,7 @@ export class Auth {
       this.dataService.sendCannotCreateNewTab();
     }
 
-    return this.dataService.value
-      .then((payload) => {
-        setExtIdCookie(payload.ext_id);
-        delete payload.ext_id;
-        // Сбрасываем после проверки
-        clearStateCookie();
-        this.state = '';
-        this.redirectWithPayload(payload);
-      });
+    return this.dataService.value;
   }
 
   private readonly loginByRedirect = (url: string) => {
@@ -154,6 +165,13 @@ export class Auth {
       }),
     };
 
+    if (config.mode !== ConfigAuthMode.Redirect) {
+      if (flowSource === AuthStatsFlowSource.AUTH) {
+        void this.analytics.sendCustomAuthStart(params?.provider);
+      }
+      queryParams.origin = location.protocol + '//' + location.hostname;
+    }
+
     let url = getVKIDUrl('authorize', queryParams, config);
 
     if (params?.screen) {
@@ -165,19 +183,19 @@ export class Auth {
       url = getVKIDUrl('auth', queryParams, config);
     }
 
-    if (config.mode === ConfigAuthMode.InNewTab) {
-      if (flowSource === AuthStatsFlowSource.AUTH) {
-        void this.analytics.sendCustomAuthStart(params?.provider);
+    switch (config.mode) {
+      case ConfigAuthMode.InNewWindow:
+        return this.loginInNewWindow(url);
+      case ConfigAuthMode.InNewTab:
+        return this.loginInNewTab(url);
+      default: {
+        if (flowSource === AuthStatsFlowSource.AUTH) {
+          return this.analytics.sendCustomAuthStart(params?.provider).finally(() => {
+            void this.loginByRedirect(url);
+          });
+        }
+        return this.loginByRedirect(url);
       }
-      queryParams.origin = location.protocol + '//' + location.hostname;
-      return this.loginInNewTab(url);
-    } else {
-      if (flowSource === AuthStatsFlowSource.AUTH) {
-        return this.analytics.sendCustomAuthStart(params?.provider).finally(() => {
-          void this.loginByRedirect(url);
-        });
-      }
-      return this.loginByRedirect(url);
     }
   }
 

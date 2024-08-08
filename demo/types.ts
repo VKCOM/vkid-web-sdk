@@ -1,19 +1,22 @@
 import { TokenResult } from '#/auth/types';
-import { ConfigAuthMode, Prompt } from '#/core/config';
+import { ConfigAuthMode, ConfigResponseMode, Prompt } from '#/core/config';
 import { Languages, Scheme } from '#/types';
 import { FloatingOneTapContentId } from '#/widgets/floatingOneTap';
+import { OneTapContentId } from '#/widgets/oneTap';
 
 export interface DemoStore {
   app: number;
   state: string;
   codeVerifier: string;
   codeChallenge: string;
-  contentId: FloatingOneTapContentId;
+  floatingOneTapContentId: FloatingOneTapContentId;
+  buttonOneTapContentId: OneTapContentId;
   lang: Languages;
   scheme: Scheme;
   onetapSkin: 'primary' | 'secondary';
   oauthes: '' | 'mail_ru' |'ok_ru' | 'mail_ru,ok_ru';
   mode: ConfigAuthMode;
+  responseMode: ConfigResponseMode;
   enable_oauthList: boolean;
   enable_basicAuth: boolean;
   enable_oneTap: boolean;

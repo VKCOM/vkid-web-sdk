@@ -87,6 +87,20 @@ const MAKE_ORDER_WITHOUT_SERVICE: Lang = {
   [Languages.TURKEY]: 'VK\u00A0ID\u00A0aracılığıyla sipariş oluşturun',
 };
 
+const FAST_REGISTRATION: Lang = {
+  [Languages.RUS]: 'Быстрая регистрация\nв\u00A0{service}',
+  [Languages.UKR]: 'Швидка реєстрація в\u00A0{service}',
+  [Languages.BEL]: 'Хуткая рэгістрацыя ў\u00A0{service}',
+  [Languages.KAZ]: '{service} сервисіне тез тіркелу',
+  [Languages.UZB]: '{service}\u00A0da tezkor ro‘yxatdan o‘tish',
+  [Languages.ENG]: 'Quick sign-up with\u00A0{service}',
+  [Languages.SPA]: 'Registro rápido con\u00A0{service}',
+  [Languages.GERMAN]: 'Schnelle Registrierung bei\u00A0{service}',
+  [Languages.POL]: 'Szybka rejestracja w\u00A0{service}',
+  [Languages.FRA]: 'Inscription rapide avec\u00A0{service}',
+  [Languages.TURKEY]: '{service}\'te\u00A0hızlı oturum açma',
+};
+
 export const getTitleLang = (contentId: FloatingOneTapContentId, lang: Languages, appName: string): string => {
   let result = SIGN_IN_TO_SERVICE[Languages.RUS];
 
@@ -108,6 +122,9 @@ export const getTitleLang = (contentId: FloatingOneTapContentId, lang: Languages
       break;
     case FloatingOneTapContentId.MAKE_ORDER_WITHOUT_SERVICE:
       result = MAKE_ORDER_WITHOUT_SERVICE[lang];
+      break;
+    case FloatingOneTapContentId.FAST_REGISTRATION:
+      result = FAST_REGISTRATION[lang];
       break;
     default:
       break;
