@@ -23,7 +23,7 @@
 
 ---
 
-ℹ️ Версия VK ID SDK 2.0.0 поддерживает авторизацию по протоколу [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-10), а также способы входа через аккаунты Одноклассников и Mail.ru.
+ℹ️ Версия VK ID SDK 2.2.0 поддерживает авторизацию по протоколу [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-10), а также способы входа через аккаунты Одноклассников и Mail.ru.
 
 ---
 
