@@ -20,7 +20,7 @@ export const linkTextLang: Text = {
 export const singleButtonText = {
   [Languages.RUS]: {
     [OAuthName.OK]: 'Войти через OK',
-    [OAuthName.MAIL]: 'Войти с Почтой Mail.ru',
+    [OAuthName.MAIL]: 'Войти с Почтой Mail',
     [OAuthName.VK]: 'Войти с VK ID',
   },
   [Languages.UKR]: 'Увійти з {provider}',

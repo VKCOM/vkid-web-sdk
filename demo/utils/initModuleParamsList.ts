@@ -61,9 +61,9 @@ const onetapSkinOptions = [
 
 const oauthesOptions = [
   { value: '', text: 'Нет' },
-  { value: OAuthName.MAIL, text: 'Mail.ru' },
+  { value: OAuthName.MAIL, text: 'Mail' },
   { value: OAuthName.OK, text: 'OK.ru' },
-  { value: OAuthName.MAIL + ',' + OAuthName.OK, text: 'Mail.ru + OK.ru' },
+  { value: OAuthName.MAIL + ',' + OAuthName.OK, text: 'Mail + OK.ru' },
 ];
 
 const fastAuthEnabledOnetapOptions = [
