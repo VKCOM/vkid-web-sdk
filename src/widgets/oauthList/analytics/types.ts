@@ -2,8 +2,8 @@ import { ProductionStatsEventScreen, ProductionStatsFieldsItem } from '#/core/an
 
 export enum MultibrandingStatsProviders {
   VK = 'vk',
-  OK = 'ok',
-  MAIL = 'mail',
+  OK = 'ok_ru',
+  MAIL = 'mail_ru',
 }
 
 interface MultibrandingOauthAddedParamsFieldsItem extends ProductionStatsFieldsItem {

@@ -194,7 +194,7 @@ export const getFloatingOneTapTemplate = ({
     }
 
     :root #${id}[data-scheme=dark] {
-      --floating--color_background_modal: #2c2d2e;
+      --floating--color_background_modal: #1C1D1E;
       --floating--color_icon_medium: #b0b1b6;
       --floating--color_text_primary: #e1e3e6;
       --floating--color_text_secondary: #76787a;
@@ -203,6 +203,7 @@ export const getFloatingOneTapTemplate = ({
       --floating--button_background_color--active: #1385FF;
       --floating--close_button_color_transparent--hover: hsla(0,0%,100%,.04);
       --floating--close_button_color_transparent--active: hsla(0,0%,100%,.08);
+      --floating--container_box_shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.30), 0px 4px 16px 0px rgba(0, 0, 0, 0.30);
     }
 
     #${id} {

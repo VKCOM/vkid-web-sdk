@@ -1,11 +1,21 @@
 # Change Log
 
+## 2.3.0
+
+### Новое
+- Поддержан ребрендинг `Почты Mail`.
+- Поддержана доступность цветов в [шторке авторизации](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/onetap-drawer/floating-onetap-web).
+
+### Исправления
+- Правильное отображение [кнопки One Tap](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/onetap-button/onetap-web) при установке значения `borderRadius: 0`.
+- Правильное отображение [виджета 3 в 1](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/widget-3-1/three-in-one-web) при установке значения `borderRadius: 0`.
+
 ## 2.2.0
 
 ### Новое
 - Добавлена возможность открыть авторизацию в новом окне для всех модулей.
-- Добавлена возможность менять текста в [кнопке One Tap](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/web/onetap).
-- Добавлен новый сценарий "Быстрая регистрация" в [шторку авторизации](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/web/auth). 
+- Добавлена возможность менять текста в [кнопке One Tap](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/onetap-button/onetap-web).
+- Добавлен новый сценарий "Быстрая регистрация" в [шторку авторизации](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/onetap-drawer/floating-onetap-web). 
 
 ## 2.1.0
 
@@ -19,7 +29,7 @@
 
 ### Новое
 - Поддержка авторизации по протоколу OAuth 2.1
-- Поддержка входа через аккаунты Одноклассников и Mail.ru
+- Поддержка входа через аккаунты Одноклассников и Mail
 - В oneTap и floatingOneTap добавлен параметр fastAuthEnabled, отвечающий за отображение кнопки "Продолжить как"
 
 ### Исправления
@@ -45,7 +55,7 @@
 
 ### Новое
 - Поддержка авторизации по протоколу OAuth 2.1
-- Поддержка входа через аккаунты Одноклассников и Mail.ru
+- Поддержка входа через аккаунты Одноклассников и Mail
 ### Исправления
 - Breaking changes: изменения в публичных интерфейсах AuthResponse, Config.
 

@@ -79,10 +79,10 @@ describe('OAuthListStatsCollector', () => {
         name: 'vk',
         value: '1',
       }, {
-        name: 'ok',
+        name: 'ok_ru',
         value: '1',
       }, {
-        name: 'mail',
+        name: 'mail_ru',
         value: '1',
       }],
     })));
@@ -123,10 +123,10 @@ describe('OAuthListStatsCollector', () => {
         name: 'vk',
         value: '0',
       }, {
-        name: 'ok',
+        name: 'ok_ru',
         value: '1',
       }, {
-        name: 'mail',
+        name: 'mail_ru',
         value: '0',
       }],
     })));
@@ -167,10 +167,10 @@ describe('OAuthListStatsCollector', () => {
         name: 'vk',
         value: '0',
       }, {
-        name: 'ok',
+        name: 'ok_ru',
         value: '0',
       }, {
-        name: 'mail',
+        name: 'mail_ru',
         value: '1',
       }],
     })));
@@ -211,10 +211,10 @@ describe('OAuthListStatsCollector', () => {
         name: 'vk',
         value: '1',
       }, {
-        name: 'ok',
+        name: 'ok_ru',
         value: '0',
       }, {
-        name: 'mail',
+        name: 'mail_ru',
         value: '0',
       }],
     })));

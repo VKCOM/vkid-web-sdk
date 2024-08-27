@@ -7,6 +7,7 @@ import { Widget, WidgetEvents } from '#/core/widget';
 import { WidgetError, WidgetErrorCode, WidgetState } from '#/core/widget/types';
 import { Languages, Scheme } from '#/types';
 import { RedirectPayload } from '#/utils/url';
+import { isNullOrUndefined } from '#/utils/url/nullOrUndefined';
 import { OAuthList, OAuthListInternalEvents, OAuthListParams, OAuthName } from '#/widgets/oauthList';
 
 import { OneTapStatsButtonType, OneTapStatsCollector } from './analytics';
@@ -141,7 +142,7 @@ export class OneTap extends Widget<OneTapParams> {
 
     const oneTapParams: Record<string, any> = {
       style_height: params.styles?.height || defaultStylesParams.height,
-      style_border_radius: params.styles?.borderRadius || defaultStylesParams.borderRadius,
+      style_border_radius: !isNullOrUndefined(params.styles?.borderRadius) ? params.styles?.borderRadius : defaultStylesParams.borderRadius,
       show_alternative_login: params?.showAlternativeLogin ? 1 : 0,
       button_skin: params.skin || OneTapSkin.Primary,
       content_id: params?.contentId || OneTapContentId.SIGN_IN,

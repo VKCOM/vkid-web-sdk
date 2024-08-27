@@ -1,5 +1,6 @@
 import { WidgetParams } from '#/core/widget';
 import { Languages } from '#/types';
+import { isNullOrUndefined } from '#/utils/url/nullOrUndefined';
 
 import { OAuthNameText } from './constants';
 import { linkTextLang, singleButtonText } from './lang';
@@ -26,16 +27,9 @@ const OAuthIconMap = {
 </svg>
   `,
   [OAuthName.MAIL]: (size: 24 | 28) => `
-<svg width="${size + 1}" height="${size}" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <g clip-path="url(#clip0_217_2730)">
-  <path d="M14.6667 28C22.3987 28 28.6667 21.732 28.6667 14C28.6667 6.26801 22.3987 0 14.6667 0C6.9347 0 0.666687 6.26801 0.666687 14C0.666687 21.732 6.9347 28 14.6667 28Z" fill="#005FF9" style="fill:#005FF9;fill:color(display-p3 0.0000 0.3725 0.9765);fill-opacity:1;"/>
-  <path d="M17.2957 14C17.2957 14.52 17.1415 15.0283 16.8526 15.4606C16.5637 15.8929 16.1531 16.2299 15.6728 16.4289C15.1924 16.6279 14.6638 16.6799 14.1538 16.5785C13.6438 16.477 13.1754 16.2267 12.8077 15.859C12.44 15.4913 12.1896 15.0229 12.0882 14.5129C11.9868 14.0029 12.0388 13.4743 12.2378 12.9939C12.4368 12.5135 12.7738 12.1029 13.2061 11.8141C13.6384 11.5252 14.1467 11.371 14.6667 11.371C15.3637 11.3718 16.0319 11.649 16.5248 12.1419C17.0177 12.6348 17.2949 13.303 17.2957 14ZM14.6667 5.259C13.2982 5.25874 11.9487 5.57982 10.7269 6.19638C9.50514 6.81295 8.44522 7.70778 7.63246 8.80882C6.81971 9.90987 6.27684 11.1864 6.04756 12.5356C5.81828 13.8847 5.909 15.2689 6.31241 16.5766C6.71581 17.8844 7.42064 19.0791 8.37015 20.0646C9.31966 21.0502 10.4873 21.799 11.7791 22.2509C13.0709 22.7027 14.4507 22.8449 15.8075 22.666C17.1643 22.4871 18.4601 21.9922 19.5907 21.221L19.6157 21.203L18.4377 19.834L18.4187 19.847C17.0632 20.7181 15.4476 21.092 13.8472 20.9048C12.2469 20.7177 10.7611 19.9811 9.64324 18.8207C8.52539 17.6603 7.84476 16.1481 7.71745 14.5419C7.59015 12.9357 8.02406 11.3351 8.94516 10.0131C9.86627 8.69111 11.2175 7.72965 12.7684 7.29274C14.3192 6.85582 15.9736 6.97052 17.4494 7.61725C18.9251 8.26399 20.1308 9.40269 20.8606 10.8391C21.5905 12.2756 21.7994 13.9207 21.4517 15.494C21.4123 15.8149 21.2547 16.1096 21.0097 16.3206C20.7647 16.5315 20.4499 16.6436 20.1267 16.635C19.9786 16.6249 19.834 16.5855 19.7013 16.5189C19.5686 16.4524 19.4505 16.3602 19.3538 16.2476C19.2571 16.135 19.1838 16.0042 19.1381 15.863C19.0924 15.7218 19.0753 15.5729 19.0877 15.425V14C19.089 12.975 18.7346 11.9813 18.085 11.1885C17.4354 10.3957 16.5308 9.85284 15.5255 9.6526C14.5203 9.45236 13.4768 9.60713 12.5729 10.0905C11.6691 10.5739 10.961 11.3559 10.5694 12.3032C10.1779 13.2504 10.1272 14.3042 10.4259 15.2847C10.7247 16.2651 11.3544 17.1116 12.2076 17.6795C13.0609 18.2475 14.0847 18.5018 15.1045 18.399C16.1244 18.2962 17.0769 17.8428 17.7997 17.116C18.0374 17.4875 18.3585 17.7985 18.7375 18.0241C19.1164 18.2498 19.5428 18.384 19.9827 18.416C20.0607 18.423 20.1397 18.426 20.2187 18.426C20.8595 18.4243 21.4824 18.2136 21.9927 17.826C22.5342 17.4031 22.9298 16.8212 23.1237 16.162C23.1577 16.051 23.2237 15.795 23.2237 15.794V15.784C23.3539 15.1985 23.4156 14.5998 23.4077 14C23.405 11.6826 22.4833 9.46079 20.8446 7.82211C19.2059 6.18342 16.9841 5.26165 14.6667 5.259Z" fill="#FF9E00" style="fill:#FF9E00;fill:color(display-p3 1.0000 0.6196 0.0000);fill-opacity:1;"/>
-  </g>
-  <defs>
-  <clipPath id="clip0_217_2730">
-  <rect width="28" height="28" fill="white" style="fill:white;fill:white;fill-opacity:1;" transform="translate(0.666687)"/>
-  </clipPath>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" fill="none" viewBox="0 0 28 28">
+  <path fill="#07F" d="M14 28a14 14 0 1 0 0-28 14 14 0 0 0 0 28Z"></path>
+  <path fill="#fff" d="M14 3c6.06 0 11 4.94 11 11 0 3.78-1.76 5.56-3.99 5.56a3.61 3.61 0 0 1-3.06-1.69A5.51 5.51 0 0 1 14 19.54 5.54 5.54 0 0 1 8.46 14 5.54 5.54 0 0 1 14 8.46 5.54 5.54 0 0 1 19.54 14v1.8c0 .91.64 1.55 1.47 1.55.99 0 1.8-.83 1.8-3.35A8.82 8.82 0 1 0 14 22.81c2.8 0 4.75-1.4 4.75-1.4l1.45 1.67S17.72 25 14 25C7.94 25 3 20.06 3 14S7.94 3 14 3Zm-3.35 11A3.35 3.35 0 1 0 14 10.65 3.34 3.34 0 0 0 10.65 14Z"></path>
 </svg>
   `,
 };
@@ -52,7 +46,7 @@ type OAuthListTemplateParams = Pick<WidgetParams, 'scheme' | 'lang'> & Pick<OAut
 export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: string) => {
   const lang = params.lang || Languages.RUS;
   const scheme = params.scheme || 'light';
-  const borderRadius = params.borderRadius || defaultStylesParams.borderRadius;
+  const borderRadius = !isNullOrUndefined(params.borderRadius) ? params.borderRadius : defaultStylesParams.borderRadius;
   const height = params.height || defaultStylesParams.height;
 
   const isonSize = height < 40 ? 24 : 28;
@@ -169,11 +163,7 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
           display: none;
           font-family: -apple-system, system-ui, "Helvetica Neue", Roboto, sans-serif;
           color: var(--oauthlist--color_text_primary);
-        }
-
-        #${id} .VkIdSdk_oauth_list[data-single-mode] .VkIdSdk_oauth_item svg {
-          position: absolute;
-          left: 16px;
+          padding-left: 8px;
         }
 
         #${id} .VkIdSdk_oauth_list[data-single-mode] .VkIdSdk_oauth_button_text {
