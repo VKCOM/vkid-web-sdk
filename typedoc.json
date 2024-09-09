@@ -1,6 +1,7 @@
 {
   "entryPoints": [
     "./src/core/config/index.ts",
+    "./src/core/widget/index.ts",
     "./src/auth/index.ts",
     "./src/widgets/oneTap/index.ts",
     "./src/widgets/floatingOneTap/index.ts",

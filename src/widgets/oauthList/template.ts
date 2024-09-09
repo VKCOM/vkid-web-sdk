@@ -28,8 +28,7 @@ const OAuthIconMap = {
   `,
   [OAuthName.MAIL]: (size: 24 | 28) => `
 <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" fill="none" viewBox="0 0 28 28">
-  <path fill="#07F" d="M14 28a14 14 0 1 0 0-28 14 14 0 0 0 0 28Z"></path>
-  <path fill="#fff" d="M14 3c6.06 0 11 4.94 11 11 0 3.78-1.76 5.56-3.99 5.56a3.61 3.61 0 0 1-3.06-1.69A5.51 5.51 0 0 1 14 19.54 5.54 5.54 0 0 1 8.46 14 5.54 5.54 0 0 1 14 8.46 5.54 5.54 0 0 1 19.54 14v1.8c0 .91.64 1.55 1.47 1.55.99 0 1.8-.83 1.8-3.35A8.82 8.82 0 1 0 14 22.81c2.8 0 4.75-1.4 4.75-1.4l1.45 1.67S17.72 25 14 25C7.94 25 3 20.06 3 14S7.94 3 14 3Zm-3.35 11A3.35 3.35 0 1 0 14 10.65 3.34 3.34 0 0 0 10.65 14Z"></path>
+    <path fill="#07F" d="M17.61 14a3.61 3.61 0 0 1-7.22 0A3.61 3.61 0 0 1 14 10.39a3.62 3.62 0 0 1 3.61 3.6Zm-3.6-12C7.37 2 2 7.38 2 14a12.01 12.01 0 0 0 18.77 9.91l.03-.02L19.2 22l-.03.01A9.54 9.54 0 0 1 14 23.53a9.55 9.55 0 0 1 0-19.07 9.55 9.55 0 0 1 9.31 11.59c-.3 1.24-1.16 1.62-1.82 1.56-.65-.05-1.42-.51-1.43-1.66V14A6.08 6.08 0 0 0 14 7.93 6.08 6.08 0 0 0 7.93 14 6.08 6.08 0 0 0 14 20.07c1.62 0 3.15-.64 4.3-1.8a3.9 3.9 0 0 0 3 1.8l.32.01a4.08 4.08 0 0 0 2.44-.82 4.5 4.5 0 0 0 1.55-2.28l.13-.5v-.02A12 12 0 0 0 14 2Z"/>
 </svg>
   `,
 };
@@ -94,12 +93,14 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
           --oauthlist--item_border_color: rgba(0, 0, 0, .12);
           --oauthlist--color_text_secondary: #818c99;
           --oauthlist--color_text_primary: #000;
+          --oauthlist--item_background_color: #fff;
         }
 
         :root #${id}[data-scheme=dark] {
           --oauthlist--item_border_color: rgba(255, 255, 255, 0.12);
           --oauthlist--color_text_secondary: #76787a;
           --oauthlist--color_text_primary: #e1e3e6;
+          --oauthlist--item_background_color: unset;
         }
 
         #${id}.VkIdSdk_oauth_container {
@@ -120,6 +121,7 @@ export const getOAuthListTemplate = (params: OAuthListTemplateParams) => (id: st
           margin-right: 12px;
           width: 100%;
           border: 1px solid var(--oauthlist--item_border_color);
+          background: var(--oauthlist--item_background_color);
           border-radius: ${borderRadius}px;
           cursor: pointer;
         }
