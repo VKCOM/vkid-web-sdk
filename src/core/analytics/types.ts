@@ -52,6 +52,8 @@ type RegistrationStatsEventTypes = 'iframe_loading_failed'
 
 type SakSessionEventTypes = 'vkid_sdk_init';
 
+export type SakSessionAdditionalInfo = 'lowcode';
+
 export interface RegistrationStatsEventParams {
   event_type: RegistrationStatsEventTypes;
   screen_current?: ProductionStatsEventScreen;
@@ -61,6 +63,7 @@ export interface RegistrationStatsEventParams {
 
 export interface SakSessionStatsEventParams {
   step: SakSessionEventTypes;
+  additional_info?: SakSessionAdditionalInfo;
 }
 
 export interface ActionStatsParams {
