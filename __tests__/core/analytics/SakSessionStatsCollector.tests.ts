@@ -6,7 +6,7 @@ import {
   ProductionStatsEventTypes,
   ProductionStatsTypeActions,
 } from '#/core/analytics';
-import { Config } from '#/core/config';
+import { Config, ConfigSource } from '#/core/config';
 import { request } from '#/utils/request';
 
 import { wait } from '../../utils';
@@ -72,6 +72,32 @@ describe('SakSessionStatsCollector', () => {
         type: ProductionStatsTypeActions.TYPE_SAK_SESSION_EVENT_ITEM,
         [ProductionStatsTypeActions.TYPE_SAK_SESSION_EVENT_ITEM]: {
           step: 'vkid_sdk_init',
+        },
+      },
+    }));
+  });
+
+  it('Logging the integration source', async () => {
+    const config = new Config();
+    const productionStatsCollector = new ProductionStatsCollector(config);
+    const actionStatsCollector = new ActionStatsCollector(productionStatsCollector);
+    const sakSessionStatsCollector = new SakSessionStatsCollector(actionStatsCollector);
+
+    void sakSessionStatsCollector.sendSdkInit(ConfigSource.LOWCODE);
+
+    await wait(0);
+
+    const events = JSON.parse((requestMocked.mock.lastCall?.[1] as any).events)[0];
+
+    expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
+    expect(events).toMatchObject(expect.objectContaining({
+      screen: ProductionStatsEventScreen.NOWHERE,
+      type: ProductionStatsEventTypes.TYPE_ACTION,
+      [ProductionStatsEventTypes.TYPE_ACTION]: {
+        type: ProductionStatsTypeActions.TYPE_SAK_SESSION_EVENT_ITEM,
+        [ProductionStatsTypeActions.TYPE_SAK_SESSION_EVENT_ITEM]: {
+          step: 'vkid_sdk_init',
+          additional_info: ConfigSource.LOWCODE,
         },
       },
     }));

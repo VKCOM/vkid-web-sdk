@@ -30,7 +30,7 @@ export class Config {
   @validator<ConfigData>({ app: [isRequired, isNumber], redirectUrl: [isRequired] })
   public init(config: Pick<ConfigData, 'app' | 'redirectUrl'> & PKSE & Partial<ConfigData>): this {
     this.set(config);
-    this.sakSessionStatsCollector.sendSdkInit();
+    this.sakSessionStatsCollector.sendSdkInit(config.source);
     return this;
   }
 

@@ -9,12 +9,12 @@ import {
   TokenResult,
   UserInfoResult,
 } from './auth';
-import { Config, ConfigData, ConfigAuthMode, ConfigResponseMode, Prompt } from './core/config';
+import { Config, ConfigData, ConfigAuthMode, ConfigResponseMode, ConfigSource, Prompt } from './core/config';
 import { Widget } from './core/widget';
 export { Languages, Scheme } from './types';
 
 const globalConfig = new Config();
-export { globalConfig as Config, ConfigAuthMode, ConfigResponseMode, Prompt };
+export { globalConfig as Config, ConfigAuthMode, ConfigResponseMode, ConfigSource, Prompt };
 export type { ConfigData };
 
 /** Export Auth */

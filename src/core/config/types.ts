@@ -18,6 +18,10 @@ export type PKSE = (
   | { codeVerifier?: never; codeChallenge: string }
   );
 
+export enum ConfigSource {
+  LOWCODE = 'lowcode'
+}
+
 export interface ConfigData {
   app: number;
   redirectUrl: string;
@@ -40,6 +44,11 @@ export interface ConfigData {
    * @ignore
    */
   responseMode?: ConfigResponseMode;
+
+  /**
+   * @ignore
+   */
+  source?: ConfigSource;
 
   /**
    * @ignore
