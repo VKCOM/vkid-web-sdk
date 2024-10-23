@@ -5,7 +5,7 @@ import { OneTapContentId } from '../types';
 import { Lang, Text } from './types';
 
 const SIGN_IN_LONG: Lang = {
-  [Languages.RUS]: 'Войти c VK ID',
+  [Languages.RUS]: 'Войти с VK ID',
   [Languages.UKR]: 'Увійти з VK ID',
   [Languages.BEL]: 'Увайсці з VК ID',
   [Languages.KAZ]: 'VK ID арқылы кіру',

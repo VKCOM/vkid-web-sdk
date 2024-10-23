@@ -1,6 +1,6 @@
 import './styles.css';
 import * as VKID from '@vkid/sdk';
-import { ConfigAuthMode, ConfigData } from '@vkid/sdk';
+import { ConfigData } from '@vkid/sdk';
 
 import { initHandleAuth } from './utils/handleAuth';
 import { initAuthButtons } from './utils/initAuthButtons';
@@ -14,6 +14,7 @@ import { getDemoStoreFromLS, saveDemoStoreInLS, vkidDomainLS } from './utils/loc
 import { initTokenManager } from './utils/tokenManager';
 
 let demoStore = getDemoStoreFromLS();
+const vkidDomain = vkidDomainLS();
 
 /**
  * General settings
@@ -26,15 +27,11 @@ VKID.Config.init({
   redirectUrl: `${window.location.protocol}//${window.location.hostname}${window.location.pathname}`,
   mode: demoStore.mode,
   prompt: demoStore.prompt,
+  __vkidDomain: vkidDomain || demoStore.vkidDomain,
 });
 
 if (demoStore.codeChallenge) {
   VKID.Config.update({ codeChallenge: demoStore.codeChallenge });
-}
-
-const vkidDomain = vkidDomainLS();
-if (vkidDomain) {
-  VKID.Config.update({ __vkidDomain: vkidDomain, mode: ConfigAuthMode.Redirect });
 }
 
 initHandleAuth(demoStore);
