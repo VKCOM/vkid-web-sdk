@@ -4,7 +4,7 @@ import { FloatingOneTapContentId } from '#/widgets/floatingOneTap/types';
 import { Lang } from './types';
 
 const SIGN_IN: Lang = {
-  [Languages.RUS]: 'Войти c VK ID',
+  [Languages.RUS]: 'Войти с VK ID',
   [Languages.UKR]: 'Увійти з VK ID',
   [Languages.BEL]: 'Увайсці з VK ID',
   [Languages.KAZ]: 'VK ID арқылы кіру',

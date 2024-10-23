@@ -1,5 +1,7 @@
 import * as VKID from '@vkid/sdk';
 
+import { VKID_DOMAIN } from '#/constants';
+
 import { DemoStore } from '#demo/types';
 
 export const saveDemoStoreInLS = (store: DemoStore) => {
@@ -39,7 +41,7 @@ export const getDemoStoreFromLS = (): DemoStore => {
     enable_floatingOneTap: true,
     prompt: [],
     deviceId: '',
-    vkidDomain: '',
+    vkidDomain: VKID_DOMAIN,
     scope: '',
     fastAuthEnabledOnetap: '1',
     fastAuthEnabledFloatingOnetap: '1',
