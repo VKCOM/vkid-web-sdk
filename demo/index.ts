@@ -26,6 +26,7 @@ VKID.Config.init({
   codeVerifier: demoStore.codeVerifier,
   redirectUrl: `${window.location.protocol}//${window.location.hostname}${window.location.pathname}`,
   mode: demoStore.mode,
+  responseMode: demoStore.responseMode,
   prompt: demoStore.prompt,
   __vkidDomain: vkidDomain || demoStore.vkidDomain,
 });

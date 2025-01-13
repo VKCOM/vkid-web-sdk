@@ -101,18 +101,15 @@ describe('Auth', () => {
       expect(searchParams.get('client_id')).toEqual(Config.get().app.toString()),
       expect(searchParams.get('response_type')).toEqual(OAUTH2_RESPONSE_TYPE),
       expect(searchParams.get('state')).toEqual(Config.get().state),
-      expect(searchParams.get('redirect_state')).toEqual(Config.get().state),
       expect(searchParams.get('v')).toEqual(`\"${version}\"`),
       expect(searchParams.get('sdk_type')).toEqual('vkid'),
       expect(searchParams.get('app_id')).toEqual(APP_ID.toString()),
       expect(searchParams.get('redirect_uri')).toEqual(Config.get().redirectUrl),
-      expect(searchParams.get('prompt')).toEqual(''),
+      expect(searchParams.get('prompt')).toEqual('login'),
       expect(searchParams.get('stats_info')).toEqual(encodeStatsInfo({
         flow_source: AuthStatsFlowSource.BUTTON_ONE_TAP,
         session_id: 'abc',
       })),
-      expect(searchParams.get('screen')).toEqual(params.screen),
-      expect(searchParams.get('oauth_version')).toEqual('2'),
     ];
 
     expect([...new Set(searchParams.keys())].length).toEqual(expectArr.length);

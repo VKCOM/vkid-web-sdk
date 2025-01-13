@@ -3,7 +3,7 @@ import { querystring } from '@vkontakte/vkjs';
 import { AuthStatsCollector } from '#/auth/analytics/AuthStatsCollector';
 import { AuthDataService } from '#/auth/authDataService';
 import { Config, ConfigAuthMode, ConfigResponseMode, Prompt } from '#/core/config';
-import { clearCodeVerifierCookie, clearStateCookie, codeVerifier, setExtIdCookie, state } from '#/utils/cookie';
+import { clearCodeVerifierCookie, clearStateCookie, codeVerifier as codeVerifierCookie, setExtIdCookie, state } from '#/utils/cookie';
 import { isDomainAllowed } from '#/utils/domain';
 import { generateCodeChallenge } from '#/utils/oauth';
 import { encodeStatsInfo, getRedirectWithPayloadUrl, getVKIDUrl, RedirectPayload } from '#/utils/url';
@@ -28,6 +28,7 @@ export class Auth {
   private readonly id: string = uuid();
   private readonly analytics: AuthStatsCollector;
   private state: string;
+  private codeVerifier: string;
 
   public constructor() {
     this.analytics = new AuthStatsCollector(Auth.config);
@@ -138,20 +139,20 @@ export class Auth {
       this.analytics.setUniqueSessionId(sessionId);
     }
 
-    codeVerifier(config.codeVerifier);
+    this.codeVerifier = codeVerifierCookie(config.codeVerifier);
     this.state = state(config.state);
 
     const authorizePrompt = [...prompt as Prompt[]];
     // Если открыто из 3-в-1, добавляем login в начало
     const hasProvider = Object.values(ExternalOAuthName).includes(params?.provider as unknown as ExternalOAuthName);
-    if (hasProvider) {
+    if (hasProvider || params?.screen) {
       authorizePrompt.unshift(Prompt.Login);
     }
 
     const queryParams: AuthQueryParams = {
       lang_id: params?.lang,
       scheme: params?.scheme,
-      code_challenge: codeChallenge || generateCodeChallenge(codeVerifier()),
+      code_challenge: codeChallenge || generateCodeChallenge(this.codeVerifier),
       code_challenge_method: CODE_CHALLENGE_METHOD,
       client_id: app,
       response_type: OAUTH2_RESPONSE_TYPE,
@@ -173,15 +174,6 @@ export class Auth {
     }
 
     let url = getVKIDUrl('authorize', queryParams, config);
-
-    if (params?.screen) {
-      Object.assign(queryParams, {
-        oauth_version: 2,
-        screen: params?.screen,
-        redirect_state: this.state,
-      });
-      url = getVKIDUrl('auth', queryParams, config);
-    }
 
     switch (config.mode) {
       case ConfigAuthMode.InNewWindow:
@@ -211,7 +203,7 @@ export class Auth {
     this.state = '';
   }
 
-  public exchangeCode(code: string, deviceId: string) {
+  public exchangeCode(code: string, deviceId: string, codeVerifier?: string) {
     const config = Auth.config.get();
     this.state = state(config.state);
 
@@ -219,7 +211,7 @@ export class Auth {
       grant_type: 'authorization_code',
       redirect_uri: config.redirectUrl,
       client_id: config.app,
-      code_verifier: codeVerifier(),
+      code_verifier: codeVerifier || this.codeVerifier || codeVerifierCookie(),
       state: this.state,
       device_id: deviceId,
     };
@@ -238,6 +230,7 @@ export class Auth {
         }
         // Сбрасываем динамические параметры после обмена кода
         clearCodeVerifierCookie();
+        this.codeVerifier = '';
         return res;
       });
   }
