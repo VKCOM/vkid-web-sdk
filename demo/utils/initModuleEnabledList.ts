@@ -3,6 +3,7 @@ const enabledModulesOptions = [
   { value: 'enable_oneTap', text: 'OneTap Button' },
   { value: 'enable_floatingOneTap', text: 'Floating OneTap' },
   { value: 'enable_oauthList', text: 'OauthList' },
+  { value: 'enable_communitySubscription', text: 'Community Subscription' },
 ];
 
 export const initModuleEnabledList = (store: Record<string, any>) => {

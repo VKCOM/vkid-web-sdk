@@ -1,4 +1,4 @@
-import { LOGIN_DOMAIN, OAUTH_DOMAIN, VKID_DOMAIN } from '#/constants';
+import { API_DOMAIN, LOGIN_DOMAIN, OAUTH_DOMAIN, VKID_DOMAIN } from '#/constants';
 import { ActionStatsCollector, ProductionStatsCollector, SakSessionStatsCollector } from '#/core/analytics';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { isNumber, isRequired, validator } from '#/core/validator';
@@ -20,6 +20,7 @@ export class Config {
     __loginDomain: LOGIN_DOMAIN,
     __oauthDomain: OAUTH_DOMAIN,
     __vkidDomain: VKID_DOMAIN,
+    __apiDomain: API_DOMAIN,
   };
   private readonly myTrackerService: MyTrackerService;
 

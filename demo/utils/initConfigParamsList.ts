@@ -18,6 +18,8 @@ export const initConfigParamsList = (store: DemoStore) => {
   <br />
   <label for="input_scope">scope:</label>
   <input value="${store.scope}" type="text" id="input_scope">
+  <label for="input_groupId">groupId:</label>
+  <input value="${store.groupId}" type="text" id="input_groupId">
 </details>
   `;
   document.querySelector('.VkIdWebSdk_controls')?.insertAdjacentHTML('beforeend', html);

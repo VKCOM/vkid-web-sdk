@@ -34,7 +34,7 @@ export interface ActionStatsEvent extends ProductionStatsBaseEvent {
   [ProductionStatsEventTypes.TYPE_ACTION]: ActionStatsEventItem;
 }
 
-type RegistrationStatsEventTypes = 'iframe_loading_failed'
+export type RegistrationStatsEventTypes = 'iframe_loading_failed'
 | 'no_session_found'
 | 'onetap_button_no_user_show'
 | 'onetap_button_no_user_tap'
@@ -48,7 +48,16 @@ type RegistrationStatsEventTypes = 'iframe_loading_failed'
 | 'vk_button_tap'
 | 'ok_button_tap'
 | 'mail_button_tap'
-| 'custom_auth_start';
+| 'custom_auth_start'
+| 'community_follow_click'
+| 'community_follow_next_time_click'
+| 'community_follow_close'
+| 'community_follow_error_show'
+| 'community_follow_error_retry_click'
+| 'community_follow_error_cancel_click'
+| 'community_follow_error_close'
+| 'community_follow_success'
+| 'community_follow_modal_window_show';
 
 type SakSessionEventTypes = 'vkid_sdk_init';
 
@@ -59,6 +68,8 @@ export interface RegistrationStatsEventParams {
   screen_current?: ProductionStatsEventScreen;
   screen_to?: ProductionStatsEventScreen;
   fields?: ProductionStatsFieldsItem[];
+  app_id?: number;
+  user_id?: number;
 }
 
 export interface SakSessionStatsEventParams {

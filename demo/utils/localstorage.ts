@@ -1,7 +1,5 @@
 import * as VKID from '@vkid/sdk';
 
-import { VKID_DOMAIN } from '#/constants';
-
 import { DemoStore } from '#demo/types';
 
 export const saveDemoStoreInLS = (store: DemoStore) => {
@@ -10,15 +8,18 @@ export const saveDemoStoreInLS = (store: DemoStore) => {
   } catch (e) {}
 };
 
-export const vkidDomainLS = (domain?: string) => {
+const domainLS = (name: string, value?: string) => {
   try {
-    if (domain) {
-      localStorage.setItem('vkid_demo:vkidDomain', domain);
+    if (value) {
+      localStorage.setItem(`vkid_demo:${name}Domain`, value);
       return;
     }
-    return localStorage.getItem('vkid_demo:vkidDomain');
+    return localStorage.getItem(`vkid_demo:${name}Domain`);
   } catch (e) {}
 };
+
+export const vkidDomainLS = (value?: string) => domainLS('vkid', value);
+export const apiDomainLS = (value?: string) => domainLS('api', value);
 
 export const getDemoStoreFromLS = (): DemoStore => {
   const defaultDemoStore: DemoStore = {
@@ -39,12 +40,13 @@ export const getDemoStoreFromLS = (): DemoStore => {
     enable_basicAuth: true,
     enable_oneTap: true,
     enable_floatingOneTap: true,
+    enable_communitySubscription: false,
     prompt: [],
     deviceId: '',
-    vkidDomain: VKID_DOMAIN,
     scope: '',
     fastAuthEnabledOnetap: '1',
     fastAuthEnabledFloatingOnetap: '1',
+    groupId: 141632613,
   };
 
   try {

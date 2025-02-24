@@ -47,3 +47,7 @@ export type { FloatingOneTapParams } from './widgets/floatingOneTap';
 /** Export OAuthList */
 export { OAuthList, OAuthName, OAuthListInternalEvents } from './widgets/oauthList';
 export type { OAuthListParams, OAuthListStyles } from './widgets/oauthList';
+
+/** Export CommunitySubscription */
+export { CommunitySubscription, CommunitySubscriptionEvents, CommunitySubscriptionErrorCode } from './widgets/communitySubscription';
+export type { CommunitySubscriptionParams, CommunitySubscriptionError } from './widgets/communitySubscription';

@@ -47,6 +47,25 @@ export const createFloatingOneTap = (demoStore: DemoStore) => {
   return floatingOneTap;
 };
 
+export const createCommunitySubscription = (demoStore: DemoStore) => {
+  const params = {
+    lang: Number(demoStore.lang),
+    scheme: demoStore.scheme,
+    groupId: demoStore.groupId,
+    accessToken: demoStore.authResult?.access_token as string,
+  };
+
+  const communitySubscription = new VKID.CommunitySubscription();
+  params.accessToken && communitySubscription
+    .on(VKID.WidgetEvents.ERROR, (e: VKID.CommunitySubscriptionError) => {
+      console.error('Community Subscription Error', e);
+      showInitErrorSnackbar();
+    })
+    .render(params);
+
+  return communitySubscription;
+};
+
 export const createOAuthList = (demoStore: DemoStore) => {
   const container = document.getElementById('oauthList') as HTMLElement;
 

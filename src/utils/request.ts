@@ -3,7 +3,13 @@ import type { Config } from '#/core/config';
 export const getStatsUrl = (method: string, config: Config) => {
   const { __vkidDomain: domain, app } = config.get();
 
-  return `https://${domain}/${method}?app_id=${app}&v=5.207`;
+  return `https://${domain}/${method}?app_id=${app}`;
+};
+
+export const getApiUrl = (method: string, config: Config) => {
+  const { __apiDomain: domain } = config.get();
+
+  return `https://${domain}/method/${method}`;
 };
 
 const makeParams = (params: Record<string, any>): string => {
@@ -14,6 +20,7 @@ const makeParams = (params: Record<string, any>): string => {
 
     return `${key}=${param}`;
   });
+  pairs.push('v=5.207');
 
   return pairs.join('&');
 };

@@ -2,6 +2,8 @@ import './styles.css';
 import * as VKID from '@vkid/sdk';
 import { ConfigData } from '@vkid/sdk';
 
+import { API_DOMAIN, VKID_DOMAIN } from '#/constants';
+
 import { initHandleAuth } from './utils/handleAuth';
 import { initAuthButtons } from './utils/initAuthButtons';
 import { initConfigParamsList } from './utils/initConfigParamsList';
@@ -10,11 +12,14 @@ import { initModuleEnabledList } from './utils/initModuleEnabledList';
 import { initModuleParamsList } from './utils/initModuleParamsList';
 import { initOauthList } from './utils/initOauthList';
 import { initOneTap } from './utils/initOneTap';
-import { getDemoStoreFromLS, saveDemoStoreInLS, vkidDomainLS } from './utils/localstorage';
+import { apiDomainLS, getDemoStoreFromLS, saveDemoStoreInLS, vkidDomainLS } from './utils/localstorage';
 import { initTokenManager } from './utils/tokenManager';
+
+import { initCommunitySubscription } from '#demo/utils/initCommunitySubscription';
 
 let demoStore = getDemoStoreFromLS();
 const vkidDomain = vkidDomainLS();
+const apiDomain = apiDomainLS();
 
 /**
  * General settings
@@ -28,7 +33,8 @@ VKID.Config.init({
   mode: demoStore.mode,
   responseMode: demoStore.responseMode,
   prompt: demoStore.prompt,
-  __vkidDomain: vkidDomain || demoStore.vkidDomain,
+  __vkidDomain: vkidDomain || VKID_DOMAIN,
+  __apiDomain: apiDomain || API_DOMAIN,
 });
 
 if (demoStore.codeChallenge) {
@@ -76,6 +82,15 @@ const resetOauthList = () => {
   }
 };
 
+const createCommunitySubscription = initCommunitySubscription(demoStore);
+let communitySubscription = demoStore.enable_communitySubscription && createCommunitySubscription();
+const resetCommunitySubscription = () => {
+  if (communitySubscription) {
+    communitySubscription.close();
+    communitySubscription = createCommunitySubscription();
+  }
+};
+
 initTokenManager(demoStore);
 
 function handleSelectParamsChange() {
@@ -85,6 +100,7 @@ function handleSelectParamsChange() {
   resetOneTap();
   resetOauthList();
   resetFloatingOneTap();
+  resetCommunitySubscription();
 
   document.querySelector('html')?.setAttribute('data-scheme', demoStore.scheme);
 }
@@ -108,7 +124,7 @@ function handleModuleEnabledCheckboxChange() {
   demoStore = Object.assign(demoStore, { [this.name]: this.checked });
   saveDemoStoreInLS(demoStore);
 }
-['enable_oauthList', 'enable_basicAuth', 'enable_oneTap', 'enable_floatingOneTap'].forEach((name) => {
+['enable_oauthList', 'enable_basicAuth', 'enable_oneTap', 'enable_floatingOneTap', 'enable_communitySubscription'].forEach((name) => {
   document.getElementById(name)?.addEventListener('change', handleModuleEnabledCheckboxChange);
 });
 
@@ -142,7 +158,7 @@ function handleConfigInputChange(e: InputEvent) {
   saveDemoStoreInLS(demoStore);
   VKID.Config.update({ [name as keyof ConfigData]: value });
 }
-['input_app', 'input_state', 'input_codeVerifier', 'input_codeChallenge', 'input_scope'].forEach((inputId) => {
+['input_app', 'input_state', 'input_codeVerifier', 'input_codeChallenge', 'input_scope', 'input_groupId'].forEach((inputId) => {
   document.getElementById(inputId)?.addEventListener('input', handleConfigInputChange);
 });
 
