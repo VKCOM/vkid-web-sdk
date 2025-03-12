@@ -1,6 +1,7 @@
-import { CommunitySubscription, CommunitySubscriptionErrorCode, Config, ConfigAuthMode, WidgetEvents } from '#/index';
+import { Config, ConfigAuthMode, WidgetEvents } from '#/index';
 import { AccountGetProfileShortInfoResponse, GetGroupInfoResponse } from '#/services/CommunitySubscriptionService';
 import { COMMUNITY_SUBSCRIPTION_ERROR_TEXT } from '#/services/CommunitySubscriptionService/constants';
+import { CommunitySubscription, CommunitySubscriptionErrorCode } from '#/widgets/communitySubscription';
 
 import { wait } from '../../utils';
 
@@ -197,7 +198,8 @@ describe('CommunitySubscription', () => {
 
     const getGroupInfoResponse: GetGroupInfoResponse = {
       response: [{
-        groups: [{ is_closed: false, name: 'name', description: 'description', photo_100: 'photo_100', members_count: 123, is_member: false, verified: true, id: 123,
+        groups: [{
+          is_closed: false, name: 'name', description: 'description', photo_100: 'photo_100', members_count: 123, is_member: false, verified: true, id: 123,
         }],
       }, false, false],
     };
