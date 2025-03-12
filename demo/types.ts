@@ -21,11 +21,12 @@ export interface DemoStore {
   enable_basicAuth: boolean;
   enable_oneTap: boolean;
   enable_floatingOneTap: boolean;
+  enable_communitySubscription: boolean;
   prompt: Prompt[];
   authResult?: TokenResult & { updated_at: Date };
   deviceId: string;
-  vkidDomain: string;
   scope: string;
   fastAuthEnabledOnetap: '' | '1';
   fastAuthEnabledFloatingOnetap: '' | '1';
+  groupId: number;
 }

@@ -12,9 +12,9 @@ export class MyTrackerService {
 
   public init() {
     this.getTrackerId()
-      .then(({ response }) => {
-        if (response.active === MyTrackerStatus.ON) {
-          this.includeOnPage(response.tracker_id);
+      .then((response) => {
+        if (response?.response?.active === MyTrackerStatus.ON) {
+          this.includeOnPage(response.response.tracker_id);
         }
       })
       .catch(console.error);

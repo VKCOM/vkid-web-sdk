@@ -1,6 +1,6 @@
 {
   "name": "@vkid/sdk",
-  "version": "2.4.1",
+  "version": "2.5.1",
   "description": "VK ID Web SDK",
   "main": "dist-sdk/cjs/index.js",
   "module": "dist-sdk/esm/index.js",

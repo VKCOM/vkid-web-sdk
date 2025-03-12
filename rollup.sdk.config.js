@@ -31,14 +31,15 @@ const plugins = [
     },
     preventAssignment: true,
   }),
-  analyze( {
+  analyze({
     skipFormatted: true,
     summaryOnly: true,
     onAnalysis: (bundle) => {
       // Для отслеживания времени и размеров сборки
       console.log('size:', bundle.bundleSize);
       console.log('time:', new Date().getTime());
-    } }),
+    }
+  }),
 ];
 
 const esm = {

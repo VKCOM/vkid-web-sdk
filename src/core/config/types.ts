@@ -68,6 +68,11 @@ export interface ConfigData {
   /**
    * @ignore
    */
+  __apiDomain?: string;
+
+  /**
+   * @ignore
+   */
   __localhost?: boolean;
 
   /**

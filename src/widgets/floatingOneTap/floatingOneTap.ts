@@ -31,6 +31,7 @@ export class FloatingOneTap extends Widget<Omit<FloatingOneTapParams, 'appName'>
 
   private readonly sendSuccessLoginEvent = (params: RedirectPayload) => {
     this.events.emit(FloatingOneTapInternalEvents.LOGIN_SUCCESS, params);
+    this.bridge.sendMessage({ handler: FloatingOneTapInternalEvents.LOGIN_SUCCESS, params: {} });
   }
 
   protected onBridgeMessageHandler(event: FloatingOneTapBridgeMessage) {

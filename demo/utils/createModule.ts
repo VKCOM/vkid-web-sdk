@@ -1,5 +1,7 @@
 import * as VKID from '@vkid/sdk';
 
+import { CommunitySubscription, CommunitySubscriptionError } from '#/widgets/communitySubscription';
+
 import { showAuthInfoSnackbar, showInitErrorSnackbar } from '#demo/components/snackbar';
 import { DemoStore } from '#demo/types';
 import { handleCallbackAuth } from '#demo/utils/handleAuth';
@@ -45,6 +47,25 @@ export const createFloatingOneTap = (demoStore: DemoStore) => {
     .render(params);
 
   return floatingOneTap;
+};
+
+export const createCommunitySubscription = (demoStore: DemoStore) => {
+  const params = {
+    lang: Number(demoStore.lang),
+    scheme: demoStore.scheme,
+    groupId: demoStore.groupId,
+    accessToken: demoStore.authResult?.access_token as string,
+  };
+
+  const communitySubscription = new CommunitySubscription();
+  params.accessToken && communitySubscription
+    .on(VKID.WidgetEvents.ERROR, (e: CommunitySubscriptionError) => {
+      console.error('Community Subscription Error', e);
+      showInitErrorSnackbar();
+    })
+    .render(params);
+
+  return communitySubscription;
 };
 
 export const createOAuthList = (demoStore: DemoStore) => {

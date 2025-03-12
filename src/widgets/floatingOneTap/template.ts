@@ -3,6 +3,8 @@ import { getTitleLang, getButtonLang, getDescriptionLang } from '#/widgets/float
 import { FloatingOneTapParams } from '#/widgets/floatingOneTap/types';
 import { OAuthListParams, OAuthName } from '#/widgets/oauthList';
 
+import { VkidImageB64 } from './assets/image_b64';
+
 type FloatingOneTapTemplateParams = Required<
 Pick<FloatingOneTapParams, 'indent' | 'contentId' | 'appName'> &
 Pick<WidgetParams, 'scheme' | 'lang'>
@@ -13,17 +15,8 @@ Pick<WidgetParams, 'scheme' | 'lang'>
   providers?: OAuthName[];
 };
 
-const logoVkIdSvg = `
-  <svg width="33" height="16" viewBox="0 0 33 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20 13H21.6479V3.5H20V13Z" fill="var(--floating--color_text_primary)"/>
-    <path d="M23.7801 13H27.474C30.4127 13 32.5 11.0326 32.5 8.24326C32.5 5.46738 30.4127 3.5 27.474 3.5H23.7801V13ZM25.4279 11.5177V4.98227H27.474C29.4377 4.98227 30.7835 6.31631 30.7835 8.24326C30.7835 10.1837 29.4377 11.5177 27.474 11.5177H25.4279Z" fill="var(--floating--color_text_primary)"/>
-    <path d="M0 7.68C0 4.05961 0 2.24942 1.12471 1.12471C2.24942 0 4.05961 0 7.68 0H8.32C11.9404 0 13.7506 0 14.8753 1.12471C16 2.24942 16 4.05961 16 7.68V8.32C16 11.9404 16 13.7506 14.8753 14.8753C13.7506 16 11.9404 16 8.32 16H7.68C4.05961 16 2.24942 16 1.12471 14.8753C0 13.7506 0 11.9404 0 8.32V7.68Z" fill="#0077FF"/>
-    <path d="M8.56331 11.66C4.91665 11.66 2.83667 9.16 2.75 5H4.57666C4.63666 8.05333 5.9833 9.34333 7.04997 9.61V5H8.77002V7.63C9.82335 7.51667 10.9299 6.32 11.3032 5H13.0233C12.7366 6.62667 11.5366 7.82667 10.6833 8.32C11.5366 8.72 12.9033 9.76667 13.4233 11.66H11.5299C11.1233 10.3933 10.11 9.41333 8.77002 9.28V11.66H8.56331Z" fill="white"/>
-  </svg>
-`;
-
 const logoVkSvg = `
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path fill-rule="evenodd" clip-rule="evenodd" d="M4.2653 4.2653C3 5.5306 3 7.56707 3 11.64V12.36C3 16.4329 3 18.4694 4.2653 19.7347C5.5306 21 7.56706 21 11.64 21H12.36C16.4329 21 18.4694 21 19.7347 19.7347C21 18.4694 21 16.4329 21 12.36V11.64C21 7.56707 21 5.5306 19.7347 4.2653C18.4694 3 16.4329 3 12.36 3H11.64C7.56706 3 5.5306 3 4.2653 4.2653Z" fill="white"/>
     <path d="M12.6095 16C8.55576 16 6.09636 13.1823 6 8.5H8.05309C8.1171 11.9395 9.67903 13.397 10.8764 13.6967V8.5H12.8439V11.4683C13.9988 11.3401 15.2076 9.98991 15.614 8.5H17.5505C17.2406 10.3321 15.9246 11.6823 14.9948 12.2392C15.9253 12.6895 17.4225 13.8682 18 16H15.8714C15.4219 14.5749 14.321 13.4712 12.8446 13.3213V16H12.6095Z" fill="#0077FF"/>
   </svg>
@@ -71,22 +64,18 @@ export const getFloatingOneTapTemplate = ({
   const containerEl = document.createElement('div');
   containerEl.classList.add(`VkIdWebSdk__floating_container_${id}`);
 
-  const headerEl = document.createElement('div');
-  headerEl.classList.add(`VkIdWebSdk__floating_header_${id}`);
-  headerEl.innerHTML = logoVkIdSvg;
+  const imgEl = document.createElement('img');
+  imgEl.classList.add(`VkIdWebSdk__floating_img_${id}`);
+  imgEl.src = VkidImageB64;
 
-  const headerAppNameEl = document.createElement('span');
-  headerAppNameEl.classList.add(`VkIdWebSdk__floating_appName_${id}`);
-  headerAppNameEl.innerText = `\u00A0·\u00A0${appName}`;
+  const closeEl = document.createElement('div');
+  closeEl.classList.add(`VkIdWebSdk__floating_close_${id}`);
 
-  const headerCloseEl = document.createElement('div');
-  headerCloseEl.classList.add(`VkIdWebSdk__floating_close_${id}`);
-
-  const headerCloseButtonEl = document.createElement('button');
-  headerCloseButtonEl.classList.add(`VkIdWebSdk__floating_button_reset_${id}`);
-  headerCloseButtonEl.classList.add(`VkIdWebSdk__floating_close_btn_${id}`);
-  headerCloseButtonEl.innerHTML = closeSvg;
-  close && (headerCloseButtonEl.onclick = close);
+  const closeButtonEl = document.createElement('button');
+  closeButtonEl.classList.add(`VkIdWebSdk__floating_button_reset_${id}`);
+  closeButtonEl.classList.add(`VkIdWebSdk__floating_close_btn_${id}`);
+  closeButtonEl.innerHTML = closeSvg;
+  close && (closeButtonEl.onclick = close);
 
   const contentEl = document.createElement('div');
   contentEl.classList.add(`VkIdWebSdk__floating_content_${id}`);
@@ -131,14 +120,13 @@ export const getFloatingOneTapTemplate = ({
       floatingOneTap.appendChild(floatingEl);
       floatingEl.appendChild(containerEl);
 
-      containerEl.appendChild(headerEl);
+      containerEl.appendChild(closeEl);
       containerEl.appendChild(contentEl);
       containerEl.appendChild(actionEl);
 
-      headerEl.appendChild(headerCloseEl);
-      headerEl.appendChild(headerAppNameEl);
-      headerCloseEl.appendChild(headerCloseButtonEl);
+      closeEl.appendChild(closeButtonEl);
 
+      contentEl.appendChild(imgEl);
       contentEl.appendChild(titleEl);
       contentEl.appendChild(descriptionEl);
 
@@ -156,8 +144,8 @@ export const getFloatingOneTapTemplate = ({
           container: oauthListEl,
           oauthList: providers,
           styles: {
-            borderRadius: 8,
-            height: 36,
+            borderRadius: 12,
+            height: 44,
           },
         });
       }
@@ -174,7 +162,7 @@ export const getFloatingOneTapTemplate = ({
 <div id="${id}" data-test-id="floatingOneTap" data-scheme="${scheme}">
   <style>
     :root #${id} {
-      --floating--contaner_padding: 16px;
+      --floating--contaner_padding: 32px;
       --floating--container_box_shadow: 0px 0px 2px rgba(0,0,0,.08),0px 4px 16px rgba(0,0,0,.08);
       --floating--font_family: -apple-system,system-ui,"Helvetica Neue",Roboto,sans-serif;
       --floating--close_button_color_transparent--hover: rgba(0,16,61,.04);
@@ -187,7 +175,7 @@ export const getFloatingOneTapTemplate = ({
       --floating--color_background_modal: #ffffff;
       --floating--color_icon_medium: #818c99;
       --floating--color_text_primary: #000000;
-      --floating--color_text_secondary: #818c99;
+      --floating--color_text_secondary: #58636F;
       --floating--button_background_color--hover: #0071F2;
       --floating--button_background_color--focus: #0071F2;
       --floating--button_background_color--active: #0069E1;
@@ -197,7 +185,7 @@ export const getFloatingOneTapTemplate = ({
       --floating--color_background_modal: #1C1D1E;
       --floating--color_icon_medium: #b0b1b6;
       --floating--color_text_primary: #e1e3e6;
-      --floating--color_text_secondary: #76787a;
+      --floating--color_text_secondary: #B9BABF;
       --floating--button_background_color--hover: #097EFF;
       --floating--button_background_color--focus: #097EFF;
       --floating--button_background_color--active: #1385FF;
@@ -240,25 +228,17 @@ export const getFloatingOneTapTemplate = ({
 
     #${id} .VkIdWebSdk__floating_container_${id} {
       background: var(--floating--color_background_modal);
-      border-radius: 12px;
+      border-radius: 32px;
       padding: var(--floating--contaner_padding);
       box-shadow: var(--floating--container_box_shadow);
       box-sizing: border-box;
-    }
-
-    #${id} .VkIdWebSdk__floating_header_${id} {
-      display: flex;
-      align-items: center;
       position: relative;
-      padding: 2px 0;
     }
 
-    #${id} .VkIdWebSdk__floating_appName_${id} {
-      font-family: var(--floating--font_family);
-      font-weight: 400;
-      font-size: 13px;
-      line-height: 16px;
-      color: var(--floating--color_text_secondary);
+    #${id} .VkIdWebSdk__floating_img_${id} {
+      width: 120px;
+      height: 120px;
+      margin: 0 0 16px 0;
     }
 
     #${id} .VkIdWebSdk__floating_close_${id} {
@@ -266,16 +246,16 @@ export const getFloatingOneTapTemplate = ({
       display: flex;
       align-items: center;
       justify-content: center;
-      top: -4px;
-      right: -4px;
-      height: 28px;
-      width: 28px;
+      top: 8px;
+      right: 8px;
+      height: 44px;
+      width: 44px;
       color: var(--floating--color_icon_medium);
     }
 
     #${id} .VkIdWebSdk__floating_close_btn_${id} {
-      width: 28px;
-      height: 28px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -293,30 +273,32 @@ export const getFloatingOneTapTemplate = ({
     }
 
     #${id} .VkIdWebSdk__floating_content_${id} {
-      padding: 36px 32px;
       text-align: center;
       font-family: var(--floating--font_family);
     }
 
     #${id} .VkIdWebSdk__floating_title_${id} {
       color: var(--floating--color_text_primary);
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 24px;
+      font-weight: 600;
+      font-size: 23px;
+      line-height: 28px;
+      letter-spacing: 0px;
+      text-align: center;
     }
 
     #${id} .VkIdWebSdk__floating_description_${id} {
       color: var(--floating--color_text_secondary);
       font-weight: 400;
-      font-size: 15px;
+      font-size: 16px;
       line-height: 20px;
-      margin-top: 8px;
+      margin-top: 12px;
+      margin-bottom: 24px;
     }
 
     #${id} .VkIdWebSdk__floating_button_${id} {
-      height: 36px;
+      height: 44px;
       width: 100%;
-      border-radius: 8px;
+      border-radius: 12px;
       color: var(--floating--button_text_color);
       transition: .15s;
       cursor: pointer;
@@ -339,7 +321,7 @@ export const getFloatingOneTapTemplate = ({
      display: flex;
      justify-content: center;
      align-items: center;
-     padding: 0 6px;
+     padding: 0 8px;
     }
 
     #${id} .VkIdWebSdk__floating_button_logo_${id},
@@ -348,7 +330,7 @@ export const getFloatingOneTapTemplate = ({
     }
 
     #${id} .VkIdWebSdk__floating_button_spinner_${id} {
-      width: 24px;
+      width: 28px;
       animation: vkIdSdkButtonSpinner 0.7s linear infinite;
     }
 
@@ -356,7 +338,7 @@ export const getFloatingOneTapTemplate = ({
       font-weight: 500;
       line-height: 20px;
       font-family: var(--floating--font_family);
-      font-size: 15px;
+      font-size: 16px;
       transition: .5s;
       min-width: max-content;
       margin-left: 6px;

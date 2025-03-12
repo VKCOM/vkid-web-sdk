@@ -23,7 +23,7 @@
 
 ---
 
-ℹ️ Версия VK ID SDK 2.3.0 поддерживает авторизацию по протоколу [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-10), а также способы входа через аккаунты Одноклассников и Mail.
+ℹ️ VK ID SDK поддерживает авторизацию по протоколу [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-10), а также способы входа через аккаунты Одноклассников и Mail.
 
 ---
 
@@ -72,19 +72,19 @@ VKID.Config.init({
 });
 
 
-const authButton = document.createElement('button');
+const authButton = document.getElementById('vk_auth_button');
+
 authButton.onclick = () => {
   // После авторизации будет редирект на адрес, указанный в параметре redirectUrl
   VKID.Auth.login()
     .catch(console.error);
 };
-
-document.getElementById('container').appendChild(authButton);
 ```
+Подробнее - в документации по [ссылке](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/custom-button/custom-button-web).
 </details>
 
 <details>
-  <summary>OneTap</summary>
+  <summary>Кнопка OneTap</summary>
 
 ```javascript
 import * as VKID from '@vkid/sdk';
@@ -107,6 +107,65 @@ if (container) {
     .on(VKID.WidgetEvents.ERROR, console.error);
 }
 ```
+Подробнее - в документации по [ссылке](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/onetap-button/onetap-web).
+</details>
+
+<details>
+  <summary>Шторка OneTap</summary>
+
+```javascript
+import * as VKID from '@vkid/sdk';
+
+VKID.Config.init({
+  app: APP_ID,
+  redirectUrl: 'https://example.com',
+  state: 'state',
+  codeVerifier: 'codeVerifier',
+  scope: 'phone email',
+});
+
+const floatingOneTap = new VKID.FlotingOneTap();
+
+floatingOneTap
+  .render({ appName: APP_NAME })
+  .on(VKID.WidgetEvents.ERROR, console.error);
+
+```
+Подробнее - в документации по [ссылке](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/onetap-drawer/floating-onetap-web).
+</details>
+
+<details>
+  <summary>Виджет 3 в 1</summary>
+
+```javascript
+import * as VKID from '@vkid/sdk';
+
+VKID.Config.init({
+  app: APP_ID,
+  redirectUrl: 'https://example.com',
+  state: 'state',
+  codeVerifier: 'codeVerifier',
+  scope: 'phone email',
+});
+
+const oauthList = new VKID.OAuthList();
+
+const container = document.getElementById('VkIdSdkOAuthList');
+
+const oauthListNames = [
+  VKID.OAuthName.VK,
+  VKID.OAuthName.MAIL,
+  VKID.OAuthName.OK,
+];
+
+if (container) {
+  oauthList
+    .render({ container, oauthList: oauthListNames })
+    .on(VKID.WidgetEvents.ERROR, handleError);
+}
+
+```
+Подробнее - в документации по [ссылке](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/widget-3-1/three-in-one-web).
 </details>
 
 ## Документация

@@ -1,6 +1,6 @@
 import { VERSION } from '#/constants';
 import type { Config } from '#/core/config';
-import { getStatsUrl, request } from '#/utils/request';
+import { getApiUrl, getStatsUrl, request } from '#/utils/request';
 
 import { ProductionStatsBaseEvent, ProductionStatsEvent, ProductionStatsEventScreen } from './types';
 
@@ -10,9 +10,11 @@ export class ProductionStatsCollector {
   private lastEvent: ProductionStatsEvent;
   private readonly config: Config;
   private stackEvents: ProductionStatsEvent[] = [];
+  private readonly accessToken?: string
 
-  public constructor(config: Config) {
+  public constructor(config: Config, accessToken?: string) {
     this.config = config;
+    this.accessToken = accessToken;
   }
 
   private getIntId(): number {
@@ -35,12 +37,16 @@ export class ProductionStatsCollector {
 
     return new Promise((res, rej) => {
       this.timeoutId = window.setTimeout(() => {
-        const params = {
+        let params: Record<string, any> = {
           events: JSON.stringify(this.stackEvents),
           sak_version: VERSION,
         };
         this.stackEvents = [];
-        const url = getStatsUrl('stat_events_vkid_sdk', this.config);
+        let url = getStatsUrl('stat_events_vkid_sdk', this.config);
+        if (this.accessToken) {
+          params.access_token = this.accessToken;
+          url = getApiUrl('statEvents.addVKID', this.config);
+        }
 
         request(url, params)
           .then(res)

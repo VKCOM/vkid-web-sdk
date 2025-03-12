@@ -42,4 +42,5 @@ global.fetch = jest.fn(() => Promise.resolve({
 jest.mock('#/utils/request', () => ({
   request: jest.fn().mockReturnValue(Promise.resolve()),
   getStatsUrl: (value) => value,
+  getApiUrl: (value) => value,
 }));
