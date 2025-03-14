@@ -275,6 +275,9 @@ export const getFloatingOneTapTemplate = ({
     #${id} .VkIdWebSdk__floating_content_${id} {
       text-align: center;
       font-family: var(--floating--font_family);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     #${id} .VkIdWebSdk__floating_title_${id} {
