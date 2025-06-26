@@ -1,7 +1,5 @@
 import * as VKID from '@vkid/sdk';
 
-import { CommunitySubscription, CommunitySubscriptionError } from '#/widgets/communitySubscription';
-
 import { showAuthInfoSnackbar, showInitErrorSnackbar } from '#demo/components/snackbar';
 import { DemoStore } from '#demo/types';
 import { handleCallbackAuth } from '#demo/utils/handleAuth';
@@ -57,9 +55,9 @@ export const createCommunitySubscription = (demoStore: DemoStore) => {
     accessToken: demoStore.authResult?.access_token as string,
   };
 
-  const communitySubscription = new CommunitySubscription();
+  const communitySubscription = new VKID.CommunitySubscription();
   params.accessToken && communitySubscription
-    .on(VKID.WidgetEvents.ERROR, (e: CommunitySubscriptionError) => {
+    .on(VKID.CommunitySubscriptionEvents.Error, (e: VKID.CommunitySubscriptionError) => {
       console.error('Community Subscription Error', e);
       showInitErrorSnackbar();
     })

@@ -35,6 +35,7 @@ VKID.Config.init({
   prompt: demoStore.prompt,
   __vkidDomain: vkidDomain || VKID_DOMAIN,
   __apiDomain: apiDomain || API_DOMAIN,
+  groupSubscriptionsLimit: demoStore.groupSubscriptionsLimit,
 });
 
 if (demoStore.codeChallenge) {
@@ -160,5 +161,37 @@ function handleConfigInputChange(e: InputEvent) {
 }
 ['input_app', 'input_state', 'input_codeVerifier', 'input_codeChallenge', 'input_scope', 'input_groupId'].forEach((inputId) => {
   document.getElementById(inputId)?.addEventListener('input', handleConfigInputChange);
+});
+
+document.getElementById('communitySubscriptionLimitData')?.addEventListener('click', (e: MouseEvent) => {
+  const periodInput = document.getElementById('communitySubscriptionLimitPeriod') as HTMLInputElement;
+  const countInput = document.getElementById('communitySubscriptionLimitCount') as HTMLInputElement;
+  const target = e.target as HTMLInputElement;
+  const value = target.checked ? {} : undefined;
+  demoStore = Object.assign(demoStore, { 'groupSubscriptionsLimit': value });
+  saveDemoStoreInLS(demoStore);
+
+  if (periodInput && countInput) {
+    periodInput.value = '';
+    countInput.value = '';
+  }
+});
+
+document.getElementById('communitySubscriptionLimitPeriod')?.addEventListener('input', (e: InputEvent) => {
+  const target = e.target as HTMLInputElement;
+  if (demoStore.groupSubscriptionsLimit) {
+    const groupSubscriptionsLimit = Object.assign(demoStore.groupSubscriptionsLimit, { 'periodInDays': target.value });
+    demoStore = Object.assign(demoStore, { 'groupSubscriptionsLimit': groupSubscriptionsLimit });
+    saveDemoStoreInLS(demoStore);
+  }
+});
+
+document.getElementById('communitySubscriptionLimitCount')?.addEventListener('input', (e: InputEvent) => {
+  const target = e.target as HTMLInputElement;
+  if (demoStore.groupSubscriptionsLimit) {
+    const groupSubscriptionsLimit = Object.assign(demoStore.groupSubscriptionsLimit, { 'maxSubscriptionsToShow': target.value });
+    demoStore = Object.assign(demoStore, { 'groupSubscriptionsLimit': groupSubscriptionsLimit });
+    saveDemoStoreInLS(demoStore);
+  }
 });
 

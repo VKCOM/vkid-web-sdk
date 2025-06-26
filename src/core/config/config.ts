@@ -33,8 +33,14 @@ export class Config {
 
   @validator<ConfigData>({ app: [isRequired, isNumber], redirectUrl: [isRequired] })
   public init(config: Pick<ConfigData, 'app' | 'redirectUrl'> & PKSE & Partial<ConfigData>): this {
+    const maxSubscriptionsToShow = config.groupSubscriptionsLimit?.maxSubscriptionsToShow;
+    const periodInDays = config.groupSubscriptionsLimit?.periodInDays;
     this.set(config);
-    this.sakSessionStatsCollector.sendSdkInit(config.source);
+    this.sakSessionStatsCollector.sendSdkInit(config.source,
+      [{ name: 'limit_settings',
+        value: `${ maxSubscriptionsToShow ? maxSubscriptionsToShow : 2};${ periodInDays ? periodInDays : 30}` },
+      ],
+    );
     this.myTrackerService.init();
     return this;
   }

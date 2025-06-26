@@ -1,5 +1,12 @@
 import { ActionStatsCollector } from './ActionStatsCollector';
-import { ProductionStatsEventScreen, ProductionStatsTypeActions, SakSessionAdditionalInfo, SakSessionStatsEvent, SakSessionStatsEventParams } from './types';
+import {
+  ProductionStatsEventScreen,
+  ProductionStatsFieldsItem,
+  ProductionStatsTypeActions,
+  SakSessionAdditionalInfo,
+  SakSessionStatsEvent,
+  SakSessionStatsEventParams,
+} from './types';
 
 export class SakSessionStatsCollector {
   private readonly actionStatsCollector: ActionStatsCollector;
@@ -20,10 +27,11 @@ export class SakSessionStatsCollector {
     });
   }
 
-  public sendSdkInit(additionalInfo?: SakSessionAdditionalInfo) {
+  public sendSdkInit(additionalInfo?: SakSessionAdditionalInfo, fields?: ProductionStatsFieldsItem[]) {
     void this.logEvent({
       step: 'vkid_sdk_init',
       additional_info: additionalInfo,
+      fields: fields,
     });
   }
 }

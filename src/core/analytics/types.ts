@@ -75,6 +75,7 @@ export interface RegistrationStatsEventParams {
 export interface SakSessionStatsEventParams {
   step: SakSessionEventTypes;
   additional_info?: SakSessionAdditionalInfo;
+  fields?: ProductionStatsFieldsItem[];
 }
 
 export interface ActionStatsParams {

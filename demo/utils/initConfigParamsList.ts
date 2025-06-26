@@ -20,6 +20,26 @@ export const initConfigParamsList = (store: DemoStore) => {
   <input value="${store.scope}" type="text" id="input_scope">
   <label for="input_groupId">groupId:</label>
   <input value="${store.groupId}" type="text" id="input_groupId">
+   <style>
+        #limitBlock {
+            display: none;
+        }
+        input:checked ~ #limitBlock {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+  <label for="communitySubscriptionLimitData">
+    <input type="checkbox" ${store.groupSubscriptionsLimit ? 'checked' : ''} name="community_subscription_limit" id="communitySubscriptionLimitData">Включить лимит показа подписки на сообщество:
+    <br />
+    <div id="limitBlock">
+        <br />
+        <label for="input_period">Период (в днях):</label>
+        <input value="${store.groupSubscriptionsLimit?.periodInDays ?? ''}" type="text" id="communitySubscriptionLimitPeriod">
+        <label for="input_count">Максимальное число показов:</label>
+        <input value="${store.groupSubscriptionsLimit?.maxSubscriptionsToShow ?? ''}" type="text" id="communitySubscriptionLimitCount">
+    </div>
+  </label>
 </details>
   `;
   document.querySelector('.VkIdWebSdk_controls')?.insertAdjacentHTML('beforeend', html);

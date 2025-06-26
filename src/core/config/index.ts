@@ -1,3 +1,3 @@
 export { Config } from './config';
-export { ConfigAuthMode, ConfigResponseMode, ConfigSource, Prompt } from './types';
+export { ConfigAuthMode, ConfigResponseMode, ConfigSource, Prompt, GroupSubscriptionsLimit } from './types';
 export type { ConfigData } from './types';
