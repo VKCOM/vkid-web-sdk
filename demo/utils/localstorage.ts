@@ -23,7 +23,7 @@ export const apiDomainLS = (value?: string) => domainLS('api', value);
 
 export const getDemoStoreFromLS = (): DemoStore => {
   const defaultDemoStore: DemoStore = {
-    app: 51988436,
+    app: 53278599,
     state: '',
     codeVerifier: '',
     codeChallenge: '',
@@ -47,6 +47,7 @@ export const getDemoStoreFromLS = (): DemoStore => {
     fastAuthEnabledOnetap: '1',
     fastAuthEnabledFloatingOnetap: '1',
     groupId: 141632613,
+    groupSubscriptionsLimit: undefined,
   };
 
   try {

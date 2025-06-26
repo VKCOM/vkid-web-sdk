@@ -1,27 +1,7 @@
+import { BridgeMessage } from '#/core/bridge';
 import { WidgetParams } from '#/core/widget';
-import { GroupsJoinResponse } from '#/services/CommunitySubscriptionService';
 
-import { CommunitySubscriptionStatsCollector } from './analytics';
-
-export interface CommunitySubscriptionGroupParams {
-  userAvatarUrls?: string[];
-  title: string;
-  description: string;
-  friendsCount?: number;
-  membersCount: number;
-  groupAvatarUrl: string;
-  isVerified: boolean;
-  userId: number;
-  groupId: number;
-}
-
-export interface CommunitySubscriptionTemplateParams extends Pick<WidgetParams, 'scheme' | 'lang'>, CommunitySubscriptionGroupParams {
-  closeWidget: VoidFunction;
-  groupsJoin: () => Promise<GroupsJoinResponse>;
-  onSuccess: () => void;
-  onError: (e: any) => void;
-  communitySubscriptionStatsCollector: CommunitySubscriptionStatsCollector;
-}
+import { CommunitySubscriptionEvents, CommunitySubscriptionInternalEvents } from './events';
 
 export interface CommunitySubscriptionParams extends Omit<WidgetParams, 'container'> {
   /**
@@ -65,12 +45,24 @@ export enum CommunitySubscriptionErrorCode {
    * Неизвестная ошибка при выполнении запроса
    */
   UnknownError,
+  /**
+   * Неправильные параметры в запросе
+   */
+  BadRequest,
+  /**
+   * Достигнут лимит показа окна подписки
+   */
+  RemoteLimitReached,
 }
 
 export type CommunitySubscriptionErrorText = Record<CommunitySubscriptionErrorCode, string>;
 
 export interface CommunitySubscriptionError {
-  code: CommunitySubscriptionErrorCode;
-  error: CommunitySubscriptionErrorText;
-  error_data: any;
+  code?: CommunitySubscriptionErrorCode;
+  error?: CommunitySubscriptionErrorText;
+  error_data?: any;
 }
+
+export type CommunitySubscriptionBridgeMessage = BridgeMessage<CommunitySubscriptionEvents | CommunitySubscriptionInternalEvents, CommunitySubscriptionError>;
+
+export type LimitDisplayLocalStorageObjType = Date[];

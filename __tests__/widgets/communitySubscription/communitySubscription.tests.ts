@@ -1,20 +1,39 @@
-import { Config, ConfigAuthMode, WidgetEvents } from '#/index';
-import { AccountGetProfileShortInfoResponse, GetGroupInfoResponse } from '#/services/CommunitySubscriptionService';
-import { COMMUNITY_SUBSCRIPTION_ERROR_TEXT } from '#/services/CommunitySubscriptionService/constants';
-import { CommunitySubscription, CommunitySubscriptionErrorCode } from '#/widgets/communitySubscription';
+import { BRIDGE_MESSAGE_TYPE_SDK } from '#/core/bridge/bridge';
+import { CommunitySubscriptionEvents, Config } from '#/index';
+import { CommunitySubscription } from '#/widgets/communitySubscription';
+import { CommunitySubscriptionBridgeMessage } from '#/widgets/communitySubscription/types';
 
+import { WINDOW_LOCATION_URL } from '../../constants';
 import { wait } from '../../utils';
 
 const APP_ID = 100;
-const GROUP_ID = 100;
-const AT = 'at';
 
-let communitySubscription: CommunitySubscription;
+let iframeElement: HTMLIFrameElement;
+let communitySubscription: TestCommunitySubscription;
+
+const openFn = jest.fn();
+const removeEventListenerFn = jest.fn();
+
+class TestCommunitySubscription extends CommunitySubscription {
+  public onBridgeMessageHandler(event: CommunitySubscriptionBridgeMessage) {
+    super.onBridgeMessageHandler(event);
+  }
+}
 
 describe('CommunitySubscription', () => {
+  beforeAll(() => {
+    window.open = openFn;
+    window.addEventListener = jest.fn().mockImplementation((event, callback) => {
+      if (event === 'DOMContentLoaded') {
+        setTimeout(callback, 0);
+      }
+    });
+    window.removeEventListener = removeEventListenerFn;
+  });
+
   beforeEach(() => {
-    Config.init({ app: APP_ID, redirectUrl: 'redirectUrl', codeVerifier: 'codeVerifier', state: 'state', mode: ConfigAuthMode.Redirect });
-    communitySubscription = new CommunitySubscription();
+    Config.init({ app: APP_ID, redirectUrl: 'test', state: 'test', codeVerifier: 'codeVerifier' });
+    communitySubscription = new TestCommunitySubscription();
 
     reporter
       .addLabel('layer', 'unit')
@@ -30,197 +49,115 @@ describe('CommunitySubscription', () => {
     communitySubscription.close();
   });
 
-  test('Should send UnknownError if error in getProfileShortInfo', async () => {
-    const error = new Error('Test error');
-    jest.spyOn(communitySubscription['communitySubscriptionService'], 'getProfileShortInfo').mockRejectedValue(error);
+  test('Check iframe url params', () => {
+    communitySubscription.render({
+      groupId: 111111,
+      accessToken: 'abc',
+    });
+    iframeElement = document.body.querySelector('iframe') as HTMLIFrameElement;
 
-    const errorCallback = jest.fn();
-    communitySubscription.on(WidgetEvents.ERROR, errorCallback);
-    communitySubscription.render({ groupId: GROUP_ID, accessToken: AT });
+    expect(iframeElement).toBeTruthy();
 
-    await wait(0);
+    const frameSrc = iframeElement.getAttribute('src') as string;
+    const location = new URL(frameSrc);
+    const searchParams = new URLSearchParams(location.search);
 
-    expect(errorCallback).toHaveBeenCalledWith(expect.objectContaining({
-      code: CommunitySubscriptionErrorCode.UnknownError,
-      error: COMMUNITY_SUBSCRIPTION_ERROR_TEXT[CommunitySubscriptionErrorCode.UnknownError],
-      error_data: error,
-    }));
+    expect(location.href.split('?')[0]).toEqual('https://id.vk.com/community_subscription');
+
+    const expectArr = [
+      expect(searchParams.get('scheme')).toEqual('light'),
+      expect(searchParams.get('lang')).toEqual('0'),
+      expect(searchParams.get('origin')).toEqual(WINDOW_LOCATION_URL),
+      expect(searchParams.get('oauth_version')).toEqual('2'),
+      expect(searchParams.get('v')).toBeTruthy(),
+      expect(searchParams.get('sdk_type')).toEqual('vkid'),
+      expect(searchParams.get('app_id')).toEqual('100'),
+      expect(searchParams.get('redirect_uri')).toEqual('test'),
+
+    ];
+
+    expect([...new Set(searchParams.keys())].length).toEqual(expectArr.length);
   });
 
-  test('Should send IsServiceAccount if is_service_account in getProfileShortInfo', async () => {
-    const accountGetProfileShortInfoResponse: AccountGetProfileShortInfoResponse = {
-      response: { is_service_account: true, id: 0 },
-    };
-    jest.spyOn(communitySubscription['communitySubscriptionService'], 'getProfileShortInfo').mockResolvedValue(accountGetProfileShortInfoResponse);
-
-    const errorCallback = jest.fn();
-    communitySubscription.on(WidgetEvents.ERROR, errorCallback);
-    communitySubscription.render({ groupId: GROUP_ID, accessToken: AT });
-
-    await wait(0);
-
-    expect(errorCallback).toHaveBeenCalledWith(expect.objectContaining({
-      code: CommunitySubscriptionErrorCode.IsServiceAccount,
-      error: COMMUNITY_SUBSCRIPTION_ERROR_TEXT[CommunitySubscriptionErrorCode.IsServiceAccount],
-    }));
-  });
-
-  test('Should send GroupNotFound if false in getGroupInfo', async () => {
-    const accountGetProfileShortInfoResponse: AccountGetProfileShortInfoResponse = {
-      response: { is_service_account: false, id: 0 },
-    };
-    jest.spyOn(communitySubscription['communitySubscriptionService'], 'getProfileShortInfo').mockResolvedValue(accountGetProfileShortInfoResponse);
-
-    const getGroupInfoResponse: GetGroupInfoResponse = {
-      response: [false, false, false],
-    };
-    jest.spyOn(communitySubscription['communitySubscriptionService'], 'getGroupInfo').mockResolvedValue(getGroupInfoResponse);
-
-    const errorCallback = jest.fn();
-    communitySubscription.on(WidgetEvents.ERROR, errorCallback);
-    communitySubscription.render({ groupId: GROUP_ID, accessToken: AT });
-
-    await wait(0);
-
-    expect(errorCallback).toHaveBeenCalledWith(expect.objectContaining({
-      code: CommunitySubscriptionErrorCode.GroupNotFound,
-      error: COMMUNITY_SUBSCRIPTION_ERROR_TEXT[CommunitySubscriptionErrorCode.GroupNotFound],
-    }));
-  });
-
-  test('Should send GroupClosed if is_closed in getGroupInfo', async () => {
-    const accountGetProfileShortInfoResponse: AccountGetProfileShortInfoResponse = {
-      response: { is_service_account: false, id: 0 },
-    };
-    jest.spyOn(communitySubscription['communitySubscriptionService'], 'getProfileShortInfo').mockResolvedValue(accountGetProfileShortInfoResponse);
-
-    const getGroupInfoResponse: GetGroupInfoResponse = {
-      response: [{
-        groups: [{
-          is_closed: true,
-          name: 'string',
-          description: 'string',
-          photo_100: 'string',
-          members_count: 123,
-          is_member: false,
-          verified: false,
-          id: 123,
-        }],
-      }, false, false],
-    };
-    jest.spyOn(communitySubscription['communitySubscriptionService'], 'getGroupInfo').mockResolvedValue(getGroupInfoResponse);
-
-    const errorCallback = jest.fn();
-    communitySubscription.on(WidgetEvents.ERROR, errorCallback);
-    communitySubscription.render({ groupId: GROUP_ID, accessToken: AT });
-
-    await wait(0);
-
-    expect(errorCallback).toHaveBeenCalledWith(expect.objectContaining({
-      code: CommunitySubscriptionErrorCode.GroupClosed,
-      error: COMMUNITY_SUBSCRIPTION_ERROR_TEXT[CommunitySubscriptionErrorCode.GroupClosed],
-    }));
-  });
-  test('Should send AlreadyMember if is_member in getGroupInfo',
-    async () => {
-      const accountGetProfileShortInfoResponse: AccountGetProfileShortInfoResponse = {
-        response: { is_service_account: false, id: 0 },
-      };
-      jest.spyOn(communitySubscription['communitySubscriptionService'], 'getProfileShortInfo').mockResolvedValue(accountGetProfileShortInfoResponse);
-
-      const getGroupInfoResponse: GetGroupInfoResponse = {
-        response: [{
-          groups: [{
-            is_closed: false,
-            name: 'string',
-            description: 'string',
-            photo_100: 'string',
-            members_count: 123,
-            is_member: true,
-            verified: false,
-            id: 123,
-          }],
-        }, false, false],
-      };
-      jest.spyOn(communitySubscription['communitySubscriptionService'], 'getGroupInfo').mockResolvedValue(getGroupInfoResponse);
-
-      const errorCallback = jest.fn();
-      communitySubscription.on(WidgetEvents.ERROR, errorCallback);
-      communitySubscription.render({ groupId: GROUP_ID, accessToken: AT });
-
-      await wait(0);
-
-      expect(errorCallback).toHaveBeenCalledWith(expect.objectContaining({
-        code: CommunitySubscriptionErrorCode.AlreadyMember,
-        error: COMMUNITY_SUBSCRIPTION_ERROR_TEXT[CommunitySubscriptionErrorCode.AlreadyMember],
-      }));
+  test('Must be in a state of loading', async () => {
+    communitySubscription.render({
+      groupId: 111111,
+      accessToken: 'abc',
     });
 
-  test('Should send ScopeMissing if is_member not in getGroupInfo',
-    async () => {
-      const accountGetProfileShortInfoResponse: AccountGetProfileShortInfoResponse = {
-        response: { is_service_account: false, id: 0 },
-      };
-      jest.spyOn(communitySubscription['communitySubscriptionService'], 'getProfileShortInfo').mockResolvedValue(accountGetProfileShortInfoResponse);
+    const communitySubscriptionEl = document.querySelector('[data-test-id="communitySubscription"]');
+    await wait(400);
+    expect(communitySubscriptionEl?.getAttribute('data-state')).toEqual('loading');
+  });
 
-      const getGroupInfoResponse: GetGroupInfoResponse = {
-        response: [{
-          groups: [{
-            is_closed: false,
-            name: 'string',
-            description: 'string',
-            photo_100: 'string',
-            members_count: 123,
-            verified: false,
-            id: 123,
-          }],
-        }, false, false],
-      };
-      jest.spyOn(communitySubscription['communitySubscriptionService'], 'getGroupInfo').mockResolvedValue(getGroupInfoResponse);
-
-      const errorCallback = jest.fn();
-      communitySubscription.on(WidgetEvents.ERROR, errorCallback);
-      communitySubscription.render({ groupId: GROUP_ID, accessToken: AT });
-
-      await wait(0);
-
-      expect(errorCallback).toHaveBeenCalledWith(expect.objectContaining({
-        code: CommunitySubscriptionErrorCode.ScopeMissing,
-        error: COMMUNITY_SUBSCRIPTION_ERROR_TEXT[CommunitySubscriptionErrorCode.ScopeMissing],
-      }));
+  test('Must be in a state of loaded', async () => {
+    communitySubscription.render({
+      groupId: 111111,
+      accessToken: 'abc',
     });
 
-  test('Should init and render community subscription', async () => {
-    const accountGetProfileShortInfoResponse: AccountGetProfileShortInfoResponse = {
-      response: { is_service_account: false, id: 0 },
-    };
-    jest.spyOn(communitySubscription['communitySubscriptionService'], 'getProfileShortInfo').mockResolvedValue(accountGetProfileShortInfoResponse);
+    communitySubscription.onBridgeMessageHandler({
+      type: BRIDGE_MESSAGE_TYPE_SDK,
+      handler: CommunitySubscriptionEvents.Load,
+      params: {},
+    });
 
-    const getGroupInfoResponse: GetGroupInfoResponse = {
-      response: [{
-        groups: [{
-          is_closed: false, name: 'name', description: 'description', photo_100: 'photo_100', members_count: 123, is_member: false, verified: true, id: 123,
-        }],
-      }, false, false],
-    };
-    jest.spyOn(communitySubscription['communitySubscriptionService'], 'getGroupInfo').mockResolvedValue(getGroupInfoResponse);
+    const communitySubscriptionEl = document.querySelector('[data-test-id="communitySubscription"]');
+    await wait(400);
+    expect(communitySubscriptionEl?.getAttribute('data-state')).toEqual('loaded');
+  });
 
-    const errorCallback = jest.fn();
-    communitySubscription.on(WidgetEvents.ERROR, errorCallback);
-    communitySubscription.render({ groupId: GROUP_ID, accessToken: AT });
+  test('Must be shown taking into the limit maxSubscriptionsToShow: 0', async () => {
+    Config.init({
+      app: APP_ID,
+      redirectUrl: 'test',
+      state: 'test',
+      codeVerifier: 'codeVerifier',
+      groupSubscriptionsLimit: {
+        maxSubscriptionsToShow: 0,
+        periodInDays: 0,
+      },
+    });
+    communitySubscription.render({
+      groupId: 111111,
+      accessToken: 'abc',
+    });
 
-    await wait(100);
+    communitySubscription.onBridgeMessageHandler({
+      type: BRIDGE_MESSAGE_TYPE_SDK,
+      handler: CommunitySubscriptionEvents.Load,
+      params: {},
+    });
 
-    expect(errorCallback).not.toHaveBeenCalled();
+    const communitySubscriptionEl = document.querySelector('[data-test-id="communitySubscription"]'); // Ищем элемент
+    await wait(5000);
+    expect(communitySubscriptionEl?.getAttribute('data-state')).toEqual('not_loaded');
+  });
 
-    // @ts-ignore
-    const id = communitySubscription.id;
-    const modalElement = document.querySelector('.VkIdSdk_CommunitySubscription_modal_' + id);
+  test('Must be shown taking into the limit maxSubscriptionsToShow: 1 in 10 days', async () => {
+    Config.init({
+      app: APP_ID,
+      redirectUrl: 'test',
+      state: 'test',
+      codeVerifier: 'codeVerifier',
+      groupSubscriptionsLimit: {
+        maxSubscriptionsToShow: 1,
+        periodInDays: 10,
+      },
+    });
+    communitySubscription.render({
+      groupId: 111111,
+      accessToken: 'abc',
+    });
 
-    expect(modalElement).not.toBeNull();
-    expect(modalElement?.querySelector('.VkIdSdk_CommunitySubscription_heading_text_' + id)?.textContent).toBe('name');
-    expect(modalElement?.querySelector('.VkIdSdk_CommunitySubscription_description_' + id)?.textContent).toBe('description');
-    expect(modalElement?.querySelector('.VkIdSdk_CommunitySubscription_avatar_img_' + id)?.getAttribute('src')).toBe('photo_100');
-    expect(modalElement?.getElementsByTagName('button').length).toBe(2);
+    communitySubscription.onBridgeMessageHandler({
+      type: BRIDGE_MESSAGE_TYPE_SDK,
+      handler: CommunitySubscriptionEvents.Load,
+      params: {},
+    });
+
+    const communitySubscriptionEl = document.querySelector('[data-test-id="communitySubscription"]'); // Ищем элемент
+    await wait(400);
+    expect(communitySubscriptionEl?.getAttribute('data-state')).toEqual('loaded');
   });
 });

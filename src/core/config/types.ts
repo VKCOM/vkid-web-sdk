@@ -1,3 +1,8 @@
+export type GroupSubscriptionsLimit = {
+  maxSubscriptionsToShow: number;
+  periodInDays: number;
+};
+
 export enum ConfigAuthMode {
   Redirect = 'redirect',
   InNewTab = 'new_tab',
@@ -29,6 +34,7 @@ export interface ConfigData {
   codeVerifier?: string;
   codeChallenge?: string;
   scope?: string;
+  groupSubscriptionsLimit?: GroupSubscriptionsLimit;
 
   /**
    * @ignore

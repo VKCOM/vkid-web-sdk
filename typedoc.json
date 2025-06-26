@@ -6,6 +6,7 @@
     "./src/widgets/oneTap/index.ts",
     "./src/widgets/floatingOneTap/index.ts",
     "./src/widgets/oauthList/index.ts",
+    "./src/widgets/communitySubscription/index.ts",
     "./src/types.ts"
   ],
   "out": "dist-docs",

@@ -1,5 +1,5 @@
 import { TokenResult } from '#/auth/types';
-import { ConfigAuthMode, ConfigResponseMode, Prompt } from '#/core/config';
+import { ConfigAuthMode, ConfigResponseMode, Prompt, GroupSubscriptionsLimit } from '#/core/config';
 import { Languages, Scheme } from '#/types';
 import { FloatingOneTapContentId } from '#/widgets/floatingOneTap';
 import { OneTapContentId } from '#/widgets/oneTap';
@@ -29,4 +29,5 @@ export interface DemoStore {
   fastAuthEnabledOnetap: '' | '1';
   fastAuthEnabledFloatingOnetap: '' | '1';
   groupId: number;
+  groupSubscriptionsLimit?: GroupSubscriptionsLimit;
 }
