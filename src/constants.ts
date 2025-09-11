@@ -3,14 +3,14 @@ export const VERSION: string = env.VERSION;
 // @ts-ignore-next-line пробрасываем тип сборки из rollup.config
 export const PRODUCTION = env.PRODUCTION;
 // @ts-ignore-next-line пробрасываем тип сборки из rollup.config
-export const DOMAIN = 'vk.com';
+export const DOMAIN = 'vk.ru';
 
 export const LOGIN_DOMAIN = `login.${DOMAIN}`;
 export const OAUTH_DOMAIN = `oauth.${DOMAIN}`;
 export const VKID_DOMAIN = `id.${DOMAIN}`;
 export const API_DOMAIN = `api.${DOMAIN}`;
 export const ALLOWED_DOMAINS = ['vk.com', 'vk.ru'];
-export const DEFAULT_DOMAIN = 'vk.com';
+export const DEFAULT_DOMAIN = 'vk.ru';
 export const DOMAIN_FILE_URL = 'https://vk.ru/domain.txt';
 
 export const COOKIE_EXPIRES_TIME_15_MIN = 900_000;
