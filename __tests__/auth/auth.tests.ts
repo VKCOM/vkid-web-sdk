@@ -35,7 +35,7 @@ describe('Auth', () => {
   });
 
   beforeEach(() => {
-    Config.init({ app: APP_ID, redirectUrl: 'https://id.vk.com', state: 'state', codeVerifier: 'codeVerifier', mode: ConfigAuthMode.InNewTab });
+    Config.init({ app: APP_ID, redirectUrl: 'https://id.vk.ru', state: 'state', codeVerifier: 'codeVerifier', mode: ConfigAuthMode.InNewTab });
     reporter
       .addLabel('layer', 'unit')
       .feature('Units')
@@ -180,7 +180,7 @@ describe('Auth', () => {
   });
 
   test('Must redirect with payload', async () => {
-    Config.update({ redirectUrl: 'https://id.vk.com?query=123' });
+    Config.update({ redirectUrl: 'https://id.vk.ru?query=123' });
 
     const response: AuthResponse = {
       code: 'code',
@@ -196,7 +196,7 @@ describe('Auth', () => {
     openFn.mockReturnValue(opener);
     eventListenerFn.mockImplementation((event, callback) => {
       callback({
-        origin: 'id.vk.com',
+        origin: 'id.vk.ru',
         source: opener,
         data: {
           action: `${OAUTH2_RESPONSE}state`,

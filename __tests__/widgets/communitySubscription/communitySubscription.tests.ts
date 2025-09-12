@@ -47,6 +47,7 @@ describe('CommunitySubscription', () => {
 
   afterEach(() => {
     communitySubscription.close();
+    localStorage.clear();
   });
 
   test('Check iframe url params', () => {
@@ -62,7 +63,7 @@ describe('CommunitySubscription', () => {
     const location = new URL(frameSrc);
     const searchParams = new URLSearchParams(location.search);
 
-    expect(location.href.split('?')[0]).toEqual('https://id.vk.com/community_subscription');
+    expect(location.href.split('?')[0]).toEqual('https://id.vk.ru/community_subscription');
 
     const expectArr = [
       expect(searchParams.get('scheme')).toEqual('light'),

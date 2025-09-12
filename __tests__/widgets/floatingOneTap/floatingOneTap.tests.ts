@@ -63,7 +63,7 @@ describe('FloatingOneTap', () => {
     const location = new URL(frameSrc);
     const searchParams = new URLSearchParams(location.search);
 
-    expect(location.href.split('?')[0]).toEqual('https://id.vk.com/floating_one_tap_auth');
+    expect(location.href.split('?')[0]).toEqual('https://id.vk.ru/floating_one_tap_auth');
 
     const expectArr = [
       expect(searchParams.get('scheme')).toEqual('light'),

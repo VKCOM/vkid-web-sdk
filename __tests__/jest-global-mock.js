@@ -28,7 +28,7 @@ const { nanoid } = require('nanoid/non-secure');
 window.env = {
   PRODUCTION: isProduction,
   VERSION: JSON.stringify(version),
-  DOMAIN: JSON.stringify('vk.com'),
+  DOMAIN: JSON.stringify('vk.ru'),
 };
 
 /**

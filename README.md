@@ -53,7 +53,7 @@ pnpm add @vkid/sdk@^2.0.0
 <script src="https://unpkg.com/@vkid/sdk@<3.0.0/dist-sdk/umd/index.js"></script>
 ```
 
-> Обратите внимание: Для работы авторизации нужен APP_ID. Вы получите его, когда [создадите](https://id.vk.com/business/go/docs/ru/vkid/latest/vk-id/connection/create-application) приложение в кабинете подключения VK ID.
+> Обратите внимание: Для работы авторизации нужен APP_ID. Вы получите его, когда [создадите](https://id.vk.ru/business/go/docs/ru/vkid/latest/vk-id/connection/create-application) приложение в кабинете подключения VK ID.
 
 ## Пример
 
@@ -80,7 +80,7 @@ authButton.onclick = () => {
     .catch(console.error);
 };
 ```
-Подробнее - в документации по [ссылке](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/custom-button/custom-button-web).
+Подробнее - в документации по [ссылке](https://id.vk.ru/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/custom-button/custom-button-web).
 </details>
 
 <details>
@@ -107,7 +107,7 @@ if (container) {
     .on(VKID.WidgetEvents.ERROR, console.error);
 }
 ```
-Подробнее - в документации по [ссылке](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/onetap-button/onetap-web).
+Подробнее - в документации по [ссылке](https://id.vk.ru/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/onetap-button/onetap-web).
 </details>
 
 <details>
@@ -131,7 +131,7 @@ floatingOneTap
   .on(VKID.WidgetEvents.ERROR, console.error);
 
 ```
-Подробнее - в документации по [ссылке](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/onetap-drawer/floating-onetap-web).
+Подробнее - в документации по [ссылке](https://id.vk.ru/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/onetap-drawer/floating-onetap-web).
 </details>
 
 <details>
@@ -165,14 +165,14 @@ if (container) {
 }
 
 ```
-Подробнее - в документации по [ссылке](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/widget-3-1/three-in-one-web).
+Подробнее - в документации по [ссылке](https://id.vk.ru/about/business/go/docs/ru/vkid/latest/vk-id/connection/elements/widget-3-1/three-in-one-web).
 </details>
 
 ## Документация
 
-- [Что такое VK ID](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/intro/start-page)
-- [Создание приложения](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/create-application)
-- [Требования к дизайну](https://id.vk.com/about/business/go/docs/ru/vkid/latest/vk-id/connection/guidelines/design-rules-oauth)
+- [Что такое VK ID](https://id.vk.ru/about/business/go/docs/ru/vkid/latest/vk-id/intro/start-page)
+- [Создание приложения](https://id.vk.ru/about/business/go/docs/ru/vkid/latest/vk-id/connection/create-application)
+- [Требования к дизайну](https://id.vk.ru/about/business/go/docs/ru/vkid/latest/vk-id/connection/guidelines/design-rules-oauth)
 - [Спецификация](https://vkcom.github.io/vkid-web-sdk/docs)
 
 ## Contributing

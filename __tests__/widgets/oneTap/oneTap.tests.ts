@@ -67,7 +67,7 @@ describe('OneTap', () => {
     const location = new URL(frameSrc);
     const searchParams = new URLSearchParams(location.search);
 
-    expect(location.href.split('?')[0]).toEqual('https://id.vk.com/button_one_tap_auth');
+    expect(location.href.split('?')[0]).toEqual('https://id.vk.ru/button_one_tap_auth');
 
     const expectArr = [
       expect(searchParams.get('style_height')).toEqual('44'),
