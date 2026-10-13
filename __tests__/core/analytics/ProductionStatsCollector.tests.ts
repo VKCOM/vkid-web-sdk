@@ -90,4 +90,29 @@ describe('ProductionStatsCollector', () => {
     expect(request).toBeCalledWith('stat_events_vkid_sdk', expect.any(Object));
     expect(events).toEqual([event, event]);
   });
+
+  it('Every event of a batch settles, a failed request does not reject', async () => {
+    const config = new Config();
+    const productStatsCollector = new ProductionStatsCollector(config);
+    const event: ProductionStatsEvent = {
+      id: 10,
+      timestamp: '0000',
+      url: 'url',
+      screen: ProductionStatsEventScreen.NOWHERE,
+      type: ProductionStatsEventTypes.TYPE_ACTION,
+      [ProductionStatsEventTypes.TYPE_ACTION]: {
+        type: ProductionStatsTypeActions.TYPE_REGISTRATION_ITEM,
+        [ProductionStatsTypeActions.TYPE_REGISTRATION_ITEM]: {
+          event_type: 'screen_proceed',
+        },
+      },
+    };
+    requestMocked.mockImplementationOnce(() => Promise.reject(new TypeError('Failed to fetch')));
+
+    const first = productStatsCollector.logEvent(event);
+    const second = productStatsCollector.logEvent(event);
+
+    await expect(first).resolves.toBeUndefined();
+    await expect(second).resolves.toBeUndefined();
+  });
 });

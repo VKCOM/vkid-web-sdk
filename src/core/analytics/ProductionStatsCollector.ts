@@ -6,7 +6,7 @@ import { ProductionStatsBaseEvent, ProductionStatsEvent, ProductionStatsEventScr
 
 export class ProductionStatsCollector {
   public static readonly MAX_INT32 = 2147483647;
-  private timeoutId: number | null = null;
+  private batch: Promise<unknown> | null = null;
   private lastEvent: ProductionStatsEvent;
   private readonly config: Config;
   private stackEvents: ProductionStatsEvent[] = [];
@@ -33,26 +33,28 @@ export class ProductionStatsCollector {
 
   private sendStats(event: ProductionStatsEvent) {
     this.stackEvents.push(event);
-    this.timeoutId && window.clearTimeout(this.timeoutId);
 
-    return new Promise((res, rej) => {
-      this.timeoutId = window.setTimeout(() => {
-        let params: Record<string, any> = {
-          events: JSON.stringify(this.stackEvents),
-          sak_version: VERSION,
-        };
-        this.stackEvents = [];
-        let url = getStatsUrl('stat_events_vkid_sdk', this.config);
-        if (this.accessToken) {
-          params.access_token = this.accessToken;
-          url = getApiUrl('statEvents.addVKID', this.config);
-        }
+    if (!this.batch) {
+      this.batch = new Promise((res) => {
+        window.setTimeout(() => {
+          this.batch = null;
+          let params: Record<string, any> = {
+            events: JSON.stringify(this.stackEvents),
+            sak_version: VERSION,
+          };
+          this.stackEvents = [];
+          let url = getStatsUrl('stat_events_vkid_sdk', this.config);
+          if (this.accessToken) {
+            params.access_token = this.accessToken;
+            url = getApiUrl('statEvents.addVKID', this.config);
+          }
 
-        request(url, params)
-          .then(res)
-          .catch(rej);
-      }, 0);
-    });
+          request(url, params).then(res, () => res(undefined));
+        }, 0);
+      });
+    }
+
+    return this.batch;
   }
 
   public getBaseEvent(screen?: ProductionStatsEventScreen): ProductionStatsBaseEvent {
